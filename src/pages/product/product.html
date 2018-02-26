@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{product.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="dismiss()" color="light">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-img [src]="product.image"></ion-img>
+  <ion-list class="my-ion-list">
+    <ion-item>
+      <h2 class="oldPrice" *ngIf="product.oldPrice">{{product.oldPrice | number : fractionSize}} đ</h2>
+      <h2 item-end class="newPrice" (click)="openProduct(product)">{{product.unitPrice | number : fractionSize}} đ</h2>
+    </ion-item>
+    <ion-item>
+      <h3>Đánh giá: 4.2
+        <ion-icon color="yellow" name="star"></ion-icon>
+      </h3>
+      <h3 item-end>
+        Hiện có: {{product.amount}}
+      </h3>
+    </ion-item>
+    <ion-item>
+      <h3>
+        Mô tả
+      </h3>
+      <p>
+        {{product.describe}}
+      </p>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<div class="fixed-footer addToCard-box">
+  <ion-row style="padding: 0 10px;">
+    <ion-col text-left align-self-end style="padding: 10px 0;">
+      <span style="height: 30px; line-height: 30px;">Số lượng: </span>
+    </ion-col>
+    <ion-col style="padding: 10px 0;">
+      <span class="quantity-control" (click)="quantityChange(-1)">
+        <ion-icon name="remove" color="light"></ion-icon>
+      </span>
+      <span class="quantity-box">
+        {{quantity}}
+      </span>
+      <span class="quantity-control" (click)="quantityChange(1)">
+        <ion-icon name="add" color="light"></ion-icon>
+      </span>
+    </ion-col>
+  </ion-row>
+  <ion-row align-items-center>
+    <ion-col text-center class="bgFacebook">
+      <h2>{{product.unitPrice*quantity | number : fractionSize}} đ</h2>
+    </ion-col>
+    <ion-col text-center class="bgPrimary myBtn" (click)="addToCart()">
+      <h2>Thêm vào giỏ</h2>
+    </ion-col>
+  </ion-row>
+</div>

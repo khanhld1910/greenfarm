@@ -1,0 +1,29 @@
+product {
+    ion-img {
+        width: 100%;
+        height: 180px;
+        background-color: transparent;
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+    .addToCard-box {
+        ion-row {
+            height: 50px !important;
+            ion-col {
+                height: 50px !important;
+                padding: 0;
+                h2 {
+                    height: 50px !important;
+                    line-height: 50px;
+                    margin: 0px !important;
+                    color: #fff;
+                }
+            }
+        }
+    }
+    .quantity-control:active {
+        background-color: darken(color($colors, primary), 15%) !important;
+    }
+}
