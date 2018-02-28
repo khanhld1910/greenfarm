@@ -87,8 +87,6 @@ export class ProductPage {
 
   }
 
-  addToFavorite() {
-    //this.events.publish('product:favorite', this.product.id)
-  }
+
 
 }

@@ -40,9 +40,19 @@
     </ul>
 
   </div>
-  <h2 class="title">
-    RAU AN TOÀN
-    <span class="span-des">theo tiêu chuẩn VietGAP</span>
+  <h2 class="title" [ngSwitch]="filterOptions">
+      <ng-container *ngSwitchCase="'all'">
+        <span>Rau an toàn</span>
+        <span class="span-des">theo tiêu chuẩn VietGAP</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'sale'">
+        <span>Khuyến mãi</span>
+        <span class="span-des">sản phẩm ưu đãi giá</span>
+      </ng-container>
+      <ng-container *ngSwitchCase="'favorite'">
+        <span>Yêu thích</span>
+        <span class="span-des">sản phẩm được quan tâm</span>
+      </ng-container>
   </h2>
   <div class="products-list">
     <ion-card class="product-card" *ngFor="let product of showedProducts">
@@ -73,20 +83,12 @@
       <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
       </ng-container>
       <ng-template #favorite>
-          <ion-icon 
-          *ngIf="_hasLoggedIn" 
-          name = "heart"
-          class="product-favorite favorite" 
-          (click)="addToFavorite(product.id, false)">
+        <ion-icon *ngIf="_hasLoggedIn" name="heart" class="product-favorite favorite" (click)="addToFavorite(product.id, false)">
         </ion-icon>
       </ng-template>
       <ng-template #not_favorite>
-          <ion-icon             
-            *ngIf="_hasLoggedIn" 
-            name = "heart-outline"
-            class="product-favorite" 
-            (click)="addToFavorite(product.id, true)">
-          </ion-icon>
+        <ion-icon *ngIf="_hasLoggedIn" name="heart-outline" class="product-favorite" (click)="addToFavorite(product.id, true)">
+        </ion-icon>
       </ng-template>
 
     </ion-card>

@@ -85,6 +85,7 @@ page-store {
             padding: 5px 10px;
             margin: 0px;
             font-size: 2rem;
+            text-transform: uppercase;
             color: color($colors, primary);
             .span-des {
                 color: color($colors, text);
@@ -105,9 +106,9 @@ page-store {
             min-width: 160px !important;
             margin: 10px !important;
             img {
-                max-width: 100%;
-                max-height: 100%;
-                object-fit: contain;
+                width: 100%;
+                height: 120px !important;
+                object-fit: fill;
             }
             ion-card-content {
                 padding: 10px;
@@ -126,13 +127,18 @@ page-store {
             }
             .product-favorite {
                 position: absolute;
-                top: 10px;
-                right: 10px;
+                top: 5px;
+                right: 5px;
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
                 font-size: 2.5rem;
-                color: color($colors, light);
-                opacity: .8;
+                color: color($colors, dark);
+                text-align: center;
+                background-color: rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
                 &.favorite {
-                    color: color($colors, yellow) !important;
+                    color: color($colors, danger) !important;
                 }
             }
         }

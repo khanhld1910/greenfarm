@@ -157,7 +157,8 @@ span.paragraph-end {
         }
     }
     ion-list-header,
-    .list-header-md {
+    .list-header-md,
+    .list-header-ios {
         padding: 0 !important;
     }
 }
@@ -210,7 +211,8 @@ h3 {
     color: darken(color($colors, primary), 25%) !important;
 }
 
-.tabs-md .tabbar {
+.tabs-md .tabbar,
+.tabs-ios .tabbar {
     background-color: color($colors, primary) !important;
     z-index: 999;
 }

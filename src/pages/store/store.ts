@@ -70,6 +70,7 @@ export class StorePage {
         break
       }
       case 'favorite': {
+        this.presentFavoriteProducts()
         break
       }
       case 'sale': {
@@ -94,6 +95,22 @@ export class StorePage {
     let result = []
     this.allProducts.forEach(product => {
       if (product.saleOff) result.push(product)
+    })
+    this.filteredProducts = result
+    this.showedProducts = this.filteredProducts.slice(0, 4)
+  }
+
+  presentFavoriteProducts() {
+    let result = []
+    let favoriteIDsArrayForLoop = this.favoriteProductIDs
+    this.allProducts.forEach(product => {
+      for (var i = 0; i < favoriteIDsArrayForLoop.length; i++) {
+        if (product.id == favoriteIDsArrayForLoop[i]) {
+          result.push(product)
+          break;
+        }
+      }
+
     })
     this.filteredProducts = result
     this.showedProducts = this.filteredProducts.slice(0, 4)
@@ -162,6 +179,8 @@ export class StorePage {
                 position: 'bottom',
                 cssClass: 'toast-info'
               })
+              if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
+              
             })
         })
     })

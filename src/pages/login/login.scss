@@ -10,14 +10,16 @@ login {
     .list {
         margin-bottom: 0;
     }
-    ion-checkbox.checkbox-md,
-    ion-label.label-md {
+    ion-label {
         margin: 13px 5px 13px 0 !important;
     }
-    ion-row {
-        margin: 0 16px !important;
-        ion-col {
-            padding: 5px 0 !important;
-        }
+    ion-toolbar,
+    ion-item {
+        padding: 0 20px !important;
+        margin-bottom: 10px !important;
+        border: 0px !important;
+    }
+    ion-toolbar .toolbar-background {
+        background-color: transparent !important;
     }
 }
