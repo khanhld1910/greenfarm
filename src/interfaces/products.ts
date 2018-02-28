@@ -3,7 +3,9 @@ export interface Product {
     name: string,
     unitPrice: number,
     image: string,
-    describe: string,
-    rating: [any],
-    amount: number
+    describe?: string,
+    rating?: [any],
+    amount: number,
+    saleOff?: boolean,
+    oldPrice?: number  
 }

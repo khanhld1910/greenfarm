@@ -11,31 +11,18 @@ export class MyDbProvider {
     private afDB: AngularFireDatabase
   ) { }
 
-  public products: Observable<Product[]>
-  public saleProducts: Observable<Product[]>
-
   getProducts(searchQuery?: string): Observable<Product[]> {
-    // this function will be called in App.Components.ts for preload data
-    if (!this.products) {
-      // check if this.getProducts() has called 
-      this.products = this.afDB.list<Product>(
-        'Products/',
-        ref => ref.orderByChild('id')
-      ).valueChanges()
-    }
-    return this.products
+    return this.afDB.list<Product>(
+      'Products/',
+      ref => ref.orderByChild('id')
+    ).valueChanges()
   }
 
   getSaleProducts(): Observable<Product[]> {
-    // this function will be called in Store.ts for preload data (ionViewDidLoad())
-    if (!this.saleProducts) {
-      // check if this.getSaleProducts() has called 
-      this.saleProducts = this.afDB.list<Product>(
-        'Products/',
-        ref => ref.orderByChild('saleOff').equalTo(true)
-      ).valueChanges()
-    }
-    return this.saleProducts
+    return this.afDB.list<Product>(
+      'Products/',
+      ref => ref.orderByChild('saleOff').equalTo(true)
+    ).valueChanges()
   }
 
   getSearchedProducts(_query?: string): Observable<Product[]> {
@@ -53,6 +40,22 @@ export class MyDbProvider {
 
   getUserInfo(phone: string): Observable<User> {
     return this.afDB.object<User>('Users/' + phone).valueChanges()
+  }
+
+  getFavoriteProductIDs(phone: string): Observable<{ id: string }[]> {
+    let favoriteRef = this.afDB.list<{ id: string }>('Users/' + phone + '/favorite/')
+    return favoriteRef.valueChanges()
+  }
+
+  setFavoriteProduct(phone: string, productID: string, setFavoriteTo: boolean): Promise<void> {
+    let favoriteRef = this.afDB.list('Users/' + phone + '/favorite/')
+    if (setFavoriteTo) {
+      // add to favorite array
+      return favoriteRef.update(productID, { id: productID })
+    } else {
+      // remove from favorite array
+      return favoriteRef.remove(productID)
+    }
   }
 
 

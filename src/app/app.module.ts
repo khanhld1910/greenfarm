@@ -34,7 +34,7 @@ import { MyDbProvider } from '../providers/my-db';
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     UserDataProvider,
     MyToastProvider,
-    MyDbProvider
+    MyDbProvider,
   ]
 })
 export class AppModule { }

@@ -162,6 +162,14 @@ span.paragraph-end {
     }
 }
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin: 0px;
+}
+
 h2 {
     font-size: 2.5rem !important;
 }
@@ -180,30 +188,6 @@ h3 {
 .oldPrice {
     color: color($colors, google) !important;
     text-decoration: line-through;
-}
-
-.fixed-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: auto;
-}
-
-.quantity-control,
-span.quantity-box {
-    display: inline-block;
-    border: 1px solid color($colors, primary);
-    width: 50px !important;
-    height: 30px;
-    padding: 3px 5px;
-    font-size: 1.6rem;
-    line-height: 30px;
-    text-align: center;
-}
-
-.quantity-control {
-    background-color: color($colors, primary);
 }
 
 .myBtn {
@@ -237,4 +221,13 @@ ion-toast.toast-info .toast-wrapper {
 
 ion-toast.toast-danger .toast-wrapper {
     background-color: darken(color($colors, facebook), 25%) !important;
+}
+
+@keyframes card-animation {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

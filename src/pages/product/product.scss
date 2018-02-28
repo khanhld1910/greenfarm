@@ -8,22 +8,39 @@ product {
             height: auto;
         }
     }
-    .addToCard-box {
-        ion-row {
-            height: 50px !important;
-            ion-col {
-                height: 50px !important;
-                padding: 0;
-                h2 {
-                    height: 50px !important;
-                    line-height: 50px;
-                    margin: 0px !important;
-                    color: #fff;
-                }
-            }
+    .quantity-control,
+    .quantity-box,
+    #add-to-card__button {
+        // height 40px
+        padding: 0px 5px;
+        margin: 0px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 1.6rem;
+        text-align: center;
+        text-transform: unset;
+        background-color: $primary-light;
+        color: $primary-dark;
+        border: solid $primary-dark 1px;
+    }
+    .quantity-control {
+        &:active {
+            color: $primary-light;
         }
     }
-    .quantity-control:active {
-        background-color: darken(color($colors, primary), 15%) !important;
+    .quantity-box {
+        border-left: solid red 0px;
+        border-right: solid red 0px;
+    }
+    ion-footer {
+        padding: 0 10px;
+        bottom: 56px !important;
+        .toolbar-background {
+            background: transparent !important;
+        }
+        ion-toolbar {
+            padding: 8px 10px;
+            max-height: 56px;
+        }
     }
 }

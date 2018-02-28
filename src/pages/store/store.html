@@ -1,14 +1,9 @@
-<ion-header no-shadow>
+<ion-header no-shadow no-border>
   <ion-navbar no-border-bottom>
     <button ion-button menuToggle id="menuBtn">
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-searchbar 
-      color="primary" 
-      [(ngModel)]="searchQuery" 
-      animated="true"
-      (ionInput)="presentSearchProducts()" 
-      placeholder="Tìm kiếm">
+    <ion-searchbar color="primary" [(ngModel)]="searchQuery" animated="true" (ionInput)="presentSearchProducts()" placeholder="Tìm kiếm">
     </ion-searchbar>
   </ion-navbar>
 </ion-header>
@@ -50,7 +45,7 @@
     <span class="span-des">theo tiêu chuẩn VietGAP</span>
   </h2>
   <div class="products-list">
-    <ion-card *ngFor="let product of showedProducts">
+    <ion-card class="product-card" *ngFor="let product of showedProducts">
       <img [src]="product.image" (click)="openProduct(product)" />
       <ion-card-content>
         <ion-card-title>
@@ -75,7 +70,25 @@
           </ion-col>
         </ion-row>
       </ion-card-content>
-      <ion-icon name="heart-outline" class="product-favorite" (click)="addToFavorite(product.id)"></ion-icon>
+      <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
+      </ng-container>
+      <ng-template #favorite>
+          <ion-icon 
+          *ngIf="_hasLoggedIn" 
+          name = "heart"
+          class="product-favorite favorite" 
+          (click)="addToFavorite(product.id, false)">
+        </ion-icon>
+      </ng-template>
+      <ng-template #not_favorite>
+          <ion-icon             
+            *ngIf="_hasLoggedIn" 
+            name = "heart-outline"
+            class="product-favorite" 
+            (click)="addToFavorite(product.id, true)">
+          </ion-icon>
+      </ng-template>
+
     </ion-card>
   </div>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">

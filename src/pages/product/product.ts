@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyToastProvider } from '../../providers/my-toast';
@@ -19,7 +19,8 @@ export class ProductPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private userProvider: UserDataProvider,
-    private myToast: MyToastProvider
+    private myToast: MyToastProvider,
+    private events: Events
   ) {
     this.product = navParams.get('product')
   }
@@ -32,6 +33,7 @@ export class ProductPage {
     }
     this.quantity += value
   }
+
 
   addToCart() {
     // Check is user already has address
@@ -83,6 +85,10 @@ export class ProductPage {
       })
     })
 
+  }
+
+  addToFavorite() {
+    //this.events.publish('product:favorite', this.product.id)
   }
 
 }

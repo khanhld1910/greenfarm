@@ -23,6 +23,11 @@ $headings-font-weight: 300;
 // colors so you can add, rename and remove colors as needed.
 // The "primary" color is the only required color in the map.
 $colors: ( primary: #689F38, secondary: #795548, danger: #f53d3d, light: #DCEDC8, dark: #212121, favorite: #69BB7B, twitter: #1da1f4, google: #dc4a38, vimeo: #23b6ea, facebook: #3b5998, transparent: transparent, text: #212121, yellow: #FFEB3B);
+$primary: color($colors, primary);
+$secondary: color($colors, secondary);
+$danger: color($colors, danger);
+$primary-dark: darken($primary, 25%);
+$primary-light: lighten($primary, 45%);
 // App iOS Variables
 // --------------------------------------------------
 // iOS only Sass variables can go here
@@ -69,4 +74,34 @@ $toolbar-md-active-color: #fff;
 .oldPrice {
     color: color($colors, text);
     text-decoration: line-through;
+}
+
+// media multiscreen --------------------------
+@media screen and (min-width: 769px) {
+    ion-card.card-md.product-card,
+    ion-card.card-ios.product-card {
+        width: calc(20% - 20px - 40px) !important; // left menu 200px 5*40 = 200
+        max-width: 200px !important;
+    }
+}
+
+@media screen and (min-width: 426px) and (max-width: 768px) {
+    ion-card.card-md.product-card,
+    ion-card.card-ios.product-card {
+        width: calc(50% - 20px)!important;
+    }
+}
+
+@media screen and (min-width: 321px) and (max-width: 425px) {
+    ion-card.card-md.product-card,
+    ion-card.card-ios.product-card {
+        width: calc(50% - 20px)!important;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    ion-card.card-md.product-card,
+    ion-card.card-ios.product-card {
+        width: calc(100% - 1*20px)!important;
+    }
 }

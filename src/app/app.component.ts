@@ -25,7 +25,7 @@ export class MyApp {
   appPages: PageInterface[] = [
     { title: 'Cửa hàng', name: 'TabsPage', tabComponent: 'StorePage', index: 0, icon: 'home' },
     { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart' },
-    { title: 'Hỗ trợ', name: 'TabsPage', tabComponent: 'ChatPage', index: 2, icon: 'chatbubbles' },
+    { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 2, icon: 'chatbubbles' },
   ]
 
   loggedOutPages: PageInterface[] = [
@@ -47,12 +47,9 @@ export class MyApp {
     private menu: MenuController,
     private events: Events,
     private myToastProvider: MyToastProvider,
-    private myDBProvider: MyDbProvider
+    private myDBProvider: MyDbProvider,
   ) {
-    this.userData.hasLoggedIn()
-      .then(hasLoggedIn => {
-        this.menuTrigger(hasLoggedIn)
-      })
+    this.userData.hasLoggedIn().then(value => this.menuTrigger(value))
 
     this.userData.hasSeenTutorial()
       .then(hasSeenTutorial => {
@@ -65,11 +62,9 @@ export class MyApp {
         this.platformReady()
       })
 
-    // load data
     // load products for storePage
     this.myDBProvider.getProducts()
     this.listenToLoginEvents()
-
   }
 
   platformReady() {

@@ -21,7 +21,6 @@ export class TabsPage {
 
   ) {
     this.mySelectedIndex = navParams.data.tabIndex || 0
-    //this.setBasketBadge()
   }
 
 }

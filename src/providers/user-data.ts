@@ -16,13 +16,16 @@ export class UserDataProvider {
   HAS_SEEN_TUTORIAL = 'hasSeenTutorial'
   USER_PHONE = 'userPhone'
 
+
   hasSeenTutorial(): Promise<boolean> {
     return this.storage.get(this.HAS_SEEN_TUTORIAL).then(value => value === true)
   }
 
   hasLoggedIn(): Promise<boolean> {
-    return this.storage.get(this.HAS_LOGGED_IN).then(value => value === true)
+    return this.storage.get(this.HAS_LOGGED_IN)
+      .then(value => value === true)
   }
+
 
   getPhoneNumber(): Promise<string> {
     return this.storage.get(this.USER_PHONE).then(value => value)
@@ -58,5 +61,7 @@ export class UserDataProvider {
         }
       })
   }
+
+
 
 }

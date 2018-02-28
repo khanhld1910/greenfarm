@@ -12,7 +12,9 @@ page-store {
         padding-right: 16px;
         right: 0px;
     }
-    .searchbar-md {
+    .searchbar-md,
+    .searchbar-ios,
+    ion-searchbar {
         .searchbar-search-icon {
             display: none !important;
         }
@@ -23,18 +25,22 @@ page-store {
             border: 1px solid color($colors, light);
         }
     }
-    .header-md::after {
+    .header-md::after,
+    .header-ios::after,
+    ion-header::after {
         background: transparent;
         position: relative;
     }
-    .toolbar-background-md {
+    .toolbar-background-md,
+    .toolbar-background-ios,
+    .toolbar-background {
         background: transparent;
     }
     ion-navbar.toolbar {
         position: absolute;
         z-index: 999;
     }
-    ion-content.content-md {
+    ion-content {
         .header-slide {
             width: 100%;
             height: 200px;
@@ -86,12 +92,18 @@ page-store {
                 font-size: 1.5rem;
             }
         }
-        ion-card.card-md {
+        ion-card.card-md.product-card,
+        ion-card.card-ios.product-card {
+            animation-name: card-animation;
+            animation-fill-mode: forwards;
+            animation-duration: .8s;
+            animation-iteration-count: 1;
+            animation-delay: .5s;
+            opacity: 0;
             float: left;
             position: relative;
-            width: 160px !important;
             min-width: 160px !important;
-            margin: 10px;
+            margin: 10px !important;
             img {
                 max-width: 100%;
                 max-height: 100%;
@@ -119,6 +131,9 @@ page-store {
                 font-size: 2.5rem;
                 color: color($colors, light);
                 opacity: .8;
+                &.favorite {
+                    color: color($colors, yellow) !important;
+                }
             }
         }
          ::-webkit-scrollbar,

@@ -1,8 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, Events } from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
+import { UserDataProvider } from '../../providers/user-data';
 
 @IonicPage(
   {
@@ -13,10 +14,13 @@ import { MyToastProvider } from '../../providers/my-toast';
   selector: 'page-store',
   templateUrl: 'store.html',
 })
+
 export class StorePage {
 
   filteredProducts: Product[]
+  allProducts: Product[]
   showedProducts: Product[]
+  favoriteProductIDs: string[]
   filterOptions: string
   searchQuery: string
 
@@ -25,19 +29,21 @@ export class StorePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private myDBProvider: MyDbProvider,
-    private myToastProvider: MyToastProvider
+    private userDataProvider: UserDataProvider,
+    private myToastProvider: MyToastProvider,
+    private events: Events,
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
   }
 
-  ionViewWillEnter() {
-    this.presentData()
-  }
-
   ionViewDidLoad() {
     // preload data
     this.myDBProvider.getSaleProducts()
+    this.checkHasLoggedIn()
+    this.presentData()
+    this.listeningToEvents()
+    this.getFavoriteProductIDs()
   }
 
   filter(filterOptions: string) {
@@ -48,8 +54,8 @@ export class StorePage {
     this.filterOptions = filterOptions
     // reset searchBar
     this.searchQuery = undefined
-    // triggered this ionViewWillEnter
-    this.ionViewWillEnter()
+
+    this.presentData()
   }
 
   slideChanged() {
@@ -78,24 +84,34 @@ export class StorePage {
 
   presentAllProducts() {
     this.myDBProvider.getProducts().subscribe(value => {
+      this.allProducts = value
       this.filteredProducts = value
       this.showedProducts = this.filteredProducts.slice(0, 4)
     })
   }
 
   presentSaleProducts() {
-    this.myDBProvider.getSaleProducts().subscribe(value => {
-      this.filteredProducts = value
-      this.showedProducts = this.filteredProducts.slice(0, 4)
+    let result = []
+    this.allProducts.forEach(product => {
+      if (product.saleOff) result.push(product)
     })
+    this.filteredProducts = result
+    this.showedProducts = this.filteredProducts.slice(0, 4)
   }
 
   presentSearchProducts() {
-    this.myDBProvider.getSearchedProducts(this.searchQuery).subscribe(value => {
-      console.log(value)
-      this.filteredProducts = value
-      this.showedProducts = this.filteredProducts.slice(0, 4)
+    let result = []
+    this.allProducts.forEach(product => {
+      if (this.checkProductWithSearchQuery(product)) result.push(product)
     })
+    this.filteredProducts = result
+    this.showedProducts = this.filteredProducts.slice(0, 4)
+  }
+
+  checkProductWithSearchQuery(product: Product): boolean {
+    let name = product.name.toLowerCase()
+    let query = this.searchQuery.trim().toLowerCase()
+    return (name.includes(query))
   }
 
   doInfinite(infiniteScroll) {
@@ -120,8 +136,72 @@ export class StorePage {
   }
 
   openProduct(_product: Product) {
-    this.navCtrl.push('ProductPage', {'product': _product})
+    this.navCtrl.push('ProductPage', { 'product': _product })
   }
+
+  addToFavorite(productID: string, setFavoriteTo: boolean) {
+    let publishInfo = {
+      productID: productID,
+      setFavoriteTo: setFavoriteTo
+    }
+    this.events.publish('product:favorite', publishInfo)
+  }
+
+  listeningToEvents() {
+    this.events.subscribe('product:favorite', publishInfo => {
+      let productID: string = publishInfo.productID
+      let setFavoriteTo: boolean = publishInfo.setFavoriteTo
+      // will be publish from StorePage and ProductPage
+      this.userDataProvider.getPhoneNumber()
+        .then(phone => {
+          this.myDBProvider.setFavoriteProduct(phone, productID, setFavoriteTo)
+            .then(() => {
+              this.myToastProvider.myToast({
+                message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
+                duration: 2000,
+                position: 'bottom',
+                cssClass: 'toast-info'
+              })
+            })
+        })
+    })
+  }
+
+  _hasLoggedIn: boolean = false
+  checkHasLoggedIn(): void {
+    this.userDataProvider.hasLoggedIn().then(value => this._hasLoggedIn = value === true)
+  }
+
+  getFavoriteProductIDs() {
+    this.userDataProvider.getPhoneNumber()
+      .then(phone => {
+        this.myDBProvider.getFavoriteProductIDs(phone)
+          .subscribe(favArr => {
+            this.favoriteProductIDs = []
+            for (var i = 0; i < favArr.length; i++) {
+              this.favoriteProductIDs.push(favArr[i].id)
+            }
+          })
+      })
+  }
+
+  isFavoriteProduct(productID: string): boolean {
+    if (!this.favoriteProductIDs) return false
+    let result = false
+    for (var i = 0; i < this.favoriteProductIDs.length; i++) {
+      if (productID == this.favoriteProductIDs[i]) {
+        result = true
+        break
+      }
+    }
+    return result
+  }
+
+
+
+
+
+
 
 
 }
