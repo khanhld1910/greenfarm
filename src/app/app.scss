@@ -222,7 +222,7 @@ ion-toast.toast-info .toast-wrapper {
 }
 
 ion-toast.toast-danger .toast-wrapper {
-    background-color: darken(color($colors, facebook), 25%) !important;
+    background-color: color($colors, google) !important;
 }
 
 @keyframes card-animation {
@@ -233,3 +233,61 @@ ion-toast.toast-danger .toast-wrapper {
         opacity: 1;
     }
 }
+
+.loading-md .loading-wrapper,
+.loading-ios .loading-wrapper {
+    background: transparent;
+    color: $primary-light;
+    box-shadow: none;
+    border-radius: 0;
+    border: 0px;
+}
+// custom loading
+@keyframes rotating {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes shaking {
+    0% {
+        transform: rotate(-60deg);
+        left: calc(50% - 60px);
+    }
+    100% {
+        transform: rotate(60deg);
+        left: calc(50% - 20px);
+    }
+}
+.rotating {
+    animation: rotating 2s linear infinite;
+}
+.shaking {
+    animation: shaking 2s ease-in-out alternate infinite;
+}
+
+.my-custom-spinner {
+    height: 30px;
+    width: 30px;
+    display: block;
+    background: transparent url('../assets/cucumber.svg') no-repeat center center;
+}
+.my-custom-loading {
+    position: relative;
+    .my-custom-spinner {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        top: -80px;
+        left: calc(50% - 40px);
+    }
+    .message {
+        padding-top: 10px;
+        color: #FFF;
+    }
+}
+
+// z-indexes--------->

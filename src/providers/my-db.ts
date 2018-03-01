@@ -3,6 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { Product } from '../interfaces/products';
 import { User } from '../interfaces/user';
+import { SingleBill } from '../interfaces/bill';
 
 @Injectable()
 export class MyDbProvider {
@@ -57,6 +58,21 @@ export class MyDbProvider {
       return favoriteRef.remove(productID)
     }
   }
+
+  newBill(bill: SingleBill): Promise<boolean> {
+    let userInvoiceList = this.afDB.list('Invoices/' + bill.userID)
+    const newKey = userInvoiceList.push('new item').key
+    bill.id = newKey
+    let singleBillRef = this.afDB.object('Invoices/' + bill.userID + '/' + bill.id)
+    return singleBillRef.update(bill)
+      .then(value => true)
+      .catch(err => false)
+  }
+
+  userGetUncheckedBill(phoneNumber: string): Observable<{}[]> {
+    return this.afDB.list('Invoices/' + phoneNumber, ref => ref.orderByChild('status').equalTo(1)).valueChanges()
+  }
+
 
 
 }

@@ -1,11 +1,11 @@
 import { Component } from '@angular/core'
-import { IonicPage, NavController } from 'ionic-angular'
+import { IonicPage, NavController, MenuController, Events } from 'ionic-angular'
 import { NgForm } from '@angular/forms/'
 import { UserDataProvider } from '../../providers/user-data'
 import { MyToastProvider } from '../../providers/my-toast'
 
 @IonicPage(
-  {name: 'LoginPage'}
+  { name: 'LoginPage' }
 )
 @Component({
   selector: 'login',
@@ -20,8 +20,18 @@ export class LoginPage {
   constructor(
     public navCtrl: NavController,
     public userData: UserDataProvider,
-    private myToast: MyToastProvider
+    private myToast: MyToastProvider,
+    private menu: MenuController,
+    private events: Events
   ) {
+  }
+
+  ionViewDidEnter() {
+    // this page will pop from navi by a toolbar's button
+    this.menu.enable(false)
+  }
+  ionViewDidLeave() {
+    this.menu.enable(true)
   }
 
   onLogin(form: NgForm) {
@@ -34,7 +44,10 @@ export class LoginPage {
             message: 'Đăng nhập thành công',
             duration: 2000,
             cssClass: 'toast-info'
-          }, () => this.navCtrl.setRoot('TabsPage'))
+          }, () => {
+            this.navCtrl.pop().then(() =>
+              this.events.publish('favorite:reload'))
+          })
         } else {
           // error or uncorrect phone, password
           this.formMessage = res.message

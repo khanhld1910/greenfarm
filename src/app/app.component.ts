@@ -49,10 +49,11 @@ export class MyApp {
     private myToastProvider: MyToastProvider,
     private myDBProvider: MyDbProvider,
   ) {
-    this.userData.hasLoggedIn().then(value => this.menuTrigger(value))
+    this.userData.hasLoggedIn()
+      .subscribe(value => this.menuTrigger(value))
 
     this.userData.hasSeenTutorial()
-      .then(hasSeenTutorial => {
+      .subscribe(hasSeenTutorial => {
         //console.log(hasSeenTutorial)
         if (!hasSeenTutorial) {
           this.rootPage = 'IntroPage'
@@ -85,12 +86,13 @@ export class MyApp {
       this.menuTrigger(true)
     })
 
-    this.events.subscribe('user:signup', () => {
-      this.menuTrigger(true)
-    })
 
     this.events.subscribe('user:logout', () => {
       this.menuTrigger(false)
+    })
+
+    this.events.subscribe('loading', data => {
+      this.myToastProvider.performLoading(data)
     })
   }
 
@@ -100,13 +102,24 @@ export class MyApp {
 
   openPage(page: PageInterface) {
 
+    if (this.nav.getActiveChildNavs()[0].name != 'tabs' && this.nav.getActiveChildNavs()[0].name == page.name) {
+      // click to showingPage -> return
+      return false
+    }
+
     let params = {}
 
     if (page.index) {
       params = { tabIndex: page.index }
     }
 
+    if (page.name == 'LoginPage' || page.name == 'ProfilePage') {
+      // if click to LoginPage or ProfilePge we use nav.push for future pop navController
+      return this.nav.push(page.name).then(() => false)
+    }
+
     if (this.nav.getActiveChildNavs().length && page.index != undefined) {
+      // clicked to tabs menu
       this.nav.getActiveChildNavs()[0].select(page.index)
     } else {
       // Set the root of the nav with params if it's a tab index
@@ -146,6 +159,8 @@ export class MyApp {
     }
     return
   }
+
+
 
 }
 

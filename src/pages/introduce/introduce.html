@@ -1,7 +1,7 @@
 <ion-header no-border>
   <ion-navbar>
     <ion-buttons end *ngIf="showSkip">
-      <button ion-button (click)="startApp()" color="primary">Bỏ qua</button>
+      <button ion-button (tap)="startApp()" color="primary">Bỏ qua</button>
     </ion-buttons>
   </ion-navbar>
 </ion-header>
@@ -37,7 +37,7 @@
     <ion-slide>
       <img src="assets/imgs/ica-slidebox-img-4.png" class="slide-image" />
       <h2 class="slide-title">Sẵn sàng?</h2>
-      <button ion-button icon-end large clear (click)="startApp()">
+      <button ion-button icon-end large clear (tap)="startApp()">
         Tiếp tục
         <ion-icon name="arrow-forward"></ion-icon>
       </button>

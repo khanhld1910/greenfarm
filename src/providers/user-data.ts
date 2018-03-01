@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage'
 import { Events } from 'ionic-angular';
 import { MyDbProvider } from './my-db';
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class UserDataProvider {
@@ -17,18 +18,28 @@ export class UserDataProvider {
   USER_PHONE = 'userPhone'
 
 
-  hasSeenTutorial(): Promise<boolean> {
-    return this.storage.get(this.HAS_SEEN_TUTORIAL).then(value => value === true)
+  hasSeenTutorial(): Observable<boolean> {
+    return new Observable(observable => {
+      setTimeout(() => {
+        this.storage.get(this.HAS_SEEN_TUTORIAL).then(value => observable.next(value === true))
+      }, 1000)
+    })
   }
 
-  hasLoggedIn(): Promise<boolean> {
-    return this.storage.get(this.HAS_LOGGED_IN)
-      .then(value => value === true)
+  hasLoggedIn(): Observable<boolean> {
+    return new Observable(observable => {
+      setTimeout(() => {
+        this.storage.get(this.HAS_LOGGED_IN).then(value => observable.next(value === true))
+      }, 1000)
+    })
   }
 
-
-  getPhoneNumber(): Promise<string> {
-    return this.storage.get(this.USER_PHONE).then(value => value)
+  getPhoneNumber(): Observable<string> {
+    return new Observable(observable => {
+      setTimeout(() => {
+        this.storage.get(this.USER_PHONE).then(value => observable.next(value))
+      }, 1000)
+    })
   }
 
   getUserInfo(phone: string) {

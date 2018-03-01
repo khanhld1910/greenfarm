@@ -28,13 +28,13 @@
   </div>
   <div class="filter-box">
     <ul>
-      <li class="myBtn" (click)="filter('all')" [ngClass]="(filterOptions == 'all') ? 'bgGoogle' : ''">
+      <li class="myBtn" (tap)="filter('all')" [ngClass]="(filterOptions == 'all') ? 'bgGoogle' : ''">
         Tất cả
       </li>
-      <li class="myBtn" (click)="filter('sale')" [ngClass]="(filterOptions == 'sale') ? 'bgGoogle' : ''">
+      <li class="myBtn" (tap)="filter('sale')" [ngClass]="(filterOptions == 'sale') ? 'bgGoogle' : ''">
         Khuyến mãi
       </li>
-      <li class="myBtn" (click)="filter('favorite')" [ngClass]="(filterOptions == 'favorite') ? 'bgGoogle' : ''">
+      <li class="myBtn" (tap)="filter('favorite')" [ngClass]="(filterOptions == 'favorite') ? 'bgGoogle' : ''">
         Yêu thích
       </li>
     </ul>
@@ -56,7 +56,7 @@
   </h2>
   <div class="products-list">
     <ion-card class="product-card" *ngFor="let product of showedProducts">
-      <img [src]="product.image" (click)="openProduct(product)" />
+      <img [src]="product.image" (tap)="openProduct(product)" />
       <ion-card-content>
         <ion-card-title>
           {{product.name}}
@@ -76,18 +76,24 @@
             <h3 class="oldPrice">{{product.oldPrice | number : fractionSize}} đ</h3>
           </ion-col>
           <ion-col align-self-center text-right>
-            <h3 class="newPrice" (click)="openProduct(product)">{{product.unitPrice | number : fractionSize}} đ</h3>
+            <h3 
+              id="btn-add-to-cart" 
+              [class]="product.saleOff ? 'sale-off newPrice' : 'newPrice' "
+              (tap)="addToCartOpt(product)">
+              <ion-icon name="cart"></ion-icon>
+              {{product.unitPrice | number : fractionSize}} đ
+            </h3>
           </ion-col>
         </ion-row>
       </ion-card-content>
       <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
       </ng-container>
       <ng-template #favorite>
-        <ion-icon *ngIf="_hasLoggedIn" name="heart" class="product-favorite favorite" (click)="addToFavorite(product.id, false)">
+        <ion-icon *ngIf="_hasLoggedIn" name="heart" class="product-favorite favorite" (tap)="addToFavorite(product.id, false)">
         </ion-icon>
       </ng-template>
       <ng-template #not_favorite>
-        <ion-icon *ngIf="_hasLoggedIn" name="heart-outline" class="product-favorite" (click)="addToFavorite(product.id, true)">
+        <ion-icon *ngIf="_hasLoggedIn" name="heart-outline" class="product-favorite" (tap)="addToFavorite(product.id, true)">
         </ion-icon>
       </ng-template>
 
@@ -96,6 +102,6 @@
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Tải thêm dữ liệu...">
     </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
+  </ion-infinite-scroll>  
 
 </ion-content>

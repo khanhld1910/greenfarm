@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavParams, Tabs } from 'ionic-angular';
+import { UserDataProvider } from '../../providers/user-data';
+import { MyDbProvider } from '../../providers/my-db';
 
 @IonicPage()
 @Component({
@@ -16,11 +18,29 @@ export class TabsPage {
   basketBadge: number
   constructor(
     navParams: NavParams,
-    //private myUserProvider: UserDataProvider,
-    //private dataProvider: MyDatabaseProvider,
+    private myUserProvider: UserDataProvider,
+    private dataProvider: MyDbProvider,
 
   ) {
     this.mySelectedIndex = navParams.data.tabIndex || 0
+  }
+
+  ionViewDidEnter() {
+    this.setBasketBadge()
+  }
+
+  setBasketBadge() {
+    this.myUserProvider.getPhoneNumber()
+      .subscribe(number => {
+        if (!number) {
+          return
+        }
+        this.dataProvider.userGetUncheckedBill(number).subscribe(
+          value => {
+            this.basketBadge = value.length > 0 ? value.length : undefined
+          })
+
+      })
   }
 
 }

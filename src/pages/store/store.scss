@@ -124,6 +124,20 @@ page-store {
                 ion-row ion-col {
                     padding: 0px;
                 }
+                .oldPrice,
+                .newPrice {
+                    font-size: 1.4rem !important;
+                    padding: 5px 0;
+                }
+            }
+            #btn-add-to-cart {
+                background-color: color($colors, primary);
+                color: $primary-light !important;
+                text-align: center;
+                border-radius: 5px;
+                &:active {
+                    background-color: $primary-dark;
+                }
             }
             .product-favorite {
                 position: absolute;

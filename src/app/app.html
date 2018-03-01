@@ -11,7 +11,7 @@
                 <ion-list-header>
                     Điều hướng
                 </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
+                <button ion-item menuClose *ngFor="let p of appPages" (tap)="openPage(p)">
                     <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
                     {{p.title}}
                 </button>
@@ -20,11 +20,11 @@
                 <ion-list-header>
                     Tài khoản
                 </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of loggedOutPages" (click)="openPage(p)">
+                <button ion-item menuClose *ngFor="let p of loggedOutPages" (tap)="openPage(p)">
                     <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
                     {{p.title}}
                 </button>
-                <button ion-item menuClose (click)="openIntro()">
+                <button ion-item menuClose (tap)="openIntro()">
                     <ion-icon item-start name="hammer"></ion-icon>
                     Hướng dẫn
                 </button>
@@ -43,7 +43,7 @@
                 <ion-list-header>
                     Điều hướng
                 </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of appPages" (click)="openPage(p)">
+                <button ion-item menuClose *ngFor="let p of appPages" (tap)="openPage(p)">
                     <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
                     {{p.title}}
                 </button>
@@ -52,17 +52,18 @@
                 <ion-list-header>
                     Tài khoản
                 </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of loggedInPages" (click)="openPage(p)">
+                <button ion-item menuClose *ngFor="let p of loggedInPages" (tap)="openPage(p)">
                     <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
                     {{p.title}}
                 </button>
-                <button ion-item menuClose (click)="openIntro()">
+                <button ion-item menuClose (tap)="openIntro()">
                     <ion-icon item-start name="hammer"></ion-icon>
                     Hướng dẫn
                 </button>
             </ion-list>
         </ion-content>
     </ion-menu>
+    
     <!-- main navigation -->
     <ion-nav [root]="rootPage" #content swipeBackEnabled="false" main name="app"></ion-nav>
 </ion-split-pane>
