@@ -37,22 +37,27 @@ export class LoginPage {
   onLogin(form: NgForm) {
     this.submitted = true
     if (!form.valid) return
-    this.userData.login(this.login.phone)
-      .then(res => {
-        if (res.isSuccessfull) {
-          this.myToast.myToast({
-            message: 'Đăng nhập thành công',
-            duration: 2000,
-            cssClass: 'toast-info'
-          }, () => {
-            this.navCtrl.pop().then(() =>
-              this.events.publish('favorite:reload'))
-          })
-        } else {
-          // error or uncorrect phone, password
-          this.formMessage = res.message
+    this.userData
+      .login(this.login.phone)
+      .subscribe(
+        () => {
+          this.userData.presetData().subscribe()
+          this.events.publish('user:login')
+          this.myToast.myToast(
+            {
+              message: 'Đăng nhập thành công',
+              duration: 2000,
+              cssClass: 'toast-info'
+            },
+            () => this.navCtrl.pop()
+          )
+        },
+        err => {
+          this.formMessage = err.message
         }
-      })
+      )
+
   }
+
 
 }

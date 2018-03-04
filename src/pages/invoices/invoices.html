@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="status">
+      <ion-segment-button value="sent">
+        Đang chờ
+      </ion-segment-button>
+      <ion-segment-button value="checked">
+        Giao hàng
+      </ion-segment-button>
+      <ion-segment-button value="done">
+        Hoàn thành
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <ion-item class="invoice">
+      <p class="invoice--time">05/03/2018, 09:00</p>
+      <h3 class="invoice--cost">{{201000 | number : fractionSize}} đ</h3>
+      <p class="invoice--products">Surprise Candy Fi...(3), Lux Vệ Binh ...(2), Anivia Phươ... (5)</p>
+    </ion-item>
+  </ion-list>
+</ion-content>

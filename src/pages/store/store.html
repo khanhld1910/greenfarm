@@ -89,11 +89,11 @@
       <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
       </ng-container>
       <ng-template #favorite>
-        <ion-icon *ngIf="_hasLoggedIn" name="heart" class="product-favorite favorite" (tap)="addToFavorite(product.id, false)">
+        <ion-icon *ngIf="userData.hasLoggedIn" name="heart" class="product-favorite favorite" (tap)="addToFavorite(product.id, false)">
         </ion-icon>
       </ng-template>
       <ng-template #not_favorite>
-        <ion-icon *ngIf="_hasLoggedIn" name="heart-outline" class="product-favorite" (tap)="addToFavorite(product.id, true)">
+        <ion-icon *ngIf="userData.hasLoggedIn" name="heart-outline" class="product-favorite" (tap)="addToFavorite(product.id, true)">
         </ion-icon>
       </ng-template>
 

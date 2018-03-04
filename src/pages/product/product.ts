@@ -37,7 +37,9 @@ export class ProductPage {
 
     let bill: SingleBill = {
       id: '',
-      status: 1,
+      productID: this.product.id,
+      status: 0,
+      deliverTime: '',
       userID: '',
       // userID will be set on StorePage
       productName: this.product.name,

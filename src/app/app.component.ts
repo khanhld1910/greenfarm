@@ -4,7 +4,7 @@ import { UserDataProvider } from '../providers/user-data'
 import { StatusBar } from '@ionic-native/status-bar'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { MyToastProvider } from '../providers/my-toast'
-import { MyDbProvider } from '../providers/my-db';
+import { Observable } from 'rxjs/Rx';
 
 
 export interface PageInterface {
@@ -15,6 +15,7 @@ export interface PageInterface {
   index?: number
   tabName?: string
   tabComponent?: any
+  requireLoggedIn?: boolean
 }
 
 @Component({
@@ -24,8 +25,9 @@ export class MyApp {
 
   appPages: PageInterface[] = [
     { title: 'Cửa hàng', name: 'TabsPage', tabComponent: 'StorePage', index: 0, icon: 'home' },
-    { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart' },
-    { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 2, icon: 'chatbubbles' },
+    { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart', requireLoggedIn: true },
+    { title: 'Hóa đơn', name: 'TabsPage', tabComponent: 'InvoicesPage', index: 2, icon: 'paper', requireLoggedIn: true },
+    { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 3, icon: 'ios-chatbubbles', requireLoggedIn: true },
   ]
 
   loggedOutPages: PageInterface[] = [
@@ -47,24 +49,16 @@ export class MyApp {
     private menu: MenuController,
     private events: Events,
     private myToastProvider: MyToastProvider,
-    private myDBProvider: MyDbProvider,
   ) {
-    this.userData.hasLoggedIn()
-      .subscribe(value => this.menuTrigger(value))
 
-    this.userData.hasSeenTutorial()
-      .subscribe(hasSeenTutorial => {
-        //console.log(hasSeenTutorial)
-        if (!hasSeenTutorial) {
-          this.rootPage = 'IntroPage'
-        } else {
-          this.rootPage = 'TabsPage'
-        }
+    //-----------> very important for preloading userdata
+    this.userData.presetData()
+      .subscribe(([hasSeenTutorial, hasLoggedIn]) => {
+        this.menuTrigger(hasLoggedIn)
+        this.rootPage = hasSeenTutorial ? 'TabsPage' : 'IntroPage'
         this.platformReady()
       })
-
-    // load products for storePage
-    this.myDBProvider.getProducts()
+    //--------------> end of the very important
     this.listenToLoginEvents()
   }
 
@@ -86,24 +80,27 @@ export class MyApp {
       this.menuTrigger(true)
     })
 
-
     this.events.subscribe('user:logout', () => {
       this.menuTrigger(false)
     })
-
-    this.events.subscribe('loading', data => {
-      this.myToastProvider.performLoading(data)
-    })
-  }
-
-  openIntro() {
-    this.nav.setRoot('IntroPage')
   }
 
   openPage(page: PageInterface) {
 
+    if (page.requireLoggedIn === true && !this.userData.hasLoggedIn) {
+      //require logged in pages
+      this.myToastProvider.myToast({
+        message: 'Đăng nhập để vào mục này',
+        duration: 2000,
+        position: 'bottom',
+        cssClass: 'toast-danger',
+      })
+      this.nav.push('LoginPage')
+      return false
+    }
+
     if (this.nav.getActiveChildNavs()[0].name != 'tabs' && this.nav.getActiveChildNavs()[0].name == page.name) {
-      // click to showingPage -> return
+      // click to current showingPage -> return
       return false
     }
 
@@ -112,6 +109,7 @@ export class MyApp {
     if (page.index) {
       params = { tabIndex: page.index }
     }
+
 
     if (page.name == 'LoginPage' || page.name == 'ProfilePage') {
       // if click to LoginPage or ProfilePge we use nav.push for future pop navController
@@ -141,6 +139,7 @@ export class MyApp {
         closeButtonText: 'Ok'
       })
     }
+
 
   }
 

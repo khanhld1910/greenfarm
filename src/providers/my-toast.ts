@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core'
 import { ToastController, AlertController, LoadingController } from 'ionic-angular'
-import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Injectable()
@@ -10,7 +9,6 @@ export class MyToastProvider {
     private toastCtrl: ToastController,
     private alertCtrl: AlertController,
     private loadingCtrl: LoadingController,
-    private sanitizer: DomSanitizer
   ) { }
 
   myToast(
@@ -69,13 +67,13 @@ export class MyToastProvider {
     alert.present()
   }
 
-  performLoading(data?: any) {
+  performLoading(message?: any) {
 
     let svg = `
     <div class="my-custom-loading">
       <div class="my-custom-spinner shaking">
       </div>
-      <h3 class="message">${data.message}</h3>
+      <h3 class="message">${message}</h3>
     </div>
     `
     //let safeSvg = this.sanitizer.bypassSecurityTrustHtml(svg);

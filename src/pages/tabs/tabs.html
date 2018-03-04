@@ -1,6 +1,27 @@
 <ion-tabs #tabs [selectedIndex]="mySelectedIndex" name="tabs">
   <ion-tab [root]="tab1Root" tabTitle="Cửa hàng" tabIcon="home" tabUrlPath="store"></ion-tab>
-  <ion-tab [root]="tab2Root" tabTitle="Giỏ hàng" tabIcon="cart" tabUrlPath="cart" [tabBadge]="basketBadge" tabBadgeStyle="google">
+  <ion-tab 
+    [enabled]="userData.hasLoggedIn" 
+    [root]="tab2Root" 
+    tabTitle="Giỏ hàng" 
+    tabIcon="cart" 
+    tabUrlPath="cart" 
+    [tabBadge]="cartBadge" 
+    tabBadgeStyle="google">
   </ion-tab>
-  <ion-tab [root]="tab3Root" tabTitle="Tin nhắn" tabIcon="chatbubbles" tabUrlPath="chat"></ion-tab>
-</ion-tabs>
+  <ion-tab 
+    [enabled]="userData.hasLoggedIn" 
+    [root]="tab3Root" 
+    tabTitle="Hóa đơn" 
+    tabIcon="paper" 
+    tabUrlPath="invoices" 
+    [tabBadge]="cartBadge" 
+    tabBadgeStyle="google">
+  </ion-tab>
+  <ion-tab 
+    [enabled]="userData.hasLoggedIn" 
+    [root]="tab4Root" 
+    tabTitle="Tin nhắn" 
+    tabIcon="chatbubbles" 
+    tabUrlPath="chat"></ion-tab>
+  </ion-tabs>

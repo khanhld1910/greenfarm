@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Product } from '../interfaces/products';
 import { User } from '../interfaces/user';
 import { SingleBill } from '../interfaces/bill';
+import { CustomMessage } from '../interfaces/message';
 
 @Injectable()
 export class MyDbProvider {
@@ -69,10 +70,33 @@ export class MyDbProvider {
       .catch(err => false)
   }
 
-  userGetUncheckedBill(phoneNumber: string): Observable<{}[]> {
-    return this.afDB.list('Invoices/' + phoneNumber, ref => ref.orderByChild('status').equalTo(1)).valueChanges()
+  userGetCartBills(phoneNumber: string): Observable<SingleBill[]> {
+    return this.afDB.list<SingleBill>('Invoices/' + phoneNumber, ref => ref.orderByChild('status').equalTo(0)).valueChanges()
   }
 
 
+  getFirst5Messages(phone: string): Observable<CustomMessage[]> {
+    return this.afDB.list<CustomMessage>(
+      'Messages/' + phone,
+      ref => ref.limitToLast(5)
+    ).valueChanges()
+  }
+
+  getAnother5Messages(phone: string, endAtTime: number): Observable<CustomMessage[]> {
+    return this.afDB.list<CustomMessage>(
+      'Messages/' + phone,
+      ref => ref.orderByChild('time').endAt(endAtTime).limitToLast(5)
+    ).valueChanges()
+  }
+
+  newMessage(phone: string, message: CustomMessage): Observable<boolean> {
+    return new Observable(ob => {
+      let messageRef = this.afDB.object('Messages/' + phone + '/' + message.time)
+
+      messageRef.update(message)
+        .then(() => ob.next(true))
+        .catch(err => ob.next(false))
+    })
+  }
 
 }

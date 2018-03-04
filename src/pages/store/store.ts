@@ -4,7 +4,6 @@ import { Product } from '../../interfaces/products';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
 import { UserDataProvider } from '../../providers/user-data';
-import { Subscription } from 'rxjs/Subscription';
 import { SingleBill } from '../../interfaces/bill';
 
 @IonicPage(
@@ -25,7 +24,6 @@ export class StorePage {
   favoriteProductIDs: string[]
   filterOptions: string
   searchQuery: string
-  _hasLoggedIn: boolean = false
   loading: Loading
 
   @ViewChild(Slides) slides: Slides
@@ -33,28 +31,27 @@ export class StorePage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private myDBProvider: MyDbProvider,
-    private userDataProvider: UserDataProvider,
+    private userData: UserDataProvider,
     private myToastProvider: MyToastProvider,
     private events: Events,
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
-    this.loading = this.myToastProvider.performLoading({ message: 'Đang tải dữ liệu...' })
-    // preload data
+    this.loading = this.myToastProvider.performLoading('Đang tải dữ liệu...')
+    // preload data ( can be put in IonViewDidEnter event)
     this.presentData()
+  }
+
+  ionViewDidLoad() {
     this.listeningToEvents()
   }
 
-  checkLoggedInSubcription(): Subscription {
-    return this.userDataProvider.hasLoggedIn().subscribe(value => {
-      this._hasLoggedIn = value
-    })
+  ionViewWillEnter() {
+    this.getFavoriteProductIDs()
   }
 
-  ionViewWillEnter() {
-    this.checkLoggedInSubcription()
-    this.getFavoriteProductIDs()
-    this.dismissLoading(5000)
+  ionViewDidLeave() {
+    this.events.unsubscribe('login:reload-state')
   }
 
   dismissLoading(duration: number) {
@@ -62,7 +59,6 @@ export class StorePage {
       this.loading.dismiss()
     }, duration)
   }
-
 
   filter(filterOptions: string) {
     // set filter
@@ -102,11 +98,13 @@ export class StorePage {
   }
 
   presentAllProducts() {
-    this.myDBProvider.getProducts().subscribe(value => {
-      this.allProducts = value
-      this.filteredProducts = value
-      this.showedProducts = this.filteredProducts.slice(0, 4)
-    })
+    this.myDBProvider
+      .getProducts()
+      .subscribe(value => {
+        this.allProducts = value
+        this.filteredProducts = value
+        this.showedProducts = this.filteredProducts.slice(0, 6)
+      })
   }
 
   presentSaleProducts() {
@@ -115,7 +113,7 @@ export class StorePage {
       if (product.saleOff) result.push(product)
     })
     this.filteredProducts = result
-    this.showedProducts = this.filteredProducts.slice(0, 4)
+    this.showedProducts = this.filteredProducts.slice(0, 6)
   }
 
   presentFavoriteProducts() {
@@ -140,7 +138,7 @@ export class StorePage {
       if (this.checkProductWithSearchQuery(product)) result.push(product)
     })
     this.filteredProducts = result
-    this.showedProducts = this.filteredProducts.slice(0, 4)
+    this.showedProducts = this.filteredProducts.slice(0, 6)
   }
 
   checkProductWithSearchQuery(product: Product): boolean {
@@ -151,7 +149,7 @@ export class StorePage {
 
   doInfinite(infiniteScroll) {
     let loadedProductsNum = this.showedProducts.length
-    let addArray = this.filteredProducts.slice(loadedProductsNum, loadedProductsNum + 2)
+    let addArray = this.filteredProducts.slice(loadedProductsNum, loadedProductsNum + 4)
     if (addArray.length == 0) {
       //infiniteScroll.enable(false)
       this.myToastProvider.myToast({
@@ -187,29 +185,23 @@ export class StorePage {
       let productID: string = publishInfo.productID
       let setFavoriteTo: boolean = publishInfo.setFavoriteTo
       // will be publish from StorePage and ProductPage
-      this.userDataProvider.getPhoneNumber()
-        .subscribe(phone => {
-          this.myDBProvider.setFavoriteProduct(phone, productID, setFavoriteTo)
-            .then(() => {
-              this.myToastProvider.myToast({
-                message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
-                duration: 2000,
-                position: 'bottom',
-                cssClass: 'toast-info'
-              })
-              if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
+      this.myDBProvider.setFavoriteProduct(this.userData.userPhone, productID, setFavoriteTo)
+        .then(() => {
+          this.myToastProvider.myToast({
+            message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
+            duration: 2000,
+            position: 'bottom',
+            cssClass: 'toast-info'
+          })
+          if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
 
-            })
         })
     })
 
-    this.events.subscribe('favorite:reload', () => {
-      this.checkLoggedInSubcription()
-    })
-
     this.events.subscribe('product:addToCart', singleBill => {
+      let loading = this.myToastProvider.performLoading('Đang kết nối ...')
       // check if user has logged in
-      if (!this._hasLoggedIn) {
+      if (!this.userData.hasLoggedIn) {
         this.myToastProvider.myToast({
           message: 'Vui lòng đăng nhập để mua hàng!',
           duration: 2000,
@@ -232,66 +224,55 @@ export class StorePage {
         return
       }
 
-      this.userDataProvider.getPhoneNumber()
-        .subscribe(phone => {
-          let userInfo = this.userDataProvider.getUserInfo(phone)
-          userInfo.subscribe(user => {
-            //console.log(value.address)       
-            if (user.address === undefined) {
-              // go to cartPage to update user info            
+      singleBill.userID = this.userData.userPhone
+
+
+      return this.myDBProvider
+        .userGetCartBills(this.userData.userPhone)
+        .subscribe(userGetCartBills => {
+          if (userGetCartBills || userGetCartBills.length > 0) {
+            let dublicatedProduct: boolean = false
+            for (var i = 0; i < userGetCartBills.length; i++) {
+              if (userGetCartBills[i].productID == singleBill.productID) {
+                dublicatedProduct = true
+                break
+              }
+            }
+
+            if (dublicatedProduct) {
+              loading.dismiss()
               this.myToastProvider.myToast({
-                message: 'Vui lòng cập nhật thông tin giao hàng!',
+                message: 'Sản phẩm sẵn có trong giỏ hàng!',
                 duration: 2000,
                 position: 'bottom',
                 cssClass: 'toast-danger'
-              }, () => {
-                this.navCtrl.push('ProfilePage')
               })
-            } else {
-              let bill: SingleBill = singleBill
-              // update userID
-              bill.userID = phone
-              this.loading = this.myToastProvider.performLoading({ message: 'Đang kết nối ...' })
-              this.myDBProvider.newBill(bill)
-                .then(success => {
-                  this.dismissLoading(500)
-                  if (success) {
-                    this.myToastProvider.myToast({
-                      message: 'Đã thêm sản phẩm vào giỏ hàng!',
-                      duration: 2000,
-                      position: 'bottom',
-                      cssClass: 'toast-info'
-                    })
-                  }
-                })
-                .catch(reason => {
-                  this.dismissLoading(500)
-                  this.myToastProvider.myToast({
-                    message: 'TThêm vào giỏ không thành công!',
-                    duration: 2000,
-                    position: 'bottom',
-                    cssClass: 'toast-danger'
-                  })
-                })
-
+              return
             }
+          }
+          // not dublicated
+          this.myDBProvider.newBill(singleBill).then(success => {
+            loading.dismiss()
+            this.myToastProvider.myToast({
+              message: 'Đã thêm sản phẩm vào giỏ hàng!',
+              duration: 2000,
+              position: 'bottom',
+              cssClass: 'toast-info'
+            })
           })
         })
-
     })
   }
 
-
   getFavoriteProductIDs() {
-    this.userDataProvider.getPhoneNumber()
-      .subscribe(phone => {
-        this.myDBProvider.getFavoriteProductIDs(phone)
-          .subscribe(favArr => {
-            this.favoriteProductIDs = []
-            for (var i = 0; i < favArr.length; i++) {
-              this.favoriteProductIDs.push(favArr[i].id)
-            }
-          })
+    this.myDBProvider
+      .getFavoriteProductIDs(this.userData.userPhone)
+      .subscribe(favArr => {
+        this.favoriteProductIDs = []
+        for (var i = 0; i < favArr.length; i++) {
+          this.favoriteProductIDs.push(favArr[i].id)
+        }
+        this.dismissLoading(500)
       })
   }
 
@@ -312,7 +293,9 @@ export class StorePage {
     let bill: SingleBill = {
       id: '',
       // id will be set on DBProvider
-      status: 1,
+      status: 0,
+      productID: product.id,
+      deliverTime: '',
       userID: '',
       // userID will be set on event.subcribe
       productName: product.name,

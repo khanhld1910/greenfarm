@@ -1,0 +1,21 @@
+invoices {
+    .invoice {
+        padding-left: 0px;
+        .invoice--cost {
+            color: color($colors, primary);
+        }
+        .item-inner ion-label {
+            padding-left: 10px;
+            border-left: 5px solid color($colors, primary);
+        }
+        &.sent .item-inner ion-label {
+            border-left: 5px solid color($colors, google);
+        }
+        &.checked .item-inner ion-label {
+            border-left: 5px solid color($colors, facebook);
+        }
+        &.done .item-inner ion-label {
+            border-left: 5px solid color($colors, primary);
+        }
+    }
+}

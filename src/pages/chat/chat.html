@@ -1,18 +1,81 @@
-<!--
-  Generated template for the ChatPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
-
   <ion-navbar>
-    <ion-title>chat</ion-title>
+    <button ion-button menuToggle id="menuBtn">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Tin nhắn</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (tap)="openIntroPage()">
+        <ion-icon name="ios-help-circle-outline"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-
 </ion-header>
 
 
-<ion-content padding>
+<ion-content>
+  <div class="chat-opts" *ngIf="!allMessagesLoaded" text-center>
+    <span tapable (tap)="viewMore()">xem thêm</span>
+  </div>
+
+  <div class="message-wrap">
+    <ng-container *ngFor="let message of showedMessages">
+      <ng-container *ngIf="message.sender == 1; then userMessage else supporterMessage">
+      </ng-container>
+
+      <ng-template #userMessage>
+        <div class="message right">
+          <img class="user-img" src="assets/avatars/woman.svg">
+          <div class="msg-detail">
+            <div class="msg-info">
+              <p>
+                {{ message.time | relativeTime}}
+              </p>
+            </div>
+            <div class="msg-content">
+              <span class="triangle"></span>
+              <p class="line-breaker ">{{message.content}}</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template #supporterMessage>
+        <div class="message left">
+          <img class="user-img" src="assets/avatars/supporter.svg">
+          <div class="msg-detail">
+            <div class="msg-info">
+              <p>
+                {{ message.time | relativeTime}}
+              </p>
+            </div>
+            <div class="msg-content">
+              <span class="triangle"></span>
+              <p class="line-breaker ">{{message.content}}</p>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+
+    </ng-container>
+
+  </div>
 
 </ion-content>
+
+<ion-footer no-border [style.height]="'55px'">
+  <ion-grid class="input-wrap">
+    <ion-row>
+      <ion-col col-10>
+        <ion-textarea #chat_input placeholder="Bạn cần trợ giúp?" [(ngModel)]="editorMsg" (keyup.enter)="sendMsg()" (ionFocus)="onFocus()">
+          <textarea spellcheck="false"></textarea>
+        </ion-textarea>
+      </ion-col>
+      <ion-col col-2>
+        <button ion-button clear icon-only item-right (tap)="sendMsg()">
+          <ion-icon name="ios-send" ios="ios-send" md="md-send"></ion-icon>
+        </button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-footer>

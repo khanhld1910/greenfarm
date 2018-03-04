@@ -38,20 +38,11 @@
 
 <ion-footer no-border no-shadow>
   <ion-toolbar>
-    <ion-row align-items-center>
-      <span ion-col col-2 class="quantity-control myBtn" (tap)="quantityChange(-1)">
-        <ion-icon name="remove"></ion-icon>
-      </span>
-      <span ion-col col-2 class="quantity-box">
-        {{quantity}}
-      </span>
-      <span ion-col col-2 class="quantity-control myBtn" (tap)="quantityChange(1)">
-        <ion-icon name="add"></ion-icon>
-      </span>
-      <ion-col col-6 style="padding-left: 20px;">
+    <ion-row align-items-center>      
+      <ion-col>
         <button id="add-to-card__button" ion-button full outline icon-left (tap)="addToCart()">
           <ion-icon name="cart"></ion-icon>
-          {{product.unitPrice*quantity | number : fractionSize}} đ
+          Thêm vào giỏ hàng
         </button>
       </ion-col>
     </ion-row>
