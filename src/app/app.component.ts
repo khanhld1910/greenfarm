@@ -4,7 +4,6 @@ import { UserDataProvider } from '../providers/user-data'
 import { StatusBar } from '@ionic-native/status-bar'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { MyToastProvider } from '../providers/my-toast'
-import { Observable } from 'rxjs/Rx';
 
 
 export interface PageInterface {

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Events, Loading } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, Events, Loading, AlertController } from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
@@ -33,7 +33,7 @@ export class StorePage {
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
     private myToastProvider: MyToastProvider,
-    private events: Events,
+    private events: Events
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
@@ -189,7 +189,7 @@ export class StorePage {
         .then(() => {
           this.myToastProvider.myToast({
             message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
-            duration: 2000,
+            duration: 1000,
             position: 'bottom',
             cssClass: 'toast-info'
           })
@@ -200,11 +200,12 @@ export class StorePage {
 
     this.events.subscribe('product:addToCart', singleBill => {
       let loading = this.myToastProvider.performLoading('Đang kết nối ...')
+      let bill: SingleBill = singleBill
       // check if user has logged in
       if (!this.userData.hasLoggedIn) {
         this.myToastProvider.myToast({
           message: 'Vui lòng đăng nhập để mua hàng!',
-          duration: 2000,
+          duration: 1000,
           position: 'bottom',
           cssClass: 'toast-danger'
         }, () => {
@@ -213,53 +214,43 @@ export class StorePage {
         return
       }
 
-      if (singleBill.quantity < 1) {
-        // san pham het hang
-        this.myToastProvider.myToast({
-          message: 'Sản phẩm tạm thời chưa có!',
-          duration: 2000,
-          position: 'bottom',
-          cssClass: 'toast-danger'
-        })
-        return
-      }
+      bill.userID = this.userData.userPhone
 
-      singleBill.userID = this.userData.userPhone
+      this.myDBProvider
+        .checkCartHadProduct(bill)
+        .first()
+        .subscribe(value => {
 
+          let result = false
 
-      return this.myDBProvider
-        .userGetCartBills(this.userData.userPhone)
-        .subscribe(userGetCartBills => {
-          if (userGetCartBills || userGetCartBills.length > 0) {
-            let dublicatedProduct: boolean = false
-            for (var i = 0; i < userGetCartBills.length; i++) {
-              if (userGetCartBills[i].productID == singleBill.productID) {
-                dublicatedProduct = true
-                break
-              }
-            }
-
-            if (dublicatedProduct) {
-              loading.dismiss()
-              this.myToastProvider.myToast({
-                message: 'Sản phẩm sẵn có trong giỏ hàng!',
-                duration: 2000,
-                position: 'bottom',
-                cssClass: 'toast-danger'
-              })
-              return
-            }
+          for (var i = 0; i < value.length; i++) {
+            result = (value[i].productID == bill.productID)
+            if (result) break
           }
-          // not dublicated
-          this.myDBProvider.newBill(singleBill).then(success => {
+
+          if (result) {
             loading.dismiss()
             this.myToastProvider.myToast({
-              message: 'Đã thêm sản phẩm vào giỏ hàng!',
-              duration: 2000,
+              message: 'Sản phẩm đã sẵn có trong giỏ!',
+              duration: 1000,
               position: 'bottom',
-              cssClass: 'toast-info'
+              cssClass: 'toast-danger'
             })
-          })
+            return
+          }
+
+          return this.myDBProvider
+            .newCartBill(bill)
+            .then(success => {
+              loading.dismiss()
+              this.myToastProvider.myToast({
+                message: 'Đã thêm sản phẩm vào giỏ hàng!',
+                duration: 1000,
+                position: 'bottom',
+                cssClass: 'toast-info'
+              })
+            })
+
         })
     })
   }
@@ -289,23 +280,27 @@ export class StorePage {
   }
 
   addToCartOpt(product: Product) {
+    if (product.amount == 0) {
+      this.myToastProvider.myToast({
+        message: 'Sản phẩm tạm thời chưa có!',
+        duration: 1000,
+        position: 'bottom',
+        cssClass: 'toast-danger'
+      })
+      return
+    }    
 
     let bill: SingleBill = {
       id: '',
       // id will be set on DBProvider
-      status: 0,
       productID: product.id,
-      deliverTime: '',
+      totalBillID: '',
       userID: '',
       // userID will be set on event.subcribe
       productName: product.name,
       unitPrice: product.unitPrice,
-      quantity: 1,
-      cost: product.unitPrice
+      quantity: 0,
     }
-
-    if (product.amount < 1) bill.quantity = 0
-
     this.events.publish('product:addToCart', bill)
   }
 

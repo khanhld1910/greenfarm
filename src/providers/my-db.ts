@@ -3,7 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 import { Product } from '../interfaces/products';
 import { User } from '../interfaces/user';
-import { SingleBill } from '../interfaces/bill';
+import { SingleBill, TotalBill } from '../interfaces/bill';
 import { CustomMessage } from '../interfaces/message';
 
 @Injectable()
@@ -18,6 +18,12 @@ export class MyDbProvider {
       'Products/',
       ref => ref.orderByChild('id')
     ).valueChanges()
+  }
+
+  getValidQuantity(productID: string): Observable<Product> {
+    return this.afDB
+      .object<Product>('Products/' + productID)
+      .valueChanges()
   }
 
   getSaleProducts(): Observable<Product[]> {
@@ -60,20 +66,88 @@ export class MyDbProvider {
     }
   }
 
-  newBill(bill: SingleBill): Promise<boolean> {
-    let userInvoiceList = this.afDB.list('Invoices/' + bill.userID)
-    const newKey = userInvoiceList.push('new item').key
+  newCartBill(bill: SingleBill): Promise<boolean> {
+
+    let cartBillList = this.afDB.list('Invoices/cart/' + bill.userID)
+    const newKey = cartBillList.push('new item').key
     bill.id = newKey
-    let singleBillRef = this.afDB.object('Invoices/' + bill.userID + '/' + bill.id)
-    return singleBillRef.update(bill)
+    let cartSingleBillRef = this.afDB.object('Invoices/cart/' + bill.userID + '/' + bill.id)
+    return cartSingleBillRef.update(bill)
       .then(value => true)
       .catch(err => false)
   }
 
   userGetCartBills(phoneNumber: string): Observable<SingleBill[]> {
-    return this.afDB.list<SingleBill>('Invoices/' + phoneNumber, ref => ref.orderByChild('status').equalTo(0)).valueChanges()
+    return this.afDB.list<SingleBill>(
+      'Invoices/cart/' + phoneNumber,
+      ref => ref.orderByChild('quantity')
+    ).valueChanges()
   }
 
+  checkCartHadProduct(bill: SingleBill): Observable<SingleBill[]> {
+    return this.afDB.list<SingleBill>(
+      'Invoices/cart/' + bill.userID,
+      ref => ref.orderByChild('productID').equalTo(bill.productID)
+    ).valueChanges()
+  }
+
+  removeCardBill(bill: SingleBill) {
+    return this.afDB
+      .list<SingleBill>('Invoices/cart/' + bill.userID)
+      .remove(bill.id)
+  }
+
+  updateProductAmount(productID: string, justHadBuy: number) {
+    this.afDB
+      .object<Product>('Products/' + productID)
+      .valueChanges()
+      .first()
+      .subscribe(product => {
+        let oldAmount = product.amount
+        let newAmount = oldAmount - justHadBuy
+        this.afDB.object<Product>('Products/' + productID).update({amount: newAmount})
+      })
+  }
+
+  sentReqFromCart(bills: SingleBill[], phone: string, deliverTime: string, sentTime: string, totalCost: number, address: string) {
+    let billList = this.afDB.list('Bills/' + phone + '/')
+    const newKey = billList.push('new item').key
+
+    let newBill: TotalBill = {
+      deliverTime: deliverTime,
+      sentTime: sentTime,
+      id: newKey,
+      status: 1,
+      userID: phone,
+      totalCost: totalCost,
+      address: address
+    }
+    //------------>
+    var sentBills = {}
+    //------------->
+    //------------->
+
+    for (var i = 0; i < bills.length; i++) {
+      bills[i].totalBillID = newKey
+
+      sentBills[bills[i].id] = bills[i]
+      //productUpdate
+      this.updateProductAmount(bills[i].productID, bills[i].quantity)
+    }
+
+    return Observable
+      .forkJoin(
+        // create total bill
+        this.afDB.object(`Bills/${phone}/${newKey}`).update(newBill),
+        // create sent bills
+        this.afDB.object('Invoices/sent/' + phone + '/').update(sentBills),
+        // delete cart bills
+        this.afDB.object('Invoices/cart/' + phone + '/').remove(),
+        // update products amount
+        // ------------------------------------------------>
+      )
+
+  }
 
   getFirst5Messages(phone: string): Observable<CustomMessage[]> {
     return this.afDB.list<CustomMessage>(
@@ -97,6 +171,10 @@ export class MyDbProvider {
         .then(() => ob.next(true))
         .catch(err => ob.next(false))
     })
+  }
+
+  updateUserInfo(user: User): Promise<void> {
+    return this.afDB.object<User>('Users/' + user.phone).update(user)
   }
 
 }

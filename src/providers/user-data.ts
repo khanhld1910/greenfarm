@@ -3,8 +3,7 @@ import { Storage } from '@ionic/storage'
 import { Events } from 'ionic-angular';
 import { MyDbProvider } from './my-db';
 import { Observable } from 'rxjs/Rx';
-import { SingleBill } from '../interfaces/bill';
-import { MyToastProvider } from './my-toast';
+import { User } from '../interfaces/user';
 
 @Injectable()
 export class UserDataProvider {
@@ -12,14 +11,15 @@ export class UserDataProvider {
   constructor(
     private storage: Storage,
     private events: Events,
-    private db: MyDbProvider,
-    private myToastProvider: MyToastProvider,
+    private db: MyDbProvider
   ) { }
 
-  deliverTime: string
   hasSeenTutorial: boolean
   hasLoggedIn: boolean
   userPhone: string
+  address: string
+  deliverTime: string
+  userProfile: User
 
   presetData() {
     return Observable.forkJoin(
@@ -27,7 +27,7 @@ export class UserDataProvider {
       // in userdata provider for lately use (in it's variables)
       this.checkHasSeenTutorial(),
       this.checkHasLoggedIn(),
-      this.getPhoneNumber()
+      this.getPhoneNumber(),
     )
   }
 

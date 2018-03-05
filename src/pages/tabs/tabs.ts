@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavParams, Tabs, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, Tabs } from 'ionic-angular';
 import { UserDataProvider } from '../../providers/user-data';
-import { MyToastProvider } from '../../providers/my-toast';
 
 @IonicPage()
 @Component({
@@ -19,8 +18,6 @@ export class TabsPage {
   constructor(
     navParams: NavParams,
     private userData: UserDataProvider,
-    private myToastProvider: MyToastProvider,
-    private nav: NavController
   ) {
     this.mySelectedIndex = navParams.data.tabIndex || 0
 

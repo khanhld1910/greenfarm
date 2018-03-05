@@ -1,4 +1,7 @@
 cart {
+    .cart-list-wrapper {
+        padding-bottom: 190px;
+    }
     .datetime-text {
         color: #888888;
     }
@@ -7,9 +10,15 @@ cart {
     .name {
         padding: 0px;
     }
+    .remove-icon {
+        padding: 0 5px;
+    }
     .cart-product {
-        padding: 10px 0 15px;
+        padding: 5px 0 10px;
         border-bottom: 1px solid #888;
+        &.total {
+            border: none;
+        }
         .product--name {
             color: color($colors, primary);
         }
@@ -67,6 +76,7 @@ cart {
         box-shadow: 0 0 4px rgba(0, 0, 0, 0.11);
         box-sizing: border-box;
         width: 100%;
+        max-height: 190px;
         background-color: #fff;
         position: absolute;
         bottom: 56px;

@@ -76,15 +76,15 @@
             <h3 class="oldPrice">{{product.oldPrice | number : fractionSize}} đ</h3>
           </ion-col>
           <ion-col align-self-center text-right>
-            <h3 
-              id="btn-add-to-cart" 
-              [class]="product.saleOff ? 'sale-off newPrice' : 'newPrice' "
-              (tap)="addToCartOpt(product)">
-              <ion-icon name="cart"></ion-icon>
+            <h3 class="newPrice">
               {{product.unitPrice | number : fractionSize}} đ
             </h3>
           </ion-col>
         </ion-row>
+        <button ion-button outline full (tap)="addToCartOpt(product)" id="btn-add-to-cart">
+          <ion-icon name="cart"></ion-icon>
+          <span>&nbsp;Thêm vào giỏ</span>
+        </button>
       </ion-card-content>
       <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
       </ng-container>

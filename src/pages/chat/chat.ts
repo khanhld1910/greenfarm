@@ -27,7 +27,6 @@ export class ChatPage {
     private myDBProvider: MyDbProvider,
     private userDataProvider: UserDataProvider,
     private myToast: MyToastProvider,
-    private events: Events,
   ) {
   }
 

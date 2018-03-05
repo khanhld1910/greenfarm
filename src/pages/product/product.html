@@ -38,11 +38,11 @@
 
 <ion-footer no-border no-shadow>
   <ion-toolbar>
-    <ion-row align-items-center>      
-      <ion-col>
+    <ion-row align-items-center>
+      <ion-col style="padding: 0 10px">
         <button id="add-to-card__button" ion-button full outline icon-left (tap)="addToCart()">
           <ion-icon name="cart"></ion-icon>
-          Thêm vào giỏ hàng
+          {{product.unitPrice| number : fractionSize}} đ
         </button>
       </ion-col>
     </ion-row>

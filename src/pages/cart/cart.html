@@ -9,48 +9,83 @@
 
 
 <ion-content padding>
-    <div class="cart-product">
+  <div class="cart-list-wrapper">
+    <div *ngFor="let bill of cartBills; let i = index" class="cart-product">
       <ion-row align-items-center>
-        <ion-col class="name">
-          <h3 class="product--name">Surprise Candy Fiddlesticks</h3>
+        <ion-col col-10 class="name">
+          <h3 class="product--name">
+            {{i+1}}<span>.&nbsp;</span>{{bill.productName}}
+            <ion-badge item-end color="facebook">{{bill.quantity}}</ion-badge>
+          </h3>
+        </ion-col>
+        <ion-col col-2 class="name" text-right>
+          <ion-icon class="remove-icon" name="close-circle" color="google" (tap)="removeBill(bill)"></ion-icon>
         </ion-col>
       </ion-row>
       <ion-row align-items-center>
-        <ion-col class="name">
-          <h3 text-left class="product--unit-price">{{21000 | number : fractionSize}} đ</h3>
+        <ion-col col-3 class="product--cost single" style="padding-right: 5px;">
+          {{bill.unitPrice | number : fractionSize}} đ
         </ion-col>
-      </ion-row>
-      <ion-row align-items-center>
-        <span ion-col col-2 class="quantity-control myBtn" (tap)="quantityChange(-1)">
-          <ion-icon name="remove"></ion-icon>
-        </span>
-        <span ion-col col-2 class="quantity-box">
-          5
-        </span>
-        <span ion-col col-2 class="quantity-control myBtn" (tap)="quantityChange(1)">
-          <ion-icon name="add"></ion-icon>
-        </span>
-        <ion-col col-6 class="product--cost" style="padding-left: 10px;">
-          {{203000 | number : fractionSize}} đ
+        <ion-col col-1 text-left>
+          x          
+        </ion-col>
+        <ion-col col-1 class="quantity-control" (tap)="quantityChange(i, -1)">
+          <ion-icon name="arrow-round-down"></ion-icon>
+        </ion-col>
+        <ion-col col-2 class="quantity-box">
+          {{bill.quantity}}
+        </ion-col>
+        <ion-col col-1 class="quantity-control" (tap)="quantityChange(i, 1)">          
+            <ion-icon name="arrow-round-up"></ion-icon>
+        </ion-col>
+        <ion-col col-1 text-right>
+          =          
+        </ion-col>
+        <ion-col col-3 class="product--cost" style="padding-left: 5px;">
+          {{bill.unitPrice * bill.quantity | number : fractionSize}} đ
         </ion-col>
       </ion-row>
     </div>
+    <div class="cart-product total">
+      <ion-row align-items-center>
+        <ion-col class="name">
+          <h3 class="product--name" text-left>
+            Tổng cộng:
+          </h3>
+        </ion-col>
+        <ion-col class="name">
+          <h3 class="product--name" text-right>
+            {{totalCost | number : fractionSize}} đ
+          </h3>
+        </ion-col>
+      </ion-row>
+    </div>
+  </div>
 </ion-content>
 
-<div id="invoice-info-box">
+<form #requestBill="ngForm" novalidate id="invoice-info-box">
   <ion-list>
     <ion-item>
-      <ion-input placeholder="địa chỉ nhận hàng" clearInput></ion-input>
+      <ion-input minlength="15" spellcheck="false" autocapitalize="off" required name="address" #address="ngModel" placeholder="địa điểm" clearInput
+        [(ngModel)]="req.address">
+      </ion-input>
     </ion-item>
     <ion-item>
-      <ion-label>thời gian nhận hàng</ion-label>
-      <ion-datetime displayFormat="DD/MM/YYYY, HH:mm" min="2016" max="2020-10-31" [(ngModel)]="myDate">
+      <ion-label>&nbsp;&nbsp;thời gian</ion-label>
+      <ion-datetime [(ngModel)]="time" cancelText="Hủy bỏ" doneText="Đồng ý" name="time" displayFormat="DD/MM/YYYY HH:mm" pickerFormat="DD MMMM YYYY HH:mm"
+        [min]="min" [max]="max" minuteValues="00, 15, 30, 45" hourValues="08, 09, 10, 14, 15, 16" monthNames="T.Một, T.Hai, T.Ba, T.Bốn, T.Năm, T.Sáu, T.Bảy, T.Tám, T.Chín, T.Mười, T.Mười Một, T.Mười Hai">
       </ion-datetime>
     </ion-item>
+    <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>
+      Địa chỉ giao hàng không hợp lệ!
+    </p>
+    <p ion-text *ngIf="formMessage" color="danger" padding-left>
+      {{formMessage}}
+    </p>
     <ion-item>
-      <button style="height: 50px;" ion-button block outline>
-        Đồng ý đặt hàng
+      <button style="height: 50px;" ion-button full (tap)="confirmInvoice(requestBill)">
+        đặt hàng
       </button>
     </ion-item>
   </ion-list>
-</div>
+</form>
