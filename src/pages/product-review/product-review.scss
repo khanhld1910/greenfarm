@@ -1,0 +1,30 @@
+product-review {
+    .col {
+        padding: 0px !important;
+    }
+    .primary-text {
+        color: color($colors, primary) !important;
+    }
+    #review-box {
+        position: absolute;
+        width: 100%;
+        left: 0px;
+        bottom: 0px;
+        z-index: 999;
+        background-color: #fff;
+        border-top: 1px solid rgba(0, 0, 0, 0.17);
+    }
+    ion-textarea {
+        margin: 10px 0;
+        border: 1px solid rgba(0, 0, 0, 0.17);
+    }
+    .star {
+        margin-right: 5px;
+    }
+    .rating-review {
+        text-align: left;
+    }
+    .my-ion-list {
+        padding-bottom: 200px;
+    }
+}

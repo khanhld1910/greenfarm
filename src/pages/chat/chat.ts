@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, App, Content, Loading, Events } from 'ionic-angular';
+import { IonicPage, NavController, App, Content, Loading} from 'ionic-angular';
 import { CustomMessage } from '../../interfaces/message';
 import { MyDbProvider } from '../../providers/my-db';
 import { UserDataProvider } from '../../providers/user-data';
@@ -42,6 +42,7 @@ export class ChatPage {
       .subscribe(value => {
         if (!this.showedMessages || this.showedMessages.length == 0) {
           this.showedMessages = value
+          this.allMessagesLoaded = (this.showedMessages.length < 5)
         } else {
           let lastReceiveMsg = value.slice(-1)[0]
           let lastShowedMsg = this.showedMessages.slice(-1)[0]
@@ -90,7 +91,6 @@ export class ChatPage {
   viewMore() {
 
     let oldestMessageHasShowed = this.showedMessages[0]
-    console.log(oldestMessageHasShowed.content)
     this._loading = this.myToast.performLoading('Đang tải ...')
     this.myDBProvider
       .getAnother5Messages(this.userDataProvider.userPhone, oldestMessageHasShowed.time - 1)

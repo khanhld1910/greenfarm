@@ -4,8 +4,10 @@ export interface Product {
     unitPrice: number,
     image: string,
     describe?: string,
-    rating?: [any],
+    ratings?: [{value: number}]
     amount: number,
     saleOff?: boolean,
-    oldPrice?: number  
+    oldPrice?: number,  
 }
+
+

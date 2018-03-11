@@ -1,14 +1,5 @@
-<ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Đăng nhập</ion-title>
-  </ion-navbar>
-</ion-header>
-
-<ion-content>
-  <div ion-fixed style="width: 100%;">
+<ion-content >
+  <div ion-fixed style="width: 100%; padding: 10vh 16px;;">
     <div class="logo">
       <img src="assets/imgs/appicon.svg" alt="Ionic logo">
     </div>
@@ -16,13 +7,13 @@
     <form #loginForm="ngForm" novalidate>
       <ion-list>
         <ion-item>
-          <ion-label color="primary">Phone</ion-label>
-          <ion-input [(ngModel)]="login.phone" name="phone" type="number" #phone="ngModel" spellcheck="false" autocapitalize="off"
+          <ion-label color="primary">phone</ion-label>
+          <ion-input [(ngModel)]="login.phone" minlength="10" maxlength="12" name="phone" type="number" #phone="ngModel" spellcheck="false" autocapitalize="off"
             required clearInput placeholder="số điện thoại">
           </ion-input>
         </ion-item>
         <p ion-text [hidden]="phone.valid || submitted == false" color="danger" padding-left>
-          Chưa điền số điện thoại
+          số điện thoại không hợp lệ
         </p>
         <p ion-text *ngIf="formMessage" color="danger" padding-left>
           {{formMessage}}

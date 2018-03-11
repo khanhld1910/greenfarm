@@ -4,6 +4,7 @@ import { Events } from 'ionic-angular';
 import { MyDbProvider } from './my-db';
 import { Observable } from 'rxjs/Rx';
 import { User } from '../interfaces/user';
+import { Product } from '../interfaces/products';
 
 @Injectable()
 export class UserDataProvider {
@@ -57,6 +58,10 @@ export class UserDataProvider {
     return this.db.getUserInfo(phone)
   }
 
+  setUserInfo(user: User) {
+    return this.db.setUserInfo(user)
+  }
+
   logout(): Promise<any> {
     let hasSeenTutorial = this.hasSeenTutorial
     this.userPhone = null
@@ -86,9 +91,46 @@ export class UserDataProvider {
       .map(array => array.length)
   }
 
+  getSentBadge() {
+    //console.log(this.userPhone)
+    return this.db
+      .getSentList(this.userPhone)
+      .map(array => array.length)
+  }
+
   getCartBills() {
     return this.db
       .userGetCartBills(this.userPhone)
   }
+
+  lessThan10Format(number: number) {
+    return number < 10 ? '0' + number : number
+  }
+
+  formatUserPhoneForDisplaying(phone: string) {
+    let head = phone.slice(0, -6)
+    let tail = phone.slice(-3)
+    return `${head}***${tail}`
+  }
+
+  averageRate(product: Product) {
+
+    let ratings = product['ratings']
+
+    if (!ratings || ratings.length < 1) {
+      return 3
+    }   
+
+    let sum: number = 0
+    let num: number = 0
+    for (let key in ratings) {
+      // skip loop if the property is from prototype
+      if (!ratings.hasOwnProperty(key)) continue
+      sum += ratings[key].value
+      num ++
+    }    
+    return (Math.round(sum*10/num))/10
+  }
+
 
 }

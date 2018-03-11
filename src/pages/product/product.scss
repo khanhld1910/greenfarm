@@ -6,6 +6,10 @@ product {
         img {
             width: 100%;
             height: auto;
+            object-fit: fill;    
+        }
+        &.out-of-stock img {
+            opacity: 0.4;
         }
     }
     .quantity-control,
@@ -31,6 +35,19 @@ product {
     .quantity-box {
         border-left: solid red 0px;
         border-right: solid red 0px;
+    }
+    .span-value {
+        color: #666;
+    }
+    #btn-review {
+        border: 1px solid rgba(0, 0, 0, 0.17);
+        padding: 5px 8px;
+        border-radius: 2px;
+        box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        color: #666;
+        &:active {
+            border: #666 1px solid;
+        }
     }
 
     ion-footer {

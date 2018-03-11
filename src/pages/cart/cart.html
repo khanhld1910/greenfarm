@@ -14,7 +14,8 @@
       <ion-row align-items-center>
         <ion-col col-10 class="name">
           <h3 class="product--name">
-            {{i+1}}<span>.&nbsp;</span>{{bill.productName}}
+            {{i+1}}
+            <span>.&nbsp;</span>{{bill.productName}}
             <ion-badge item-end color="facebook">{{bill.quantity}}</ion-badge>
           </h3>
         </ion-col>
@@ -27,19 +28,19 @@
           {{bill.unitPrice | number : fractionSize}} đ
         </ion-col>
         <ion-col col-1 text-left>
-          x          
+          x
         </ion-col>
         <ion-col col-1 class="quantity-control" (tap)="quantityChange(i, -1)">
-          <ion-icon name="arrow-round-down"></ion-icon>
+          -
         </ion-col>
         <ion-col col-2 class="quantity-box">
           {{bill.quantity}}
         </ion-col>
-        <ion-col col-1 class="quantity-control" (tap)="quantityChange(i, 1)">          
-            <ion-icon name="arrow-round-up"></ion-icon>
+        <ion-col col-1 class="quantity-control" (tap)="quantityChange(i, 1)">
+          +
         </ion-col>
         <ion-col col-1 text-right>
-          =          
+          =
         </ion-col>
         <ion-col col-3 class="product--cost" style="padding-left: 5px;">
           {{bill.unitPrice * bill.quantity | number : fractionSize}} đ
@@ -55,7 +56,7 @@
         </ion-col>
         <ion-col class="name">
           <h3 class="product--name" text-right>
-            {{totalCost | number : fractionSize}} đ
+            {{getTotalCost() | number : fractionSize}} đ
           </h3>
         </ion-col>
       </ion-row>
@@ -66,26 +67,13 @@
 <form #requestBill="ngForm" novalidate id="invoice-info-box">
   <ion-list>
     <ion-item>
-      <ion-input minlength="15" spellcheck="false" autocapitalize="off" required name="address" #address="ngModel" placeholder="địa điểm" clearInput
-        [(ngModel)]="req.address">
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label>&nbsp;&nbsp;thời gian</ion-label>
+      <ion-label>&nbsp;&nbsp;ngày nhận</ion-label>
       <ion-datetime [(ngModel)]="time" cancelText="Hủy bỏ" doneText="Đồng ý" name="time" displayFormat="DD/MM/YYYY HH:mm" pickerFormat="DD MMMM YYYY HH:mm"
         [min]="min" [max]="max" minuteValues="00, 15, 30, 45" hourValues="08, 09, 10, 14, 15, 16" monthNames="T.Một, T.Hai, T.Ba, T.Bốn, T.Năm, T.Sáu, T.Bảy, T.Tám, T.Chín, T.Mười, T.Mười Một, T.Mười Hai">
       </ion-datetime>
     </ion-item>
-    <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>
-      Địa chỉ giao hàng không hợp lệ!
-    </p>
-    <p ion-text *ngIf="formMessage" color="danger" padding-left>
-      {{formMessage}}
-    </p>
-    <ion-item>
-      <button style="height: 50px;" ion-button full (tap)="confirmInvoice(requestBill)">
-        đặt hàng
-      </button>
-    </ion-item>
   </ion-list>
+  <button style="height: 50px; margin: 0px;" ion-button full (tap)="confirmInvoice(requestBill)">
+    đặt hàng
+  </button>
 </form>

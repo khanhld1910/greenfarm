@@ -1,28 +1,33 @@
 <ion-header>
   <ion-navbar>
     <ion-title>{{product.name}}</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only (tap)="dismiss()" color="light">
-        <ion-icon name="close"></ion-icon>
-      </button>
-    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content padding>
-  <ion-img [src]="product.image"></ion-img>
+  <ion-img [class]="product.amount < 1 ? 'out-of-stock' : ''" [src]="product.image">
+
+  </ion-img>
   <ion-list class="my-ion-list">
     <ion-item>
-      <h2 class="oldPrice" *ngIf="product.oldPrice">{{product.oldPrice | number : fractionSize}} đ</h2>
-      <h2 item-end class="newPrice" (tap)="openProduct(product)">{{product.unitPrice | number : fractionSize}} đ</h2>
+      <h2 class="newPrice">
+        <span class="oldPrice" *ngIf="product.oldPrice">{{product.oldPrice | number : fractionSize}} đ</span>
+        <span>&nbsp;{{product.unitPrice | number : fractionSize}} đ</span>
+      </h2>
+      <h3 item-end>
+        Hiện có:&nbsp;
+        <span class="span-value">{{product.amount}}</span>
+      </h3>
     </ion-item>
     <ion-item>
-      <h3>Đánh giá: 4.2
-        <ion-icon color="yellow" name="star"></ion-icon>
+      <h3>Đánh giá:&nbsp;
+        <span class="span-value">{{getAverageRate(product)}}</span>
+        <ion-icon color="google" name="star"></ion-icon>
       </h3>
-      <h3 item-end>
-        Hiện có: {{product.amount}}
+      <h3 item-end id="btn-review" (tap)="openReview()">
+        <ion-icon name="md-create"></ion-icon>
+        Bình luận
       </h3>
     </ion-item>
     <ion-item>
@@ -34,15 +39,16 @@
       </p>
     </ion-item>
   </ion-list>
+
 </ion-content>
 
 <ion-footer no-border no-shadow>
   <ion-toolbar>
     <ion-row align-items-center>
       <ion-col style="padding: 0 10px">
-        <button id="add-to-card__button" ion-button full outline icon-left (tap)="addToCart()">
+        <button id="add-to-card__button" ion-button full outline icon-left data-tap-disabled="true" (tap)="addToCart()">
           <ion-icon name="cart"></ion-icon>
-          {{product.unitPrice| number : fractionSize}} đ
+          MUA NGAY
         </button>
       </ion-col>
     </ion-row>

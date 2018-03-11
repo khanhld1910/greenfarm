@@ -24,11 +24,18 @@ export class TabsPage {
   }
 
   cartBadge: number = 0
+  sentBadge: number = 0
   ionViewDidEnter() {
     setTimeout(() => {
       this.userData
+        .getSentBadge()
+        .subscribe(value => this.sentBadge = value)
+
+      this.userData
         .getCartBadge()
         .subscribe(value => this.cartBadge = value)
+
+
     }, 1000)
   }
 

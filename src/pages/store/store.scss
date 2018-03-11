@@ -104,11 +104,14 @@ page-store {
             float: left;
             position: relative;
             min-width: 160px !important;
-            margin: 10px !important;
+            margin: 10px !important;     
             img {
                 width: 100%;
                 height: 120px !important;
-                object-fit: fill;
+                object-fit: fill;       
+                &.out-of-stock {
+                    opacity: 0.4;
+                }
             }
             ion-card-content {
                 padding: 10px;

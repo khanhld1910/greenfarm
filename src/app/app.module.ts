@@ -12,21 +12,27 @@ import { firebaseConfig } from '../environment'
 import { AngularFireDatabaseModule } from 'angularfire2/database'
 import { MyToastProvider } from '../providers/my-toast';
 import { MyDbProvider } from '../providers/my-db';
+import { ProductReviewPage } from '../pages/product-review/product-review';
+import { TimesPipe } from '../pipes/custom-loop';
+
 
 @NgModule({
   declarations: [
     MyApp,
+    ProductReviewPage,
+    TimesPipe
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
+    ProductReviewPage
   ],
   providers: [
     StatusBar,
@@ -35,6 +41,7 @@ import { MyDbProvider } from '../providers/my-db';
     UserDataProvider,
     MyToastProvider,
     MyDbProvider,
+    TimesPipe
   ]
 })
 export class AppModule { }

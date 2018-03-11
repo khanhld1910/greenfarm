@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core'
 import { IonicPage, NavController, Slides, MenuController } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
+import { UserDataProvider } from '../../providers/user-data';
 
 @IonicPage({
   name: 'IntroPage'
@@ -18,15 +19,13 @@ export class IntroducePage {
   constructor(
     public navCtrl: NavController,
     public menu: MenuController,
-    public storage: Storage
+    public storage: Storage,
+    private userData: UserDataProvider
   ) { }
 
   startApp() {
-    this.navCtrl.setRoot('TabsPage').then(
-      () => {
-        this.storage.set('hasSeenTutorial', true)
-      }
-    )
+    let root = this.userData.hasLoggedIn ? 'TabsPage' : 'LoginPage'
+    this.navCtrl.setRoot(root).then(() => this.storage.set('hasSeenTutorial', true))
   }
 
   onSlideChangeStart(slider: Slides) {

@@ -49,12 +49,10 @@ export class LoginPage {
               duration: 2000,
               cssClass: 'toast-info'
             },
-            () => this.navCtrl.pop()
+            () => this.navCtrl.setRoot('TabsPage')
           )
         },
-        err => {
-          this.formMessage = err.message
-        }
+        err => this.formMessage = err.message
       )
 
   }

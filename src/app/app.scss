@@ -217,7 +217,8 @@ h3 {
     z-index: 999;
 }
 
-ion-toast.toast-info .toast-wrapper {
+ion-toast.toast-info .toast-wrapper,
+ion-toast.toast-primary .toast-wrapper {
     background-color: darken(color($colors, primary), 25%) !important;
 }
 
@@ -242,6 +243,7 @@ ion-toast.toast-danger .toast-wrapper {
     border-radius: 0;
     border: 0px;
 }
+
 // custom loading
 @keyframes rotating {
     from {
@@ -262,9 +264,11 @@ ion-toast.toast-danger .toast-wrapper {
         left: calc(50% - 20px);
     }
 }
+
 .rotating {
     animation: rotating 2s linear infinite;
 }
+
 .shaking {
     animation: shaking 2s ease-in-out alternate infinite;
 }
@@ -275,6 +279,7 @@ ion-toast.toast-danger .toast-wrapper {
     display: block;
     background: transparent url('../assets/bananas.svg') no-repeat center center;
 }
+
 .my-custom-loading {
     position: relative;
     .my-custom-spinner {
@@ -288,6 +293,15 @@ ion-toast.toast-danger .toast-wrapper {
         padding-top: 10px;
         color: #FFF;
     }
+}
+
+.paragraph-end {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+    bottom: 0 !important;
+    height: 25px;
+    max-height: 100%;
+    position: absolute;
+    right: 0;
 }
 
 // z-indexes--------->

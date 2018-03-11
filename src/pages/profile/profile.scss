@@ -1,3 +1,23 @@
 profile {
+    ::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: color($colors, primary) !important;
+        opacity: 1 !important;
+        /* Firefox */
+    }
 
+    textarea.text-input {
+        margin: 0px;
+        padding: 13px 0px;
+    }
+    
+    input.text-input {
+        margin: 0px;
+        padding: 10px 0px 0px;
+        text-align: right;
+    }
+
+    form {
+        margin: 50px 0 20px;
+    }
 }

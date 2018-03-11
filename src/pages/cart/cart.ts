@@ -16,11 +16,9 @@ import { Product } from '../../interfaces/products';
 export class CartPage {
 
   cartBills: SingleBill[]
-  totalCost: number
   req: { address: string } = { address: '' }
   time: string
   submitted = false
-  formMessage: string
   userInfo: User
   allProducts: Product[]
 
@@ -29,6 +27,7 @@ export class CartPage {
     private userData: UserDataProvider,
     private myToasProvider: MyToastProvider
   ) {
+    this.cartBills = []
   }
 
   ionViewDidLoad() {
@@ -38,7 +37,6 @@ export class CartPage {
       .userGetCartBills(this.userData.userPhone)
       .subscribe(cartBills => {
         this.cartBills = cartBills
-        this.totalCost = 0
         loading.dismiss()
       })
 
@@ -53,7 +51,7 @@ export class CartPage {
       .first()
       .subscribe(info => {
         this.userInfo = info
-        this.req.address = this.userInfo.address || null
+        this.req.address = this.userInfo.address[.0] || null
       })
 
     this.setTimeRange()
@@ -76,21 +74,17 @@ export class CartPage {
     let max = new Date(maxUnix)
 
     if (now.getHours() < 11) {
-      this.min = `${min.getFullYear()}-${this.lessThan10Format(min.getMonth() + 1)}-${this.lessThan10Format(min.getDate())}T14:00`
+      this.min = `${min.getFullYear()}-${this.userData.lessThan10Format(min.getMonth() + 1)}-${this.userData.lessThan10Format(min.getDate())}T14:00`
     } else {
-      this.min = `${min.getFullYear()}-${this.lessThan10Format(tomorrow.getMonth() + 1)}-${this.lessThan10Format(tomorrow.getDate())}T08:00`
+      this.min = `${min.getFullYear()}-${this.userData.lessThan10Format(tomorrow.getMonth() + 1)}-${this.userData.lessThan10Format(tomorrow.getDate())}T08:00`
     }
-    this.max = `${max.getFullYear()}-${this.lessThan10Format(max.getMonth() + 1)}-${this.lessThan10Format(max.getDate())}`
+    this.max = `${max.getFullYear()}-${this.userData.lessThan10Format(max.getMonth() + 1)}-${this.userData.lessThan10Format(max.getDate())}`
 
   }
 
   sentTime() {
     let now = new Date()
-    return `${now.getFullYear()}-${this.lessThan10Format(now.getMonth() + 1)}-${this.lessThan10Format(now.getDate())}T${this.lessThan10Format(now.getHours())}:${this.lessThan10Format(now.getMinutes())}`
-  }
-
-  lessThan10Format(number: number) {
-    return number < 10 ? '0' + number : number
+    return `${now.getFullYear()}-${this.userData.lessThan10Format(now.getMonth() + 1)}-${this.userData.lessThan10Format(now.getDate())}T${this.userData.lessThan10Format(now.getHours())}:${this.userData.lessThan10Format(now.getMinutes())}`
   }
 
   removeBill(bill: SingleBill) {
@@ -125,7 +119,7 @@ export class CartPage {
       // update address to profile
       this.myDBProvider.updateUserInfo({
         phone: this.userData.userPhone,
-        address: this.req.address
+        address: [this.req.address]
       })
       console.log(this.req.address)
     }
@@ -137,7 +131,7 @@ export class CartPage {
         this.userData.userPhone,
         this.time,
         this.sentTime(),
-        this.totalCost,
+        this.getTotalCost(),
         this.req.address
       )
       .subscribe(success => {
@@ -145,14 +139,22 @@ export class CartPage {
           .myToast({
             message: 'Yêu cầu đặt hàng thành công!',
             duration: 1500,
-            position: 'button',
-            cssClass: 'toast-primary'
+            position: 'top',
+            cssClass: 'toast-info'
           }, () => {
-            this.totalCost = 0
             this.cartBills = []
           })
       })
 
+  }
+
+  getTotalCost() {
+    let total = 0
+    for (let i = 0; i < this.cartBills.length; i++) {
+      let bill = this.cartBills[i]
+      total += bill.unitPrice * bill.quantity
+    }
+    return total
   }
 
   quantityChange(indexInArray: number, value: number) {
@@ -171,11 +173,10 @@ export class CartPage {
 
     if (value > 0 && y.quantity == thisProductAmount) {
       // do nothing
-    } else if (value < 0 && y.quantity == 0) {
+    } else if (value < 0 && y.quantity == 1) {
       // do nothing
     } else {
       y.quantity = +y.quantity + +value
-      this.totalCost = +this.totalCost + +value * y.unitPrice
       //console.log(y.quantity, value)
     }
   }

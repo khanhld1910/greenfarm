@@ -55,16 +55,17 @@
       </ng-container>
   </h2>
   <div class="products-list">
-    <ion-card class="product-card" *ngFor="let product of showedProducts">
-      <img [src]="product.image" (tap)="openProduct(product)" />
+    <ion-card *ngFor="let product of showedProducts" class="product-card">
+      <img [class]="product.amount == 0 ? 'out-of-stock' : ''" [src]="product.image" (tap)="openProduct(product)" />
       <ion-card-content>
         <ion-card-title>
           {{product.name}}
         </ion-card-title>
         <ion-row>
           <ion-col align-self-center>
-            <p>4.2
-              <ion-icon color="yellow" name="star"></ion-icon>
+            <p>
+              {{getAverageRate(product)}}
+              <ion-icon color="google" name="star"></ion-icon>
             </p>
           </ion-col>
           <ion-col align-self-center text-right>
@@ -81,19 +82,19 @@
             </h3>
           </ion-col>
         </ion-row>
-        <button ion-button outline full (tap)="addToCartOpt(product)" id="btn-add-to-cart">
+        <button ion-button outline full (tap)="addToCartOpt(product)" data-tap-disabled="true" id="btn-add-to-cart">
           <ion-icon name="cart"></ion-icon>
-          <span>&nbsp;Thêm vào giỏ</span>
+          <span>&nbsp;Mua ngay</span>
         </button>
       </ion-card-content>
       <ng-container *ngIf="isFavoriteProduct(product.id);then favorite else not_favorite">
       </ng-container>
       <ng-template #favorite>
-        <ion-icon *ngIf="userData.hasLoggedIn" name="heart" class="product-favorite favorite" (tap)="addToFavorite(product.id, false)">
+        <ion-icon *ngIf="userData.hasLoggedIn" name="heart" class="product-favorite favorite" data-tap-disabled="true" (tap)="addToFavorite(product.id, false)">
         </ion-icon>
       </ng-template>
       <ng-template #not_favorite>
-        <ion-icon *ngIf="userData.hasLoggedIn" name="heart-outline" class="product-favorite" (tap)="addToFavorite(product.id, true)">
+        <ion-icon *ngIf="userData.hasLoggedIn" name="heart-outline" class="product-favorite" data-tap-disabled="true" (tap)="addToFavorite(product.id, true)">
         </ion-icon>
       </ng-template>
 

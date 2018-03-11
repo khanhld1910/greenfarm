@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{product.name}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (tap)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list class="my-ion-list">
+    <ion-item *ngFor="let rating of ratings; let i = index">
+
+      <ion-row>
+        <h3 ion-col text-left>
+          {{formatPhoneNumber(rating.userID)}}
+        </h3>
+        <h4 class="primary-text" ion-col text-right>
+          {{getTime(-rating.time)}}
+        </h4>
+      </ion-row>
+      <h4 text-left>
+        <ion-icon *ngFor="let i of 5 | loop" name="star" [color]="checkStar(i, rating.rate) ? 'google' : 'star-dark'" class="star">
+        </ion-icon>
+      </h4>
+      <p class="rating-review">
+        {{rating.review}}
+      </p>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+
+<div padding id="review-box">
+  <h2>
+    <ion-icon *ngFor="let i of 5 | loop" name="star" [color]="checkStar(i, myRating.rate) ? 'google' : 'star-dark'" class="star"
+      data-tap-disabled="true" (tap)="setRate(i)">
+    </ion-icon>
+  </h2>
+  <ion-textarea minlength="0" required maxlength="350" autocorrect="off" [(ngModel)]="myRating.review" autosize placeholder="đánh giá của bạn?">
+  </ion-textarea>
+  <button ion-button block (tap)="rating()" data-tap-disabled="true">Bình luận</button>
+</div>

@@ -1,18 +1,65 @@
-<!--
-  Generated template for the ProfilePage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
 
   <ion-navbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Hồ sơ</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <form #userForm="ngForm" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">Điện thoại</ion-label>
+        <ion-input readonly [(ngModel)]="user.phone" minlength="10" maxlength="12" name="phone" type="number" #phone="ngModel" spellcheck="false"
+          required>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">Họ tên</ion-label>
+        <ion-input [(ngModel)]="user.name" minlength="2" maxlength="30" name="name" type="text" #name="ngModel" spellcheck="false"
+          autocapitalize="on" required>
+        </ion-input>
+      </ion-item>
+      <p ion-text [hidden]="name.valid || submitted == false" color="danger" padding-left>
+        Họ tên không hợp lệ
+      </p>
+      <ion-item>
+        <ion-label color="primary">Giới tính</ion-label>
+        <ion-select required [(ngModel)]="user.isMale" name="isMale" #isMale="ngModel">
+          <ion-option value="true">Nam</ion-option>
+          <ion-option value="false">Nữ</ion-option>
+        </ion-select>
+      </ion-item>
+      <p ion-text [hidden]="isMale.valid || submitted == false" color="danger" padding-left>
+        Vui lòng chọn giới tính
+      </p>
+      <ion-item>
+        <ion-label color="primary">Độ tuổi</ion-label>
+        <ion-select required [(ngModel)]="user.age" name="age" #age="ngModel">
+          <ion-option value="1">Dưới 16</ion-option>
+          <ion-option value="2">16 - 25</ion-option>
+          <ion-option value="3">26 - 45</ion-option>
+          <ion-option value="4">Trên 46</ion-option>
+        </ion-select>
+      </ion-item>
+      <p ion-text [hidden]="age.valid || submitted == false" color="danger" padding-left>
+        Vui lòng chọn độ tuổi
+      </p>
+      <ion-item>
+        <ion-textarea minlength="10" required maxlength="50" autocorrect="off" name="address" [(ngModel)]="user.address[.0]" #address="ngModel" autosize placeholder="Địa chỉ">
+          
+        </ion-textarea>
+      </ion-item>
+      <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>
+        Địa chỉ không hợp lệ
+      </p>
+      <p ion-text *ngIf="formMessage" color="danger" padding-left>
+        {{formMessage}}
+      </p>
+    </ion-list>
+    <button ion-button (tap)="updateProfile(userForm)" type="submit" block>Cập nhật</button>
+  </form>
 
 </ion-content>

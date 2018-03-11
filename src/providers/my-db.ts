@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core'
 import { AngularFireDatabase } from 'angularfire2/database';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx';
 import { Product } from '../interfaces/products';
 import { User } from '../interfaces/user';
 import { SingleBill, TotalBill } from '../interfaces/bill';
 import { CustomMessage } from '../interfaces/message';
+//import { FirebaseDatabase } from '@firebase/database-types';
+import * as firebase from 'firebase'
+import { Rating } from '../interfaces/rating';
 
 @Injectable()
 export class MyDbProvider {
+  fdb: firebase.database.Database
 
   constructor(
-    private afDB: AngularFireDatabase
-  ) { }
+    private afDB: AngularFireDatabase,
+  ) {
+    this.fdb = firebase.database()
+  }
 
   getProducts(searchQuery?: string): Observable<Product[]> {
     return this.afDB.list<Product>(
@@ -48,6 +54,13 @@ export class MyDbProvider {
 
   getUserInfo(phone: string): Observable<User> {
     return this.afDB.object<User>('Users/' + phone).valueChanges()
+  }
+
+  setUserInfo(user: User): Promise<void> {
+    //console.log (user)
+    return this.afDB
+      .object('Users/' + user.phone)
+      .update(user)
   }
 
   getFavoriteProductIDs(phone: string): Observable<{ id: string }[]> {
@@ -97,6 +110,51 @@ export class MyDbProvider {
       .remove(bill.id)
   }
 
+  updateProductAmoutAfterReturn(id: string, quantity: number) {
+    return this.fdb
+      .ref(`Products/${id}/amount`)
+      .transaction(amount => {
+        return amount + quantity
+      })
+  }
+
+  getBillsInTotalBill(invoice: TotalBill) {
+    return this.afDB
+      .list<SingleBill>(
+        `Invoices/sent/${invoice.userID}/`,
+        ref => ref.orderByChild('totalBillID').equalTo(invoice.id)
+      )
+      .valueChanges()
+  }
+
+  async removeInvoice(invoice: TotalBill) {
+
+    this.afDB
+      .list<TotalBill>(`Bills/${invoice.userID}/`)
+      .remove(invoice.id)
+
+    this.getBillsInTotalBill(invoice)
+      .first()
+      .subscribe(singleBills => {
+        let removeSentBills = {}
+        let updateProducts = []
+
+        for (let i = 0; i < singleBills.length; i++) {
+          let sentBill = singleBills[i]
+          let key = sentBill.id
+          removeSentBills[key] = null
+          updateProducts.push({ productID: sentBill.productID, amount: sentBill.quantity })
+        }
+
+        this.afDB.object(`Invoices/sent/${invoice.userID}`).update(removeSentBills)
+
+        for (let i = 0; i < updateProducts.length; i++) {
+          let update: { productID: string, amount: number } = updateProducts[i]
+          this.updateProductAmoutAfterReturn(update.productID, update.amount)
+        }
+      })
+  }
+
   updateProductAmount(productID: string, justHadBuy: number) {
     this.afDB
       .object<Product>('Products/' + productID)
@@ -105,7 +163,7 @@ export class MyDbProvider {
       .subscribe(product => {
         let oldAmount = product.amount
         let newAmount = oldAmount - justHadBuy
-        this.afDB.object<Product>('Products/' + productID).update({amount: newAmount})
+        this.afDB.object<Product>('Products/' + productID).update({ amount: newAmount })
       })
   }
 
@@ -120,7 +178,8 @@ export class MyDbProvider {
       status: 1,
       userID: phone,
       totalCost: totalCost,
-      address: address
+      address: address,
+      productName: []
     }
     //------------>
     var sentBills = {}
@@ -129,6 +188,8 @@ export class MyDbProvider {
 
     for (var i = 0; i < bills.length; i++) {
       bills[i].totalBillID = newKey
+
+      newBill.productName.push(bills[i].productName)
 
       sentBills[bills[i].id] = bills[i]
       //productUpdate
@@ -143,10 +204,31 @@ export class MyDbProvider {
         this.afDB.object('Invoices/sent/' + phone + '/').update(sentBills),
         // delete cart bills
         this.afDB.object('Invoices/cart/' + phone + '/').remove(),
-        // update products amount
-        // ------------------------------------------------>
-      )
+      // update products amount
+      // ------------------------------------------------>
+    )
 
+  }
+
+  getSentList(phone: string): Observable<TotalBill[]> {
+    return this.afDB.list<TotalBill>(
+      `Bills/${phone}/`,
+      ref => ref.orderByChild('status').equalTo(1)
+    ).valueChanges()
+  }
+
+  getCheckedList(phone: string): Observable<TotalBill[]> {
+    return this.afDB.list<TotalBill>(
+      `Bills/${phone}/`,
+      ref => ref.orderByChild('status').equalTo(2)
+    ).valueChanges()
+  }
+
+  getDoneList(phone: string): Observable<TotalBill[]> {
+    return this.afDB.list<TotalBill>(
+      `Bills/${phone}/`,
+      ref => ref.orderByChild('status').equalTo(3)
+    ).valueChanges()
   }
 
   getFirst5Messages(phone: string): Observable<CustomMessage[]> {
@@ -175,6 +257,33 @@ export class MyDbProvider {
 
   updateUserInfo(user: User): Promise<void> {
     return this.afDB.object<User>('Users/' + user.phone).update(user)
+  }
+
+  productRate(rating: Rating): Promise<boolean> {
+
+    let messageRef = this.afDB.object(`Ratings/${rating.productID}/${rating.userID}/`)
+
+    rating.time = - new Date().getTime()
+
+    let productRating = this.afDB.object(`Products/${rating.productID}/ratings/${rating.userID}`)
+
+    return Promise.all([
+      productRating.update({ value: rating.rate }),
+      messageRef.update(rating)
+    ])
+      .then(() => true)
+      .catch(err => false)
+  }
+
+  getUserRating(userID: string, productID: string): Observable<Rating> {
+    return this.afDB.object<Rating>(`Ratings/${productID}/${userID}/`).valueChanges()
+  }
+
+  getAllRatingsOfProduct(productID: string): Observable<Rating[]> {
+    return this.afDB.list<Rating>(
+      `Ratings/${productID}/`,
+      ref => ref.orderByChild('time')
+    ).valueChanges()
   }
 
 }

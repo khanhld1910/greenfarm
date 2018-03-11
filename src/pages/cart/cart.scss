@@ -70,18 +70,15 @@ cart {
         border-right: solid red 0px;
     }
     #invoice-info-box {
-        padding: 0 10px;
+        background: transparent;
+        padding: 10px;
         z-index: 9999;
-        padding-top: 10px;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.11);
         box-sizing: border-box;
         width: 100%;
         max-height: 190px;
-        background-color: #fff;
         position: absolute;
         bottom: 56px;
         left: 0px;
-        border-top: 1px solid #888888;
         ion-item,
         ion-item .item-inner,
         ion-item .item-inner ion-label,
@@ -92,5 +89,14 @@ cart {
         {
             margin: 10px 0 0 0;
         }
+        ion-list.list {
+            border: 1px solid #888;
+            border-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+    .text-input {
+        color: #888;
+        background-color: rgba(255, 255, 255, 0.3);
     }
 }

@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, Events } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Events, ModalController } from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { SingleBill } from '../../interfaces/bill';
 import { MyToastProvider } from '../../providers/my-toast';
+import { ProductReviewPage } from '../product-review/product-review';
+import { UserDataProvider } from '../../providers/user-data';
 
 @IonicPage(
   { name: 'ProductPage' }
@@ -18,7 +20,9 @@ export class ProductPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private events: Events,
-    private myToastProvider: MyToastProvider
+    private myToastProvider: MyToastProvider,
+    private modalCtrl: ModalController,
+    private userData: UserDataProvider
   ) {
     this.product = navParams.get('product')
   }
@@ -30,7 +34,7 @@ export class ProductPage {
       this.myToastProvider.myToast({
         message: 'Sản phẩm tạm thời chưa có!',
         duration: 1000,
-        position: 'bottom',
+        position: 'top',
         cssClass: 'toast-danger'
       })
       return
@@ -44,12 +48,23 @@ export class ProductPage {
       // userID will be set on StorePage
       productName: this.product.name,
       unitPrice: this.product.unitPrice,
-      quantity: 0
+      quantity: 1
     }
 
     this.events.publish('product:addToCart', bill)
   }
 
+  openReview() {
+    let profileModal = this.modalCtrl.create(ProductReviewPage, { product: this.product })
+    profileModal.present()
+    
+  }
+
+  getAverageRate(product: Product) {
+    return this.userData.averageRate(product)
+  }
+
 
 
 }
+

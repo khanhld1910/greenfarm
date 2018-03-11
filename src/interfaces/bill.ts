@@ -18,7 +18,8 @@ export interface TotalBill {
     totalCost: number,
     sentTime: string,
     deliverTime: string,
-    address: string
+    address: string,
+    productName: string[]
 }
 
 

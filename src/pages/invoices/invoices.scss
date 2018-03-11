@@ -17,5 +17,19 @@ invoices {
         &.done .item-inner ion-label {
             border-left: 5px solid color($colors, primary);
         }
+        ion-col {
+            padding: 0px;
+        }
+        .invoice--products {
+            overflow: hidden;
+            margin: 10px 0 0 0;
+            line-height: 1.4rem;
+            position: relative;
+            span.paragraph-end{
+                height: 2rem;
+                line-height: 1.4rem;
+                width: 50px;
+            }    
+        }
     }
 }

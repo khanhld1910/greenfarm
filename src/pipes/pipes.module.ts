@@ -1,8 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RelativeTime } from './relative-time';
 @NgModule({
-	declarations: [RelativeTime],
+	declarations: [
+		RelativeTime,
+	],
 	imports: [],
-	exports: [RelativeTime]
+	exports: [
+		RelativeTime,
+	]
 })
-export class PipesModule {}
+export class PipesModule {
+}

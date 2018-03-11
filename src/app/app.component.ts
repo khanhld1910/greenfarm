@@ -24,9 +24,9 @@ export class MyApp {
 
   appPages: PageInterface[] = [
     { title: 'Cửa hàng', name: 'TabsPage', tabComponent: 'StorePage', index: 0, icon: 'home' },
-    { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart', requireLoggedIn: true },
-    { title: 'Hóa đơn', name: 'TabsPage', tabComponent: 'InvoicesPage', index: 2, icon: 'paper', requireLoggedIn: true },
-    { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 3, icon: 'ios-chatbubbles', requireLoggedIn: true },
+    { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart' },
+    { title: 'Hóa đơn', name: 'TabsPage', tabComponent: 'InvoicesPage', index: 2, icon: 'paper' },
+    { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 3, icon: 'ios-chatbubbles' },
   ]
 
   loggedOutPages: PageInterface[] = [
@@ -54,7 +54,11 @@ export class MyApp {
     this.userData.presetData()
       .subscribe(([hasSeenTutorial, hasLoggedIn]) => {
         this.menuTrigger(hasLoggedIn)
-        this.rootPage = hasSeenTutorial ? 'TabsPage' : 'IntroPage'
+        if (!hasSeenTutorial) {
+          this.rootPage = 'IntroPage'
+        } else {
+          this.rootPage = hasLoggedIn ? 'TabsPage' : 'LoginPage'
+        }
         this.platformReady()
       })
     //--------------> end of the very important
@@ -86,18 +90,6 @@ export class MyApp {
 
   openPage(page: PageInterface) {
 
-    if (page.requireLoggedIn === true && !this.userData.hasLoggedIn) {
-      //require logged in pages
-      this.myToastProvider.myToast({
-        message: 'Đăng nhập để vào mục này',
-        duration: 2000,
-        position: 'bottom',
-        cssClass: 'toast-danger',
-      })
-      this.nav.push('LoginPage')
-      return false
-    }
-
     if (this.nav.getActiveChildNavs()[0].name != 'tabs' && this.nav.getActiveChildNavs()[0].name == page.name) {
       // click to current showingPage -> return
       return false
@@ -110,9 +102,9 @@ export class MyApp {
     }
 
 
-    if (page.name == 'LoginPage' || page.name == 'ProfilePage') {
-      // if click to LoginPage or ProfilePge we use nav.push for future pop navController
-      return this.nav.push(page.name).then(() => false)
+    if (page.name == 'ProfilePage') {
+      // if click to ProfilePge we use nav.push for future pop navController
+      return this.nav.push(page.name)
     }
 
     if (this.nav.getActiveChildNavs().length && page.index != undefined) {
@@ -127,12 +119,14 @@ export class MyApp {
 
     if (page.logsOut === true) {
       // Give the menu time to close before changing to logged out
-      this.userData.logout()
+      this.userData
+        .logout()
+        .then(() => this.nav.setRoot('LoginPage'))
       //this.myToastProvider.myToast(2000, "Đăng xuất thành công", null)
       this.myToastProvider.myToast({
         message: 'Đăng xuất thành công',
         duration: 2000,
-        position: 'bottom',
+        position: 'top',
         cssClass: 'toast-info',
         showCloseButton: true,
         closeButtonText: 'Ok'
@@ -156,6 +150,10 @@ export class MyApp {
       return 'primary'
     }
     return
+  }
+
+  openIntro() {
+    this.nav.setRoot('IntroPage')
   }
 
 

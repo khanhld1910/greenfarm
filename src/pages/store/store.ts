@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Events, Loading, AlertController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides, Events, Loading } from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
@@ -155,9 +155,7 @@ export class StorePage {
       this.myToastProvider.myToast({
         message: 'Đã hết sản phẩm!',
         duration: 1000,
-        position: 'bottom',
-        showCloseButton: true,
-        closeButtonText: 'ok',
+        position: 'top',
         cssClass: 'toast-info'
       }, () => { infiniteScroll.complete() })
     } else {
@@ -190,8 +188,8 @@ export class StorePage {
           this.myToastProvider.myToast({
             message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
             duration: 1000,
-            position: 'bottom',
-            cssClass: 'toast-info'
+            position: 'top',
+            cssClass: 'toast-primary'
           })
           if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
 
@@ -199,14 +197,13 @@ export class StorePage {
     })
 
     this.events.subscribe('product:addToCart', singleBill => {
-      let loading = this.myToastProvider.performLoading('Đang kết nối ...')
       let bill: SingleBill = singleBill
       // check if user has logged in
       if (!this.userData.hasLoggedIn) {
         this.myToastProvider.myToast({
           message: 'Vui lòng đăng nhập để mua hàng!',
           duration: 1000,
-          position: 'bottom',
+          position: 'top',
           cssClass: 'toast-danger'
         }, () => {
           this.navCtrl.push('LoginPage')
@@ -229,11 +226,10 @@ export class StorePage {
           }
 
           if (result) {
-            loading.dismiss()
             this.myToastProvider.myToast({
               message: 'Sản phẩm đã sẵn có trong giỏ!',
               duration: 1000,
-              position: 'bottom',
+              position: 'top',
               cssClass: 'toast-danger'
             })
             return
@@ -242,11 +238,10 @@ export class StorePage {
           return this.myDBProvider
             .newCartBill(bill)
             .then(success => {
-              loading.dismiss()
               this.myToastProvider.myToast({
                 message: 'Đã thêm sản phẩm vào giỏ hàng!',
                 duration: 1000,
-                position: 'bottom',
+                position: 'top',
                 cssClass: 'toast-info'
               })
             })
@@ -282,13 +277,13 @@ export class StorePage {
   addToCartOpt(product: Product) {
     if (product.amount == 0) {
       this.myToastProvider.myToast({
-        message: 'Sản phẩm tạm thời chưa có!',
+        message: 'Sản phẩm tạm thời hết hàng!',
         duration: 1000,
-        position: 'bottom',
+        position: 'top',
         cssClass: 'toast-danger'
       })
       return
-    }    
+    }
 
     let bill: SingleBill = {
       id: '',
@@ -299,16 +294,13 @@ export class StorePage {
       // userID will be set on event.subcribe
       productName: product.name,
       unitPrice: product.unitPrice,
-      quantity: 0,
+      quantity: 1,
     }
     this.events.publish('product:addToCart', bill)
   }
 
-
-
-
-
-
-
+  getAverageRate(product: Product) {
+    return this.userData.averageRate(product)
+  }
 
 }
