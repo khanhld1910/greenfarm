@@ -64,16 +64,6 @@
   </div>
 </ion-content>
 
-<form #requestBill="ngForm" novalidate id="invoice-info-box">
-  <ion-list>
-    <ion-item>
-      <ion-label>&nbsp;&nbsp;ngày nhận</ion-label>
-      <ion-datetime [(ngModel)]="time" cancelText="Hủy bỏ" doneText="Đồng ý" name="time" displayFormat="DD/MM/YYYY HH:mm" pickerFormat="DD MMMM YYYY HH:mm"
-        [min]="min" [max]="max" minuteValues="00, 15, 30, 45" hourValues="08, 09, 10, 14, 15, 16" monthNames="T.Một, T.Hai, T.Ba, T.Bốn, T.Năm, T.Sáu, T.Bảy, T.Tám, T.Chín, T.Mười, T.Mười Một, T.Mười Hai">
-      </ion-datetime>
-    </ion-item>
-  </ion-list>
-  <button style="height: 50px; margin: 0px;" ion-button full (tap)="goConfirmCart()">
-    đặt hàng
-  </button>
-</form>
+<button id="confirm-btn" ion-button full (tap)="goConfirmCart()">
+  đặt hàng
+</button>

@@ -12,7 +12,7 @@
         Thêm
       </button>
     </ion-list-header>
-    <ion-item *ngFor="let address of addresses; let i = index" [class.checked]="isAddressChecked(i)" >
+    <ion-item *ngFor="let address of addresses; let i = index" [class.checked]="isAddressChecked(i)">
       <ion-row>
         <div ion-col text-left>
           <ion-icon [name]="isAddressChecked(i) ? 'checkbox' : 'square' " class="check-box" (tap)="setCheckedIndex(i)"></ion-icon>
@@ -28,3 +28,25 @@
     </ion-item>
   </ion-list>
 </ion-content>
+
+
+<div id="invoice-info-box">
+  <ion-list>
+    <ion-item>
+      <ion-label>&nbsp;&nbsp;ngày nhận</ion-label>
+      <ion-datetime [(ngModel)]="time" cancelText="Hủy bỏ" doneText="Đồng ý" name="time" displayFormat="DD/MM/YYYY" pickerFormat="DD MMMM YYYY"
+        [min]="min" [max]="max" monthNames="Tháng Một, Tháng Hai, Tháng Ba, Tháng Bốn, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai">
+      </ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-label>&nbsp;&nbsp;thời gian</ion-label>
+      <ion-select [(ngModel)]="timeDeliver">
+        <ion-option value="morning">08-10h sáng</ion-option>
+        <ion-option value="afternoon">14-16h chiều</ion-option>
+      </ion-select>
+    </ion-item>
+  </ion-list>
+  <button style="height: 50px; margin: 0px;" ion-button full (tap)="confirmInvoice()">
+    đặt hàng
+  </button>
+</div>

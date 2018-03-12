@@ -30,4 +30,40 @@ cart-confirm {
         font-size: 1.6rem;
         color: color($colors, primary);
     }
+    #invoice-info-box {
+        background: transparent;
+        padding: 10px;
+        z-index: 9999;
+        box-sizing: border-box;
+        width: 100%;
+        max-height: 190px;
+        position: absolute;
+        bottom: 56px;
+        left: 0px;
+        ion-item,
+        ion-item .item-inner,
+        ion-item .item-inner ion-label,
+        {
+            padding: 0px;
+        }
+        ion-item .item-inner ion-label,
+        {
+            margin: 10px 0 0 0;
+        }
+        ion-list.list {
+            border: 1px solid #888;
+            border-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+    .datetime-text, .select-text {
+        color: #888888;
+    }
+    .text-input {
+        color: #888;
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .my-ion-list {
+        padding-bottom: 190px;
+    }
 }
