@@ -18,9 +18,6 @@ export class UserDataProvider {
   hasSeenTutorial: boolean
   hasLoggedIn: boolean
   userPhone: string
-  address: string
-  deliverTime: string
-  userProfile: User
 
   presetData() {
     return Observable.forkJoin(
@@ -58,6 +55,10 @@ export class UserDataProvider {
     return this.db.getUserInfo(phone)
   }
 
+  getUserAddresses(phone: string) {
+    return this.db.getUserAddresses(phone)
+  }
+
   setUserInfo(user: User) {
     return this.db.setUserInfo(user)
   }
@@ -65,7 +66,6 @@ export class UserDataProvider {
   logout(): Promise<any> {
     let hasSeenTutorial = this.hasSeenTutorial
     this.userPhone = null
-    this.deliverTime = null
     this.hasLoggedIn = false
 
     return this.storage.clear()

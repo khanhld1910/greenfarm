@@ -63,6 +63,7 @@ cart {
     .quantity-control {
         &:active {
             color: $primary-light;
+            background-color: $primary-dark;
         }
     }
     .quantity-box {

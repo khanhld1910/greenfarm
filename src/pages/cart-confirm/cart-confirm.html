@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Xác nhận đặt hàng</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list class="my-ion-list">
+    <ion-list-header>
+      Địa chỉ giao hàng
+      <button ion-button item-end clear (tap)="addressModal()">
+        Thêm
+      </button>
+    </ion-list-header>
+    <ion-item *ngFor="let address of addresses; let i = index" [class.checked]="isAddressChecked(i)" >
+      <ion-row>
+        <div ion-col text-left>
+          <ion-icon [name]="isAddressChecked(i) ? 'checkbox' : 'square' " class="check-box" (tap)="setCheckedIndex(i)"></ion-icon>
+          Địa chỉ {{i + 1}}
+        </div>
+        <div *ngIf="i > 0" class="primary-text" ion-col text-right>
+          <ion-icon name="md-create" class="more-opts" (tap)="addressModal(i)"></ion-icon>
+        </div>
+      </ion-row>
+      <p class="rating-review">
+        {{address}}
+      </p>
+    </ion-item>
+  </ion-list>
+</ion-content>

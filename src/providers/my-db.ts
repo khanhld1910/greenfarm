@@ -56,6 +56,10 @@ export class MyDbProvider {
     return this.afDB.object<User>('Users/' + phone).valueChanges()
   }
 
+  getUserAddresses(phone: string) {
+    return this.afDB.list<string>(`Users/${phone}/address/`).valueChanges()
+  }
+
   setUserInfo(user: User): Promise<void> {
     //console.log (user)
     return this.afDB
@@ -284,6 +288,16 @@ export class MyDbProvider {
       `Ratings/${productID}/`,
       ref => ref.orderByChild('time')
     ).valueChanges()
+  }
+
+  newAddress(userPhone: string, address: string) {
+    return this.afDB.list(`Users/${userPhone}/address`).push(address)
+  }
+
+  updateAddresses(userPhone: string, addresses: any) {
+    return this.afDB
+    .object(`Users/${userPhone}/address`)
+    .set(addresses)
   }
 
 }

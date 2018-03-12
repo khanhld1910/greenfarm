@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage } from 'ionic-angular';
+import { IonicPage, NavController } from 'ionic-angular';
 import { SingleBill } from '../../interfaces/bill';
 import { MyDbProvider } from '../../providers/my-db';
 import { UserDataProvider } from '../../providers/user-data';
@@ -25,7 +25,8 @@ export class CartPage {
   constructor(
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
-    private myToasProvider: MyToastProvider
+    private myToasProvider: MyToastProvider,
+    private navCtrl: NavController
   ) {
     this.cartBills = []
   }
@@ -104,17 +105,6 @@ export class CartPage {
       }
     }
 
-    if (reqBills.length == 0) {
-      this.myToasProvider
-        .myToast({
-          message: 'Vui lòng chọn số lượng sản phẩm',
-          duration: 1500,
-          position: 'button',
-          cssClass: 'toast-danger'
-        })
-      return
-    }
-
     if (!this.userInfo.address) {
       // update address to profile
       this.myDBProvider.updateUserInfo({
@@ -179,6 +169,19 @@ export class CartPage {
       y.quantity = +y.quantity + +value
       //console.log(y.quantity, value)
     }
+  }
+
+  goConfirmCart() {
+    if (this.cartBills.length < 1) {
+      this.myToasProvider.myToast({
+        message: 'Chưa có sản phẩm trong giỏ hàng!',
+        duration: 1000,
+        cssClass: 'toast-danger',
+        position: 'top'
+      })
+      return
+    }
+    this.navCtrl.push('CartConfirmPage', {'cart': this.cartBills})
   }
 
 }

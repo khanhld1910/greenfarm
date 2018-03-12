@@ -1,0 +1,33 @@
+cart-confirm {
+    .col {
+        padding: 0px;
+        color: #666;
+        .icon {
+            color: color($colors, primary);
+        }
+        .more-opts {
+            padding-left: 10px;
+            z-index: 999;
+        }
+        .check-box {
+            padding-right: 10px;
+            z-index: 999;
+        }
+    }
+    .item {
+        .item-inner .input-wrapper .label {
+            margin: 5px 0;
+            padding: 5px;
+        }
+        &.checked .item-inner .input-wrapper .label {
+            border-left: 5px solid color($colors, primary);
+        }
+    }
+    .list-header {
+        border: none;
+        border-bottom: 1px solid #dedede;
+        margin-bottom: 0px;
+        font-size: 1.6rem;
+        color: color($colors, primary);
+    }
+}

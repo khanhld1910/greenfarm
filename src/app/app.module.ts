@@ -14,13 +14,15 @@ import { MyToastProvider } from '../providers/my-toast';
 import { MyDbProvider } from '../providers/my-db';
 import { ProductReviewPage } from '../pages/product-review/product-review';
 import { TimesPipe } from '../pipes/custom-loop';
+import { AddressModalPage } from '../pages/address-modal/address-modal';
 
 
 @NgModule({
   declarations: [
     MyApp,
     ProductReviewPage,
-    TimesPipe
+    TimesPipe,
+    AddressModalPage
   ],
   imports: [
     BrowserModule,
@@ -32,7 +34,8 @@ import { TimesPipe } from '../pipes/custom-loop';
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    ProductReviewPage
+    ProductReviewPage,
+    AddressModalPage
   ],
   providers: [
     StatusBar,
