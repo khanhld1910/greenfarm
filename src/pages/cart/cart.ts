@@ -4,7 +4,6 @@ import { SingleBill } from '../../interfaces/bill';
 import { MyDbProvider } from '../../providers/my-db';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyToastProvider } from '../../providers/my-toast';
-import { NgForm } from '@angular/forms';
 import { User } from '../../interfaces/user';
 import { Product } from '../../interfaces/products';
 

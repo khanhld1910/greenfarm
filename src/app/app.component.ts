@@ -47,7 +47,7 @@ export class MyApp {
     private userData: UserDataProvider,
     private menu: MenuController,
     private events: Events,
-    private myToastProvider: MyToastProvider,
+    private myToastProvider: MyToastProvider
   ) {
 
     //-----------> very important for preloading userdata
@@ -155,6 +155,7 @@ export class MyApp {
   openIntro() {
     this.nav.setRoot('IntroPage')
   }
+
 
 
 

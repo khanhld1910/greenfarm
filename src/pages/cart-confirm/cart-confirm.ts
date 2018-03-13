@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
+import { IonicPage, NavParams, ModalController, App } from 'ionic-angular';
 import { SingleBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
 import { AddressModalPage } from '../address-modal/address-modal';
@@ -26,12 +26,12 @@ export class CartConfirmPage {
   max: string
 
   constructor(
-    public navCtrl: NavController,
     public navParams: NavParams,
     private userData: UserDataProvider,
     private modalCtrl: ModalController,
     private myDBProvider: MyDbProvider,
-    private myToasProvider: MyToastProvider
+    private myToasProvider: MyToastProvider,
+    private _app: App
   ) {
     this.cartBills = this.navParams.get('cart')
   }
@@ -101,16 +101,7 @@ export class CartConfirmPage {
   }
 
 
-  confirmInvoice() {
-
-
-    let reqBills = []
-
-    for (let i = 0; i < this.cartBills.length; i++) {
-      if (this.cartBills[i].quantity > 0) {
-        reqBills.push(this.cartBills[i])
-      }
-    }
+  confirmInvoice() {    
 
     let deliverTime = (this.timeDeliver == 'morning') ? `${this.time}T08:00` : `${this.time}T14:00`
     //console.log(this.timeDeliver, deliverTime)    
@@ -118,7 +109,7 @@ export class CartConfirmPage {
     this
       .myDBProvider
       .sentReqFromCart(
-        reqBills,
+        this.cartBills,
         this.userData.userPhone,
         deliverTime,
         this.sentTime(),
@@ -129,15 +120,26 @@ export class CartConfirmPage {
         this.myToasProvider
           .myToast({
             message: 'Yêu cầu đặt hàng thành công!',
-            duration: 1500,
+            duration: 1000,
             position: 'top',
             cssClass: 'toast-info'
           }, () => {
-            this.navCtrl.setRoot('TabsPage', {index: 3})
+            this.getNav().setRoot('TabsPage', {tabIndex: 2})
           })
-      })
-      
+      })     
 
+  }
+
+  getNav() {
+    let navs = this._app.getRootNavs()
+    if (navs && navs.length > 0) {
+      return navs[0]
+    }
+    return this._app.getActiveNavs('content')
+  }
+
+  test(){
+    console.log('tap')
   }
 
 }

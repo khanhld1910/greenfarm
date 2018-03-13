@@ -7,7 +7,7 @@ cart-confirm {
         }
         .more-opts {
             padding-left: 10px;
-            z-index: 999;
+            z-index: 999 !important;
         }
         .check-box {
             padding-right: 10px;
@@ -21,6 +21,15 @@ cart-confirm {
         }
         &.checked .item-inner .input-wrapper .label {
             border-left: 5px solid color($colors, primary);
+        }
+        .tap-area {
+            width: 90%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 10%;
+            background: transparent;
+            z-index: 997;
         }
     }
     .list-header {
@@ -56,7 +65,8 @@ cart-confirm {
             margin-bottom: 0px;
         }
     }
-    .datetime-text, .select-text {
+    .datetime-text,
+    .select-text {
         color: #888888;
     }
     .text-input {
