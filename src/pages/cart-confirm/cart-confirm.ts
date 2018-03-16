@@ -5,6 +5,7 @@ import { UserDataProvider } from '../../providers/user-data';
 import { AddressModalPage } from '../address-modal/address-modal';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
+import { User } from '../../interfaces/user';
 
 
 @IonicPage({
@@ -17,7 +18,11 @@ import { MyToastProvider } from '../../providers/my-toast';
 export class CartConfirmPage {
 
   cartBills: SingleBill[]
-  addresses: string[] = []
+  user: User = {
+    phone: '',
+    address: undefined
+  }
+  deliverAddresses: string[] = []
   addressSelectedIndex: number = 0
   time: string
   timeDeliver: string
@@ -40,8 +45,15 @@ export class CartConfirmPage {
   ionViewDidLoad() {
     this.userData
       .getUserAddresses(this.userData.userPhone)
-      .subscribe(value => this.addresses = value)
+      .subscribe(value => {
+        this.deliverAddresses = value
+      })
 
+    this.userData
+      .getUserInfo(this.userData.userPhone)
+      .subscribe(user => {
+        this.user = user
+      })
 
     this.setTimeRange()
     this.time = this.min
@@ -84,18 +96,27 @@ export class CartConfirmPage {
     this.addressSelectedIndex = index
   }
 
-  addressModal(index?: number) {
+  addOrEditAddress(index?: number) {
+
+    if (!this.user.address) {
+      // user have not updated profile
+      this.navCtrl.push('ProfilePage', { popBack: true })
+      return false
+    }
     //console.log(index)
 
     let addressModal
 
-    if (!index || index < 0) {
+    if (index == undefined) {
       // new address
       addressModal = this.modalCtrl.create(AddressModalPage, { isEdit: false })
+    } else if (index == -1) {
+      // edit profile
+      this.navCtrl.push('ProfilePage', { popBack: true })
+      return false
     } else {
       // edit address
-      console.log(index)
-      addressModal = this.modalCtrl.create(AddressModalPage, { isEdit: true, index: index, addresses: this.addresses });
+      addressModal = this.modalCtrl.create(AddressModalPage, { isEdit: true, index: index, addresses: this.deliverAddresses })
     }
 
     addressModal.present()
@@ -103,7 +124,9 @@ export class CartConfirmPage {
 
 
   confirmInvoice() {
-    //console.log(this.timeDeliver, deliverTime)    
+    //console.log(this.timeDeliver, deliverTime) 
+    
+    let address = this.addressSelectedIndex == -1 ? this.user.address : this.deliverAddresses[this.addressSelectedIndex]
 
     this
       .myDBProvider
@@ -114,7 +137,7 @@ export class CartConfirmPage {
         this.timeDeliver == 'morning',
         this.sentTime(),
         this.navParams.get('total'),
-        this.addresses[this.addressSelectedIndex]
+        address
       )
       .subscribe(success => {
         this.navCtrl.pop().then(
@@ -140,6 +163,10 @@ export class CartConfirmPage {
       return navs[0]
     }
     return this._app.getActiveNavs('content')
+  }
+
+  birthdateFormat() {
+    return this.userData.dateDisplay(this.user.birthday)
   }
 
 

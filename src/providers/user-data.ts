@@ -136,6 +136,13 @@ export class UserDataProvider {
       this.lessThan10Format(date.getMinutes())
   }
 
+  dateDisplay(time: string) {
+    let date = new Date(time)
+    return this.lessThan10Format(date.getDate()) + '/' +
+      this.lessThan10Format(date.getMonth() + 1) + '/' +
+      this.lessThan10Format(date.getFullYear())
+  }
+
   getHotlineNumber() {
     return this.db.getHotline()
   }

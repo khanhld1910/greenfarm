@@ -58,7 +58,7 @@ export class MyDbProvider {
   }
 
   getUserAddresses(phone: string) {
-    return this.afDB.list<string>(`Users/${phone}/address/`).valueChanges()
+    return this.afDB.list<string>(`Users/${phone}/deliverAddresses/`).valueChanges()
   }
 
   setUserInfo(user: User): Promise<void> {
@@ -297,12 +297,12 @@ export class MyDbProvider {
   }
 
   newAddress(userPhone: string, address: string) {
-    return this.afDB.list(`Users/${userPhone}/address`).push(address)
+    return this.afDB.list(`Users/${userPhone}/deliverAddresses`).push(address)
   }
 
   updateAddresses(userPhone: string, addresses: any) {
     return this.afDB
-      .object(`Users/${userPhone}/address`)
+      .object(`Users/${userPhone}/deliverAddresses`)
       .set(addresses)
   }
 

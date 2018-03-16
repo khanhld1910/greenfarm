@@ -189,8 +189,10 @@ export class StorePage {
         })
     })
 
-    this.events.subscribe('product:addToCart', singleBill => {
+    this.events.subscribe('product:addToCart', (singleBill) =>  {
+      let loading = this.myToastProvider.performLoading('đang xử lý ...')
       let bill: SingleBill = singleBill
+      // day ne
 
       bill.userID = this.userData.userPhone
       bill.productID_userID = `${bill.productID}_${this.userData.userPhone}`
@@ -198,7 +200,7 @@ export class StorePage {
       this.myDBProvider
         .checkCartHadProduct(bill)
         .first()
-        .subscribe(value => {
+        .subscribe(async value => {
 
           let result = false
 
@@ -208,6 +210,7 @@ export class StorePage {
           }
 
           if (result) {
+            await loading.dismiss()
             this.myToastProvider.myToast({
               message: 'Sản phẩm đã sẵn có trong giỏ!',
               duration: 1000,
@@ -219,7 +222,8 @@ export class StorePage {
 
           return this.myDBProvider
             .newCartBill(bill)
-            .then(success => {
+            .then(async success => {
+              await loading.dismiss()
               this.myToastProvider.myToast({
                 message: 'Đã thêm sản phẩm vào giỏ hàng!',
                 duration: 1000,

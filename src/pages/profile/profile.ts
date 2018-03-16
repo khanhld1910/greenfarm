@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, MenuController } from 'ionic-angular';
+import { IonicPage, MenuController, NavParams, NavController } from 'ionic-angular';
 import { User } from '../../interfaces/user';
 import { NgForm } from '@angular/forms';
 import { UserDataProvider } from '../../providers/user-data';
@@ -22,14 +22,15 @@ export class ProfilePage {
     private menu: MenuController,
     private userDataProvider: UserDataProvider,
     private myToastProvider: MyToastProvider,
-    private userData: UserDataProvider
+    private navParams: NavParams,
+    private navCtrl: NavController
   ) {
     // this page will pop from navi by a toolbar's button
     this.user = {
       name: '',
       phone: '',
       isMale: true,
-      address: [],
+      address: '',
       favorite: [],
       birthday: '1991-10-19'
     }
@@ -63,14 +64,20 @@ export class ProfilePage {
     this
       .userDataProvider
       .setUserInfo(this.user)
-      .then(() => this.myToastProvider.myToast({
-        message: 'đã cập nhật hồ sơ!',
-        duration: 1500,
-        cssClass: 'toast-primary',
-        position: 'top',
-        closeButtonText: 'OK',
-        showCloseButton: true
-      }))
+      .then(() => this.myToastProvider.myToast(
+        {
+          message: 'đã cập nhật hồ sơ!',
+          duration: 1500,
+          cssClass: 'toast-primary',
+          position: 'top',
+          closeButtonText: 'OK',
+          showCloseButton: true
+        },
+        () => {
+          let popBack: boolean = this.navParams.get('popBack')
+          if (popBack) this.navCtrl.pop()
+        }
+      ))
       .catch(err => this.formMessage = err.message)
 
   }
