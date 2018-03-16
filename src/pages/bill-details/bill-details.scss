@@ -1,3 +1,38 @@
 bill-details {
-
+     ::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
+        color: color($colors, primary) !important;
+        opacity: 1 !important;
+        /* Firefox */
+    }
+    textarea.text-input {
+        margin: 0px;
+        padding: 13px 0px;
+    }
+    input.text-input {
+        margin: 0px;
+        padding: 10px 0px 0px;
+        text-align: right;
+    }
+    input,
+    textarea,
+    select,
+    a {
+        outline: none !important;
+    }
+    .item {
+        padding: 0px;
+    }
+    .item-inner {
+        padding: 0px !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #dedede !important;
+        color: #666;
+    }
+    .product--name {
+        color: color($colors, primary);
+    }
+    .product--total {
+        color: color($colors, google);
+    }
 }

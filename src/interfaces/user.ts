@@ -4,5 +4,6 @@ export interface User {
     address?: string[],
     isMale?: boolean,
     age?: number,
+    birthday?: string,
     favorite?: string[]
 }

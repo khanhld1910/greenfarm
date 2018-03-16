@@ -36,7 +36,7 @@
 
 <div padding id="review-box">
   <h2>
-    <ion-icon *ngFor="let i of 5 | loop" name="star" [color]="checkStar(i, myRating.rate) ? 'google' : 'star-dark'" class="star"
+    <ion-icon *ngFor="let i of 5 | loop" name="star" [color]="checkStar(i, myRating.rate) ? 'google' : 'star-dark'" class="star sound"
       data-tap-disabled="true" (tap)="setRate(i)">
     </ion-icon>
   </h2>

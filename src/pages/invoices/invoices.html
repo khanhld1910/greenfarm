@@ -1,13 +1,13 @@
 <ion-header>
   <ion-toolbar>
     <ion-segment [(ngModel)]="status" (ionChange)="getBills()">
-      <ion-segment-button value="sent">
+      <ion-segment-button value="sent" class="sound">
         Đang chờ
       </ion-segment-button>
-      <ion-segment-button value="checked">
+      <ion-segment-button value="checked" class="sound">
         Giao hàng
       </ion-segment-button>
-      <ion-segment-button value="done">
+      <ion-segment-button value="done" class="sound">
         Hoàn thành
       </ion-segment-button>
     </ion-segment>
@@ -17,7 +17,7 @@
 
 <ion-content padding>
   <ion-list>
-    <ion-item *ngFor="let invoice of getBills()" [class]="setClass()" (tap)="totalBillDetails(invoice)">
+    <ion-item *ngFor="let invoice of getBills()" [ngClass]="status">
       <ion-row align-items-center>
         <ion-col col-6 style="padding-right: 5px;">
           <h3 class="invoice--time" text-left>
@@ -29,14 +29,15 @@
             {{invoice.totalCost | number : fractionSize}} đ
           </h3>
         </ion-col>
-        <ion-col col-1 style="padding: 0 5px;" text-right>
-          <ion-icon class="remove-icon" name="close-circle" color="google" (tap)="removeInvoice(invoice)"></ion-icon>
+        <ion-col col-1 style="padding: 0 0 0 5px; font-size: 2rem;" text-right>
+          <ion-icon class="remove-icon sound" name="close-circle" color="google" (tap)="removeInvoice(invoice)"></ion-icon>
         </ion-col>
       </ion-row>
       <p class="invoice--products">
         {{formatNameForDisplaying(invoice.productName)}}
-        <span class="paragraph-end"></span>        
+        <span class="paragraph-end"></span>
       </p>
+      <div class="tap-area sound" (tap)="totalBillDetails(invoice)"></div>
     </ion-item>
   </ion-list>
 </ion-content>

@@ -1,11 +1,11 @@
 <div class="wrapper">
     <ion-card>
-        <ion-icon color="google" name="close" id="close" (tap)="dismiss()"></ion-icon>
+        <ion-icon class="sound" color="google" name="close" id="close" (tap)="dismiss()"></ion-icon>
         <ion-card-header color="primary">
             {{title}}
         </ion-card-header>
         <ion-card-content>
-            <ion-item>
+            <ion-item class="sound">
                 <ion-textarea maxlength="200" autocorrect="off" name="address" [(ngModel)]="address" autosize placeholder="Địa chỉ">
 
                 </ion-textarea>

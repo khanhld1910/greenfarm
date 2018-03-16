@@ -47,10 +47,6 @@ export class InvoicesPage {
 
   }
 
-  setClass() {
-    return `invoice ${this.status} `
-  }
-
   getBills() {
     switch (this.status) {
       case 'sent': return this.sentList
@@ -61,6 +57,19 @@ export class InvoicesPage {
   }
 
   removeInvoice(totalBillID: TotalBill) {
+    this.myToast.myConfirmAlert(
+      'Hủy đơn hàng',
+      'Bạn có chắc chắn muốn hủy đơn đặt hàng?',
+      () => {
+        return false
+      },
+      () => {
+        this.confirmRemoveBill(totalBillID)
+      }
+    )
+  }
+
+  confirmRemoveBill(totalBillID: TotalBill) {
     let loading = this.myToast.performLoading('đang kết nối ...')
     this.dbProvider
       .removeInvoice(totalBillID)
@@ -82,16 +91,10 @@ export class InvoicesPage {
           cssClass: 'toast-danger'
         })
       })
-
   }
 
   timeDisplay(time: string) {
-    let date = new Date(time)
-    return this.userDataProvider.lessThan10Format(date.getDate()) + '/' +
-      this.userDataProvider.lessThan10Format(date.getMonth() + 1) + '/' +
-      this.userDataProvider.lessThan10Format(date.getFullYear()) + ', ' +
-      this.userDataProvider.lessThan10Format(date.getHours()) + ':' +
-      this.userDataProvider.lessThan10Format(date.getMinutes())
+    return this.userDataProvider.timeDisplay(time)
   }
 
   formatNameForDisplaying(productNames: string[]): string {

@@ -21,16 +21,17 @@ export class ProfilePage {
   constructor(
     private menu: MenuController,
     private userDataProvider: UserDataProvider,
-    private myToastProvider: MyToastProvider
+    private myToastProvider: MyToastProvider,
+    private userData: UserDataProvider
   ) {
     // this page will pop from navi by a toolbar's button
     this.user = {
       name: '',
       phone: '',
-      age: 1,
       isMale: true,
       address: [],
       favorite: [],
+      birthday: '1991-10-19'
     }
   }
 
@@ -38,11 +39,17 @@ export class ProfilePage {
     // this page will pop from navi by a toolbar's button
     this.menu.enable(false)
 
+    this.setBirthdayRange()
+
     this
       .userDataProvider
       .getUserInfo(this.userDataProvider.userPhone)
       .first()
-      .subscribe(user => this.user = Object.assign(this.user, user))
+      .subscribe(user => {
+        this.user = Object.assign(this.user, user)
+
+        this.user.birthday = user.birthday || this.max
+      })
   }
 
   ionViewDidLeave() {
@@ -55,7 +62,7 @@ export class ProfilePage {
 
     this
       .userDataProvider
-      .setUserInfo(this.user)      
+      .setUserInfo(this.user)
       .then(() => this.myToastProvider.myToast({
         message: 'đã cập nhật hồ sơ!',
         duration: 1500,
@@ -65,7 +72,15 @@ export class ProfilePage {
         showCloseButton: true
       }))
       .catch(err => this.formMessage = err.message)
-      
+
+  }
+
+  min: string
+  max: string
+  setBirthdayRange() {
+    let now = new Date()
+    this.min = `${now.getFullYear() - 60}-01-01` // 01/01// 60 years ago
+    this.max = `${now.getFullYear() - 14}-01-01` // 14 years ago in 01/01
   }
 
 }

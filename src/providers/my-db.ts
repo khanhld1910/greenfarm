@@ -8,6 +8,7 @@ import { CustomMessage } from '../interfaces/message';
 //import { FirebaseDatabase } from '@firebase/database-types';
 import * as firebase from 'firebase'
 import { Rating } from '../interfaces/rating';
+import { AppsCfg } from '../interfaces/app';
 
 @Injectable()
 export class MyDbProvider {
@@ -85,10 +86,10 @@ export class MyDbProvider {
 
   newCartBill(bill: SingleBill): Promise<boolean> {
 
-    let cartBillList = this.afDB.list('Invoices/cart/' + bill.userID)
+    let cartBillList = this.afDB.list('Invoices/cart/')
     const newKey = cartBillList.push('new item').key
     bill.id = newKey
-    let cartSingleBillRef = this.afDB.object('Invoices/cart/' + bill.userID + '/' + bill.id)
+    let cartSingleBillRef = this.afDB.object('Invoices/cart/' + bill.id)
     return cartSingleBillRef.update(bill)
       .then(value => true)
       .catch(err => false)
@@ -96,21 +97,21 @@ export class MyDbProvider {
 
   userGetCartBills(phoneNumber: string): Observable<SingleBill[]> {
     return this.afDB.list<SingleBill>(
-      'Invoices/cart/' + phoneNumber,
-      ref => ref.orderByChild('quantity')
+      'Invoices/cart/',
+      ref => ref.orderByChild('userID').equalTo(phoneNumber)
     ).valueChanges()
   }
 
   checkCartHadProduct(bill: SingleBill): Observable<SingleBill[]> {
     return this.afDB.list<SingleBill>(
-      'Invoices/cart/' + bill.userID,
-      ref => ref.orderByChild('productID').equalTo(bill.productID)
-    ).valueChanges()
+      'Invoices/cart/',
+      ref => ref.orderByChild('productID_userID').equalTo(`${bill.productID}_${bill.userID}`)
+    ).valueChanges().first()
   }
 
   removeCardBill(bill: SingleBill) {
     return this.afDB
-      .list<SingleBill>('Invoices/cart/' + bill.userID)
+      .list<SingleBill>('Invoices/cart/')
       .remove(bill.id)
   }
 
@@ -125,7 +126,7 @@ export class MyDbProvider {
   getBillsInTotalBill(invoice: TotalBill) {
     return this.afDB
       .list<SingleBill>(
-        `Invoices/sent/${invoice.userID}/`,
+        `Invoices/sent/`,
         ref => ref.orderByChild('totalBillID').equalTo(invoice.id)
       )
       .valueChanges()
@@ -134,7 +135,7 @@ export class MyDbProvider {
   async removeInvoice(invoice: TotalBill) {
 
     this.afDB
-      .list<TotalBill>(`Bills/${invoice.userID}/`)
+      .list<TotalBill>(`Bills/`)
       .remove(invoice.id)
 
     this.getBillsInTotalBill(invoice)
@@ -150,7 +151,7 @@ export class MyDbProvider {
           updateProducts.push({ productID: sentBill.productID, amount: sentBill.quantity })
         }
 
-        this.afDB.object(`Invoices/sent/${invoice.userID}`).update(removeSentBills)
+        this.afDB.object(`Invoices/sent/`).update(removeSentBills)
 
         for (let i = 0; i < updateProducts.length; i++) {
           let update: { productID: string, amount: number } = updateProducts[i]
@@ -171,22 +172,26 @@ export class MyDbProvider {
       })
   }
 
-  sentReqFromCart(bills: SingleBill[], phone: string, deliverTime: string, sentTime: string, totalCost: number, address: string) {
-    let billList = this.afDB.list('Bills/' + phone + '/')
+  sentReqFromCart(bills: SingleBill[], phone: string, deliverTime: string, morning: boolean, sentTime: string, totalCost: number, address: string) {
+    let billList = this.afDB.list('Bills/')
     const newKey = billList.push('new item').key
+
 
     let newBill: TotalBill = {
       deliverTime: deliverTime,
+      morningDeliver: morning,
       sentTime: sentTime,
       id: newKey,
       status: 1,
       userID: phone,
       totalCost: totalCost,
       address: address,
-      productName: []
+      productName: [],
+      userID_status: `${phone}_1`,
     }
     //------------>
-    var sentBills = {}
+    let sentBills = {}
+    let removeCartBills = {}
     //------------->
     //------------->
 
@@ -195,7 +200,8 @@ export class MyDbProvider {
 
       newBill.productName.push(bills[i].productName)
 
-      sentBills[bills[i].id] = bills[i]
+      sentBills[bills[i].id] = bills[i] // update sent bills
+      removeCartBills[bills[i].id] = null // remove cart bills
       //productUpdate
       this.updateProductAmount(bills[i].productID, bills[i].quantity)
     }
@@ -203,35 +209,35 @@ export class MyDbProvider {
     return Observable
       .forkJoin(
         // create total bill
-        this.afDB.object(`Bills/${phone}/${newKey}`).update(newBill),
+        this.afDB.object(`Bills/${newKey}`).update(newBill),
         // create sent bills
-        this.afDB.object('Invoices/sent/' + phone + '/').update(sentBills),
+        this.afDB.object('Invoices/sent/').update(sentBills),
         // delete cart bills
-        this.afDB.object('Invoices/cart/' + phone + '/').remove(),
-      // update products amount
-      // ------------------------------------------------>
-    )
+        this.afDB.object('Invoices/cart/').update(removeCartBills),
+        // update products amount
+        // ------------------------------------------------>
+      )
 
   }
 
   getSentList(phone: string): Observable<TotalBill[]> {
     return this.afDB.list<TotalBill>(
-      `Bills/${phone}/`,
-      ref => ref.orderByChild('status').equalTo(1)
+      `Bills/`,
+      ref => ref.orderByChild('userID_status').equalTo(`${phone}_1`)
     ).valueChanges()
   }
 
   getCheckedList(phone: string): Observable<TotalBill[]> {
     return this.afDB.list<TotalBill>(
-      `Bills/${phone}/`,
-      ref => ref.orderByChild('status').equalTo(2)
+      `Bills/`,
+      ref => ref.orderByChild('userID_status').equalTo(`${phone}_2`)
     ).valueChanges()
   }
 
   getDoneList(phone: string): Observable<TotalBill[]> {
     return this.afDB.list<TotalBill>(
-      `Bills/${phone}/`,
-      ref => ref.orderByChild('status').equalTo(3)
+      `Bills/`,
+      ref => ref.orderByChild('userID_status').equalTo(`${phone}_3`)
     ).valueChanges()
   }
 
@@ -296,8 +302,12 @@ export class MyDbProvider {
 
   updateAddresses(userPhone: string, addresses: any) {
     return this.afDB
-    .object(`Users/${userPhone}/address`)
-    .set(addresses)
+      .object(`Users/${userPhone}/address`)
+      .set(addresses)
+  }
+
+  getHotline() {
+    return this.afDB.object<AppsCfg>('Apps').valueChanges()
   }
 
 }

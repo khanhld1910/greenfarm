@@ -13,14 +13,14 @@
       </button>
     </ion-list-header>
     <ion-item *ngFor="let address of addresses; let i = index" [class.checked]="isAddressChecked(i)">
-      <div class="tap-area" (tap)="test()"></div>
+      <div class="tap-area sound" (tap)="setCheckedIndex(i)"></div>
       <ion-row>
         <div ion-col col-11 text-left>
-          <ion-icon [name]="isAddressChecked(i) ? 'checkbox' : 'square' " class="check-box" (tap)="setCheckedIndex(i)"></ion-icon>
+          <ion-icon  color="facebook" [name]="isAddressChecked(i) ? 'checkbox' : 'square' " class="check-box"></ion-icon>
           Địa chỉ {{i + 1}}
         </div>
-        <div *ngIf="i > 0" class="primary-text" ion-col col-1 text-right>
-          <ion-icon name="md-create" class="more-opts" (tap)="addressModal(i)"></ion-icon>
+        <div *ngIf="i > 0" ion-col col-1 text-right>
+          <ion-icon color="google" name="md-create" class="more-opts sound" (tap)="addressModal(i)"></ion-icon>
         </div>
       </ion-row>
       <p class="rating-review">

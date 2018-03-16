@@ -27,12 +27,12 @@ export class ProductPage {
     this.product = navParams.get('product')
   }
 
-
   addToCart() {
-
+    // trang chi tiet
     if (this.product.amount == 0) {
+      
       this.myToastProvider.myToast({
-        message: 'Sản phẩm tạm thời chưa có!',
+        message: 'Sản phẩm tạm thời hết hàng!',
         duration: 1000,
         position: 'top',
         cssClass: 'toast-danger'

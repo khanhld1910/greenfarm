@@ -35,7 +35,6 @@ export class TabsPage {
         .getCartBadge()
         .subscribe(value => this.cartBadge = value)
 
-
     }, 1000)
   }
 

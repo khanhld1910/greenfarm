@@ -5,7 +5,8 @@ export interface SingleBill {
     productID: string,
     productName: string,
     unitPrice: number,
-    quantity: number
+    quantity: number,
+    productID_userID?: string,
 }
 
 export interface TotalBill {
@@ -19,7 +20,9 @@ export interface TotalBill {
     sentTime: string,
     deliverTime: string,
     address: string,
-    productName: string[]
+    productName: string[],
+    userID_status: string,
+    morningDeliver?: boolean
 }
 
 

@@ -36,20 +36,15 @@
         Vui lòng chọn giới tính
       </p>
       <ion-item>
-        <ion-label color="primary">Độ tuổi</ion-label>
-        <ion-select required [(ngModel)]="user.age" name="age" #age="ngModel">
-          <ion-option value="1">Dưới 16</ion-option>
-          <ion-option value="2">16 - 25</ion-option>
-          <ion-option value="3">26 - 45</ion-option>
-          <ion-option value="4">Trên 46</ion-option>
-        </ion-select>
+        <ion-label color="primary">Ngày sinh</ion-label>
+        <ion-datetime [(ngModel)]="user.birthday" cancelText="Hủy bỏ" doneText="Đồng ý" name="birthday" displayFormat="DD/MM/YYYY"
+          pickerFormat="DD MMMM YY" [min]="min" [max]="max" monthNames="Tháng Một, Tháng Hai, Tháng Ba, Tháng Bốn, Tháng Năm, Tháng Sáu, Tháng Bảy, Tháng Tám, Tháng Chín, Tháng Mười, Tháng Mười Một, Tháng Mười Hai">
+        </ion-datetime>
       </ion-item>
-      <p ion-text [hidden]="age.valid || submitted == false" color="danger" padding-left>
-        Vui lòng chọn độ tuổi
-      </p>
       <ion-item>
-        <ion-textarea minlength="10" required maxlength="200" autocorrect="off" name="address" [(ngModel)]="user.address[.0]" #address="ngModel" autosize placeholder="Địa chỉ">
-          
+        <ion-label color="primary">Địa chỉ</ion-label>
+        <ion-textarea minlength="10" required maxlength="200" autocorrect="off" name="address" [(ngModel)]="user.address[.0]" #address="ngModel"
+          autosize>
         </ion-textarea>
       </ion-item>
       <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>

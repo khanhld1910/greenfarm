@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavParams, ViewController } from 'ionic-angular';
+import { NavParams, ViewController } from 'ionic-angular';
 import { MyDbProvider } from '../../providers/my-db';
 import { UserDataProvider } from '../../providers/user-data';
 import { Rating } from '../../interfaces/rating';
@@ -7,7 +7,6 @@ import { MyToastProvider } from '../../providers/my-toast';
 import { Product } from '../../interfaces/products';
 
 
-@IonicPage()
 @Component({
   selector: 'product-review',
   templateUrl: 'product-review.html'

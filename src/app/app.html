@@ -28,7 +28,7 @@
                     <ion-icon item-start name="hammer"></ion-icon>
                     Hướng dẫn
                 </button>
-                <button ion-item>
+                <button ion-item (tap)="call()">
                     <ion-icon item-start name="call"></ion-icon>
                     <a href="tel:+84945359269">Hotline: 0945.359.269</a>
                 </button>
@@ -64,9 +64,9 @@
                     <ion-icon item-start name="hammer"></ion-icon>
                     Hướng dẫn
                 </button>
-                <button ion-item>
+                <button ion-item (tap)="call()">
                     <ion-icon item-start name="call"></ion-icon>
-                    <a href="tel:+84945359269">Hotline: 0945.359.269</a>
+                    <a>Hotline: {{hotline}}</a>
                 </button>
             </ion-list>
         </ion-content>

@@ -1,13 +1,70 @@
 <ion-header>
-
   <ion-navbar>
-    <ion-title>{{bill.deliverTime}}</ion-title>
+    <ion-title>Chi tiết đơn hàng</ion-title>
   </ion-navbar>
-
 </ion-header>
 
 
 <ion-content padding>
-  
-
+  <ion-list>
+    <ion-item>
+      <ion-label color="primary">Trạng thái</ion-label>
+      <ion-input readonly [(ngModel)]="status">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary">Ngày tạo</ion-label>
+      <ion-input readonly [(ngModel)]="sentTime" name="sent-time">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary">Ngày giao</ion-label>
+      <ion-input readonly [(ngModel)]="deliverTime" name="deliver-time">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color="primary">Địa chỉ</ion-label>
+      <ion-textarea readonly name="address" [(ngModel)]="address" autosize placeholder="Địa chỉ">
+      </ion-textarea>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-item *ngFor="let bill of singleBills">
+      <h4>
+        <span class="product--name">{{bill.productName}}</span>
+        <ion-badge color="facebook">{{bill.quantity}}</ion-badge>
+      </h4>
+      <ion-row align-items-center justify-content-center>
+        <ion-col col-4 text-left>
+          {{bill.unitPrice | number : fractionSize}} đ
+        </ion-col>
+        <ion-col col-1 text-center>
+          x
+        </ion-col>
+        <ion-col col-2 text-center>
+          {{bill.quantity}}
+        </ion-col>
+        <ion-col col-1 text-center>
+          =
+        </ion-col>
+        <ion-col col-4 text-right>
+          {{bill.unitPrice*bill.quantity | number : fractionSize}} đ
+        </ion-col>
+      </ion-row>
+    </ion-item>
+    <ion-item>
+      <ion-row align-items-center>
+        <ion-col>
+          <h3 text-left>
+            <span class="product--total">Tổng cộng:</span>
+          </h3>
+        </ion-col>
+        <ion-col class="name">
+          <h3 text-right>
+            <span class="product--total">{{totalCost | number : fractionSize}} đ</span>
+          </h3>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
 </ion-content>

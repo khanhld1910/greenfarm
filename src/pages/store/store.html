@@ -3,7 +3,7 @@
     <button ion-button menuToggle id="menuBtn">
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-searchbar color="primary" [(ngModel)]="searchQuery" animated="true" (ionInput)="presentSearchProducts()" placeholder="Tìm kiếm">
+    <ion-searchbar class="sound" color="primary" [(ngModel)]="searchQuery" animated="true" (ionInput)="presentSearchProducts()" placeholder="Tìm kiếm">
     </ion-searchbar>
   </ion-navbar>
 </ion-header>
@@ -28,13 +28,13 @@
   </div>
   <div class="filter-box">
     <ul>
-      <li class="myBtn" (tap)="filter('all')" [ngClass]="(filterOptions == 'all') ? 'bgGoogle' : ''">
+      <li class="myBtn sound" (tap)="filter('all')" [ngClass]="(filterOptions == 'all') ? 'bgGoogle' : ''">
         Tất cả
       </li>
-      <li class="myBtn" (tap)="filter('sale')" [ngClass]="(filterOptions == 'sale') ? 'bgGoogle' : ''">
+      <li class="myBtn sound" (tap)="filter('sale')" [ngClass]="(filterOptions == 'sale') ? 'bgGoogle' : ''">
         Khuyến mãi
       </li>
-      <li class="myBtn" (tap)="filter('favorite')" [ngClass]="(filterOptions == 'favorite') ? 'bgGoogle' : ''">
+      <li class="myBtn sound" (tap)="filter('favorite')" [ngClass]="(filterOptions == 'favorite') ? 'bgGoogle' : ''">
         Yêu thích
       </li>
     </ul>
@@ -56,7 +56,7 @@
   </h2>
   <div class="products-list">
     <ion-card *ngFor="let product of showedProducts" class="product-card">
-      <img [class]="product.amount == 0 ? 'out-of-stock' : ''" [src]="product.image" (tap)="openProduct(product)" />
+      <img [class]="product.amount == 0 ? 'out-of-stock sound' : 'sound'" [src]="product.thumbnail" (tap)="openProduct(product)" />
       <ion-card-content>
         <ion-card-title>
           {{product.name}}

@@ -1,35 +1,50 @@
 invoices {
-    .invoice {
-        padding-left: 0px;
-        .invoice--cost {
-            color: color($colors, primary);
-        }
-        .item-inner ion-label {
-            padding-left: 10px;
-            border-left: 5px solid color($colors, primary);
-        }
-        &.sent .item-inner ion-label {
-            border-left: 5px solid color($colors, google);
-        }
-        &.checked .item-inner ion-label {
-            border-left: 5px solid color($colors, facebook);
-        }
-        &.done .item-inner ion-label {
-            border-left: 5px solid color($colors, primary);
-        }
-        ion-col {
+    .invoice--cost {
+        color: color($colors, primary);
+    }
+    .item {
+        padding: 0px;
+        .item-inner {
             padding: 0px;
         }
-        .invoice--products {
-            overflow: hidden;
-            margin: 10px 0 0 0;
-            line-height: 1.4rem;
-            position: relative;
-            span.paragraph-end{
-                height: 2rem;
-                line-height: 1.4rem;
-                width: 50px;
-            }    
+        .item-inner .input-wrapper .label {
+            margin: 5px 0;
+            padding: 5px;
         }
+        &.sent .item-inner .input-wrapper .label {
+            border-left: 5px solid color($colors, google);
+        }
+        &.checked .item-inner .input-wrapper .label {
+            border-left: 5px solid color($colors, facebook);
+        }
+        &.done .item-inner .input-wrapper .label {
+            border-left: 5px solid color($colors, primary);
+        }
+        .tap-area {
+            width: 90%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 10%;
+            background: transparent;
+            z-index: 997;
+        }
+    }
+    .invoice--products {
+        overflow: hidden;
+        margin: 10px 0 0 0;
+        line-height: 1.4rem;
+        position: relative;
+        span.paragraph-end {
+            height: 2rem;
+            line-height: 1.4rem;
+            width: 50px;
+        }
+    }
+    .col {
+        padding: 0px;
+    }
+    .remove-icon {
+        padding-left: 5px;
     }
 }

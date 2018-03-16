@@ -1,9 +1,11 @@
 import { Component, ViewChild } from '@angular/core'
-import { Platform, MenuController, Events, NavController } from 'ionic-angular'
+import { Platform, MenuController, Events, NavController, App } from 'ionic-angular'
 import { UserDataProvider } from '../providers/user-data'
 import { StatusBar } from '@ionic-native/status-bar'
 import { SplashScreen } from '@ionic-native/splash-screen'
+import { CallNumber } from '@ionic-native/call-number'
 import { MyToastProvider } from '../providers/my-toast'
+import { ScreenOrientation } from '@ionic-native/screen-orientation'
 
 
 export interface PageInterface {
@@ -14,7 +16,6 @@ export interface PageInterface {
   index?: number
   tabName?: string
   tabComponent?: any
-  requireLoggedIn?: boolean
 }
 
 @Component({
@@ -39,6 +40,7 @@ export class MyApp {
   ]
 
   rootPage: any
+  hotline: string
   @ViewChild('content') nav: NavController
   constructor(
     private platform: Platform,
@@ -47,7 +49,10 @@ export class MyApp {
     private userData: UserDataProvider,
     private menu: MenuController,
     private events: Events,
-    private myToastProvider: MyToastProvider
+    private myToastProvider: MyToastProvider,
+    private callNumber: CallNumber,
+    private app: App,
+    private screenOrientation: ScreenOrientation
   ) {
 
     //-----------> very important for preloading userdata
@@ -63,13 +68,26 @@ export class MyApp {
       })
     //--------------> end of the very important
     this.listenToLoginEvents()
+    this.getHotline()
   }
 
   platformReady() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then(val => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
+      this.setBackButton()
+      //console.log(val)
+      if (val == 'cordova') {
+        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
+      }
     })
+  }
+
+  getHotline() {
+    this.userData
+      .getHotlineNumber()
+      .first()
+      .subscribe(value => this.hotline = value.hotline)
   }
 
   menuTrigger(hasLoggedIn: boolean) {
@@ -154,6 +172,41 @@ export class MyApp {
 
   openIntro() {
     this.nav.setRoot('IntroPage')
+  }
+
+
+  call() {
+    this.callNumber.callNumber(this.hotline, true)
+      .then(() => console.log('Launched dialer!'))
+      .catch(() => console.log('Error launching dialer'))
+  }
+
+  lastBack: number
+  allowClose: boolean
+  setBackButton() {
+    this.platform.registerBackButtonAction(() => {
+      const overlay = this.app._appRoot._overlayPortal.getActive()
+      const nav = this.app.getActiveNav()
+      const closeDelay = 2000
+      const spamDelay = 500
+
+      if (overlay && overlay.dismiss) {
+        overlay.dismiss()
+      } else if (nav.canGoBack()) {
+        nav.pop()
+      } else if (Date.now() - this.lastBack > spamDelay && !this.allowClose) {
+        this.allowClose = true
+        this.myToastProvider.myToast({
+          message: 'Nhấn hai lần để thoát ứng dụng',
+          duration: closeDelay,
+          position: 'top'
+        }, () => this.allowClose = false
+        )
+      } else if (Date.now() - this.lastBack < closeDelay && this.allowClose) {
+        this.platform.exitApp()
+      }
+      this.lastBack = Date.now()
+    })
   }
 
 

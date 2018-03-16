@@ -6,6 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar'
 import { MyApp } from './app.component'
 import { UserDataProvider } from '../providers/user-data'
 import { IonicStorageModule } from '@ionic/storage'
+import { CallNumber } from '@ionic-native/call-number';
+import { ScreenOrientation } from '@ionic-native/screen-orientation';
 // angularfire2 config and imports
 import { AngularFireModule } from 'angularfire2'
 import { firebaseConfig } from '../environment'
@@ -44,7 +46,9 @@ import { AddressModalPage } from '../pages/address-modal/address-modal';
     UserDataProvider,
     MyToastProvider,
     MyDbProvider,
-    TimesPipe
+    TimesPipe,
+    CallNumber,
+    ScreenOrientation
   ]
 })
 export class AppModule { }

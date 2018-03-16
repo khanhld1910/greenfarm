@@ -5,6 +5,9 @@ profile {
         opacity: 1 !important;
         /* Firefox */
     }
+    .text-input, .select-text, .datetime-text {
+        color: #666 !important;
+    }
 
     textarea.text-input {
         margin: 0px;

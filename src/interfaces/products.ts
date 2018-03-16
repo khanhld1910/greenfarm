@@ -1,3 +1,4 @@
+
 export interface Product {
     id: string,
     name: string,
@@ -8,6 +9,7 @@ export interface Product {
     amount: number,
     saleOff?: boolean,
     oldPrice?: number,  
+    thumbnail?: string
 }
 
 

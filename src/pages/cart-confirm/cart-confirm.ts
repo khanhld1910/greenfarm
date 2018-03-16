@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavParams, ModalController, App } from 'ionic-angular';
+import { IonicPage, NavParams, ModalController, App, NavController } from 'ionic-angular';
 import { SingleBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
 import { AddressModalPage } from '../address-modal/address-modal';
@@ -31,7 +31,8 @@ export class CartConfirmPage {
     private modalCtrl: ModalController,
     private myDBProvider: MyDbProvider,
     private myToasProvider: MyToastProvider,
-    private _app: App
+    private _app: App,
+    private navCtrl: NavController
   ) {
     this.cartBills = this.navParams.get('cart')
   }
@@ -101,9 +102,7 @@ export class CartConfirmPage {
   }
 
 
-  confirmInvoice() {    
-
-    let deliverTime = (this.timeDeliver == 'morning') ? `${this.time}T08:00` : `${this.time}T14:00`
+  confirmInvoice() {
     //console.log(this.timeDeliver, deliverTime)    
 
     this
@@ -111,22 +110,27 @@ export class CartConfirmPage {
       .sentReqFromCart(
         this.cartBills,
         this.userData.userPhone,
-        deliverTime,
+        this.time,
+        this.timeDeliver == 'morning',
         this.sentTime(),
         this.navParams.get('total'),
         this.addresses[this.addressSelectedIndex]
       )
       .subscribe(success => {
-        this.myToasProvider
-          .myToast({
-            message: 'Yêu cầu đặt hàng thành công!',
-            duration: 1000,
-            position: 'top',
-            cssClass: 'toast-info'
-          }, () => {
-            this.getNav().setRoot('TabsPage', {tabIndex: 2})
-          })
-      })     
+        this.navCtrl.pop().then(
+          () => {
+            this.getNav().getActiveChildNavs()[0].select(2)
+
+            this.myToasProvider
+              .myToast({
+                message: 'Yêu cầu đặt hàng thành công!',
+                duration: 1000,
+                position: 'top',
+                cssClass: 'toast-info'
+              })
+          }
+        )
+      })
 
   }
 
@@ -138,8 +142,5 @@ export class CartConfirmPage {
     return this._app.getActiveNavs('content')
   }
 
-  test(){
-    console.log('tap')
-  }
 
 }

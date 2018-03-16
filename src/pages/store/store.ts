@@ -40,18 +40,11 @@ export class StorePage {
     this.loading = this.myToastProvider.performLoading('Đang tải dữ liệu...')
     // preload data ( can be put in IonViewDidEnter event)
     this.presentData()
-  }
-
-  ionViewDidLoad() {
     this.listeningToEvents()
   }
 
   ionViewWillEnter() {
     this.getFavoriteProductIDs()
-  }
-
-  ionViewDidLeave() {
-    this.events.unsubscribe('login:reload-state')
   }
 
   dismissLoading(duration: number) {
@@ -198,20 +191,9 @@ export class StorePage {
 
     this.events.subscribe('product:addToCart', singleBill => {
       let bill: SingleBill = singleBill
-      // check if user has logged in
-      if (!this.userData.hasLoggedIn) {
-        this.myToastProvider.myToast({
-          message: 'Vui lòng đăng nhập để mua hàng!',
-          duration: 1000,
-          position: 'top',
-          cssClass: 'toast-danger'
-        }, () => {
-          this.navCtrl.push('LoginPage')
-        })
-        return
-      }
 
       bill.userID = this.userData.userPhone
+      bill.productID_userID = `${bill.productID}_${this.userData.userPhone}`
 
       this.myDBProvider
         .checkCartHadProduct(bill)
@@ -295,6 +277,7 @@ export class StorePage {
       productName: product.name,
       unitPrice: product.unitPrice,
       quantity: 1,
+      productID_userID: ''
     }
     this.events.publish('product:addToCart', bill)
   }

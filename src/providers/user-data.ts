@@ -98,11 +98,6 @@ export class UserDataProvider {
       .map(array => array.length)
   }
 
-  getCartBills() {
-    return this.db
-      .userGetCartBills(this.userPhone)
-  }
-
   lessThan10Format(number: number) {
     return number < 10 ? '0' + number : number
   }
@@ -119,7 +114,7 @@ export class UserDataProvider {
 
     if (!ratings || ratings.length < 1) {
       return 3
-    }   
+    }
 
     let sum: number = 0
     let num: number = 0
@@ -127,9 +122,22 @@ export class UserDataProvider {
       // skip loop if the property is from prototype
       if (!ratings.hasOwnProperty(key)) continue
       sum += ratings[key].value
-      num ++
-    }    
-    return (Math.round(sum*10/num))/10
+      num++
+    }
+    return (Math.round(sum * 10 / num)) / 10
+  }
+
+  timeDisplay(time: string) {
+    let date = new Date(time)
+    return this.lessThan10Format(date.getDate()) + '/' +
+      this.lessThan10Format(date.getMonth() + 1) + '/' +
+      this.lessThan10Format(date.getFullYear()) + ', ' +
+      this.lessThan10Format(date.getHours()) + ':' +
+      this.lessThan10Format(date.getMinutes())
+  }
+
+  getHotlineNumber() {
+    return this.db.getHotline()
   }
 
 
