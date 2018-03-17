@@ -23,7 +23,7 @@ export class CartConfirmPage {
     address: undefined
   }
   deliverAddresses: string[] = []
-  addressSelectedIndex: number = 0
+  addressSelectedIndex: number = -1
   time: string
   timeDeliver: string
 
@@ -147,7 +147,7 @@ export class CartConfirmPage {
             this.myToasProvider
               .myToast({
                 message: 'Yêu cầu đặt hàng thành công!',
-                duration: 1000,
+                duration: 3000,
                 position: 'top',
                 cssClass: 'toast-info'
               })

@@ -4,6 +4,8 @@ page-store {
         z-index: 999;
         display: block;
         position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
         .button-inner {
             color: color($colors, text);
         }
@@ -69,7 +71,8 @@ page-store {
                 list-style: none;
                 li {
                     float: left;
-                    padding: 10px 15px;
+                    width: auto;
+                    padding: 10px;
                     margin-right: 5px;
                     margin-bottom: 5px;
                     background-color: color($colors, primary);

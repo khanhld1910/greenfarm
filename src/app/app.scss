@@ -274,10 +274,12 @@ ion-toast.toast-danger .toast-wrapper {
 }
 
 .my-custom-spinner {
-    height: 30px;
-    width: 30px;
+    height: 80px;
+    width: 80px;
     display: block;
     background: transparent url('../assets/bananas.svg') no-repeat center center;
+    top: calc(50% - 40px);
+    left: calc(50% - 40px);
 }
 
 .my-custom-loading {
@@ -305,3 +307,17 @@ ion-toast.toast-danger .toast-wrapper {
 }
 
 // z-indexes--------->
+.splash {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: color($colors, primary);
+}
+
+.spinner {
+    // your animation code (SpinKit used in this demo)
+}

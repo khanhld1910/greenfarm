@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { CallNumber } from '@ionic-native/call-number'
 import { MyToastProvider } from '../providers/my-toast'
 import { ScreenOrientation } from '@ionic-native/screen-orientation'
+import { timer } from 'rxjs/observable/timer';
 
 
 export interface PageInterface {
@@ -30,10 +31,6 @@ export class MyApp {
     { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 3, icon: 'ios-chatbubbles' },
   ]
 
-  loggedOutPages: PageInterface[] = [
-    { title: 'Đăng nhập', name: 'LoginPage', icon: 'log-in' },
-  ]
-
   loggedInPages: PageInterface[] = [
     { title: 'Hồ sơ', name: 'ProfilePage', icon: 'person' },
     { title: 'Đăng xuất', name: 'TabsPage', icon: 'log-out', logsOut: true }
@@ -41,6 +38,7 @@ export class MyApp {
 
   rootPage: any
   hotline: string
+  showSplash: boolean = true
   @ViewChild('content') nav: NavController
   constructor(
     private platform: Platform,
@@ -80,6 +78,8 @@ export class MyApp {
       if (val == 'cordova') {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
       }
+
+      timer(3000).subscribe(() => this.showSplash = false) // <-- hide animation after 3s
     })
   }
 

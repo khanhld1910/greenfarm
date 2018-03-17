@@ -1,41 +1,4 @@
 <ion-split-pane>
-    <!-- logged out menu -->
-    <ion-menu id="loggedOutMenu" [content]="content">
-        <ion-header>
-            <ion-toolbar>
-                <ion-title>Menu</ion-title>
-            </ion-toolbar>
-        </ion-header>
-        <ion-content class="outer-content">
-            <ion-list>
-                <ion-list-header>
-                    Điều hướng
-                </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of appPages" (tap)="openPage(p)">
-                    <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-                    {{p.title}}
-                </button>
-            </ion-list>
-            <ion-list>
-                <ion-list-header>
-                    Tài khoản
-                </ion-list-header>
-                <button ion-item menuClose *ngFor="let p of loggedOutPages" (tap)="openPage(p)">
-                    <ion-icon item-start [name]="p.icon" [color]="isActive(p)"></ion-icon>
-                    {{p.title}}
-                </button>
-                <button ion-item menuClose (tap)="openIntro()">
-                    <ion-icon item-start name="hammer"></ion-icon>
-                    Hướng dẫn
-                </button>
-                <button ion-item (tap)="call()">
-                    <ion-icon item-start name="call"></ion-icon>
-                    <a href="tel:+84945359269">Hotline: 0945.359.269</a>
-                </button>
-            </ion-list>
-        </ion-content>
-    </ion-menu>
-    <!-- logged in menu -->
     <ion-menu id="loggedInMenu" [content]="content">
         <ion-header>
             <ion-toolbar>
@@ -71,6 +34,10 @@
             </ion-list>
         </ion-content>
     </ion-menu>
+    <div *ngIf="showSplash" class="splash">
+        <div class="my-custom-spinner shaking">
+        </div>
+    </div>
 
     <!-- main navigation -->
     <ion-nav [root]="rootPage" #content swipeBackEnabled="false" main name="app"></ion-nav>

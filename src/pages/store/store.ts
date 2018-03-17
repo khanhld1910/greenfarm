@@ -24,7 +24,6 @@ export class StorePage {
   favoriteProductIDs: string[]
   filterOptions: string
   searchQuery: string
-  loading: Loading
 
   @ViewChild(Slides) slides: Slides
   constructor(
@@ -37,7 +36,6 @@ export class StorePage {
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
-    this.loading = this.myToastProvider.performLoading('Đang tải dữ liệu...')
     // preload data ( can be put in IonViewDidEnter event)
     this.presentData()
     this.listeningToEvents()
@@ -45,12 +43,6 @@ export class StorePage {
 
   ionViewWillEnter() {
     this.getFavoriteProductIDs()
-  }
-
-  dismissLoading(duration: number) {
-    setTimeout(() => {
-      this.loading.dismiss()
-    }, duration)
   }
 
   filter(filterOptions: string) {
@@ -244,7 +236,6 @@ export class StorePage {
         for (var i = 0; i < favArr.length; i++) {
           this.favoriteProductIDs.push(favArr[i].id)
         }
-        this.dismissLoading(500)
       })
   }
 
