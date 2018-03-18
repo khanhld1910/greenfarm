@@ -180,52 +180,6 @@ export class StorePage {
 
         })
     })
-
-    this.events.subscribe('product:addToCart', (singleBill) =>  {
-      let loading = this.myToastProvider.performLoading('đang xử lý ...')
-      let bill: SingleBill = singleBill
-      // day ne
-
-      bill.userID = this.userData.userPhone
-      bill.productID_userID = `${bill.productID}_${this.userData.userPhone}`
-
-      this.myDBProvider
-        .checkCartHadProduct(bill)
-        .first()
-        .subscribe(async value => {
-
-          let result = false
-
-          for (var i = 0; i < value.length; i++) {
-            result = (value[i].productID == bill.productID)
-            if (result) break
-          }
-
-          if (result) {
-            await loading.dismiss()
-            this.myToastProvider.myToast({
-              message: 'Sản phẩm đã sẵn có trong giỏ!',
-              duration: 1000,
-              position: 'top',
-              cssClass: 'toast-danger'
-            })
-            return
-          }
-
-          return this.myDBProvider
-            .newCartBill(bill)
-            .then(async success => {
-              await loading.dismiss()
-              this.myToastProvider.myToast({
-                message: 'Đã thêm sản phẩm vào giỏ hàng!',
-                duration: 1000,
-                position: 'top',
-                cssClass: 'toast-info'
-              })
-            })
-
-        })
-    })
   }
 
   getFavoriteProductIDs() {
@@ -274,7 +228,51 @@ export class StorePage {
       quantity: 1,
       productID_userID: ''
     }
-    this.events.publish('product:addToCart', bill)
+
+    // add
+
+    let loading = this.myToastProvider.performLoading('đang xử lý ...')
+    // day ne
+
+    bill.userID = this.userData.userPhone
+    bill.productID_userID = `${bill.productID}_${this.userData.userPhone}`
+
+    this.myDBProvider
+      .checkCartHadProduct(bill)
+      .first()
+      .subscribe(async value => {
+
+        let result = false
+
+        for (var i = 0; i < value.length; i++) {
+          result = (value[i].productID == bill.productID)
+          if (result) break
+        }
+
+        if (result) {
+          await loading.dismiss()
+          this.myToastProvider.myToast({
+            message: 'Sản phẩm đã sẵn có trong giỏ!',
+            duration: 1000,
+            position: 'top',
+            cssClass: 'toast-danger'
+          })
+          return
+        }
+
+        return this.myDBProvider
+          .newCartBill(bill)
+          .then(async success => {
+            await loading.dismiss()
+            this.myToastProvider.myToast({
+              message: 'Đã thêm sản phẩm vào giỏ hàng!',
+              duration: 1000,
+              position: 'top',
+              cssClass: 'toast-info'
+            })
+          })
+      })
+
   }
 
   getAverageRate(product: Product) {

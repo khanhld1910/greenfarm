@@ -1,12 +1,12 @@
 product {
     ion-img {
         width: 100%;
-        height: auto;
+        height: calc(3*100vw/4) !important;
         background-color: transparent;
+        border-bottom: 1px solid rgba(0,0,0,0.17);
         img {
-            width: 100%;
-            height: auto;
-            object-fit: fill;    
+            width: 100% !important;
+            object-fit: fill;
         }
         &.out-of-stock img {
             opacity: 0.4;
@@ -43,13 +43,12 @@ product {
         border: 1px solid rgba(0, 0, 0, 0.17);
         padding: 5px 8px;
         border-radius: 2px;
-        box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
         color: #666;
         &:active {
             border: #666 1px solid;
         }
     }
-
     ion-footer {
         padding: 0 10px;
         bottom: 56px !important;
@@ -60,5 +59,9 @@ product {
             padding: 8px 10px;
             max-height: 56px;
         }
+    }
+
+    .item-inner {
+        border: none !important;
     }
 }
