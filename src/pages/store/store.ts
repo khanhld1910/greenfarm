@@ -251,7 +251,7 @@ export class StorePage {
             await loading.dismiss()
             this.myToastProvider.myToast({
               message: 'Đã thêm sản phẩm vào giỏ hàng!',
-              duration: 3000,
+              duration: 2000,
               position: 'top',
               cssClass: 'toast-info'
             })

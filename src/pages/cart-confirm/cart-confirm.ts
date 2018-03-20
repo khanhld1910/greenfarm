@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavParams, App, NavController } from 'ionic-angular';
+import { IonicPage, NavParams, App, NavController, AlertController } from 'ionic-angular';
 import { SingleBill, AddressInfo, TotalBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyDbProvider } from '../../providers/my-db';
-import { MyToastProvider } from '../../providers/my-toast';
 import { User } from '../../interfaces/user';
+import { messaging } from 'firebase';
 
 
 @IonicPage({
@@ -36,9 +36,9 @@ export class CartConfirmPage {
     public navParams: NavParams,
     private userData: UserDataProvider,
     private myDBProvider: MyDbProvider,
-    private myToasProvider: MyToastProvider,
     private _app: App,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private alertCtrl: AlertController
   ) {
     this.cartBills = this.navParams.get('cart')
   }
@@ -54,6 +54,7 @@ export class CartConfirmPage {
       .getUserInfo(this.userData.userPhone)
       .subscribe(user => {
         this.user = user
+        this.mainAddressChecked()
       })
 
     this.setTimeRange()
@@ -140,7 +141,7 @@ export class CartConfirmPage {
       totalCost: this.navParams.get('total'),
       userID: this.user.phone,
       sentTime: this.sentTime(),
-      userID_status: this.user.phone + '_1',      
+      userID_status: this.user.phone + '_1',
     }
     this
       .myDBProvider
@@ -149,21 +150,35 @@ export class CartConfirmPage {
         invoice
       )
       .subscribe(success => {
-        this.navCtrl.pop().then(
-          () => {
-            this.getNav().getActiveChildNavs()[0].select(2)
-
-            this.myToasProvider
-              .myToast({
-                message: 'Yêu cầu đặt hàng thành công!',
-                duration: 3000,
-                position: 'top',
-                cssClass: 'toast-info'
-              })
-          }
-        )
+        this.navCtrl.pop().then(() => {
+          this.successAlert()
+        })
       })
 
+  }
+
+  successAlert() {
+    let alert = this.alertCtrl.create({
+      title: 'Đặt hàng thành công',
+      message: 'Chúng tôi sẽ gọi điện thoại xác nhận đơn hàng trong thời gian sớm nhất.'
+        + ' Xin cảm ơn quý khách đã tin tưởng và ủng hộ Phú Thịnh Greenfarm.',
+      buttons: [
+        {
+          text: 'Về cửa hàng',
+          role: 'cancel',
+          handler: () => {
+            this.getNav().getActiveChildNavs()[0].select(0)
+          }
+        },
+        {
+          text: 'Xem đơn hàng',
+          handler: () => {
+            this.getNav().getActiveChildNavs()[0].select(2)
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   getNav() {
