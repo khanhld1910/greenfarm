@@ -55,8 +55,8 @@ export class UserDataProvider {
     return this.db.getUserInfo(phone)
   }
 
-  getUserAddresses(phone: string) {
-    return this.db.getUserAddresses(phone)
+  getUserAddressInfoList(phone: string) {
+    return this.db.getUserAddressInfoList(phone)
   }
 
   setUserInfo(user: User) {

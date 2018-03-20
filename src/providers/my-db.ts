@@ -3,7 +3,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Rx';
 import { Product } from '../interfaces/products';
 import { User } from '../interfaces/user';
-import { SingleBill, TotalBill } from '../interfaces/bill';
+import { SingleBill, TotalBill, AddressInfo } from '../interfaces/bill';
 import { CustomMessage } from '../interfaces/message';
 //import { FirebaseDatabase } from '@firebase/database-types';
 import * as firebase from 'firebase'
@@ -57,8 +57,8 @@ export class MyDbProvider {
     return this.afDB.object<User>('Users/' + phone).valueChanges()
   }
 
-  getUserAddresses(phone: string) {
-    return this.afDB.list<string>(`Users/${phone}/deliverAddresses/`).valueChanges()
+  getUserAddressInfoList(phone: string) {
+    return this.afDB.list<AddressInfo>(`Users/${phone}/deliverAddresses/`).valueChanges()
   }
 
   setUserInfo(user: User): Promise<void> {
@@ -172,23 +172,13 @@ export class MyDbProvider {
       })
   }
 
-  sentReqFromCart(bills: SingleBill[], phone: string, deliverTime: string, morning: boolean, sentTime: string, totalCost: number, address: string) {
+  sentReqFromCart(bills: SingleBill[], invoice: TotalBill) {
     let billList = this.afDB.list('Bills/')
     const newKey = billList.push('new item').key
 
 
-    let newBill: TotalBill = {
-      deliverTime: deliverTime,
-      morningDeliver: morning,
-      sentTime: sentTime,
-      id: newKey,
-      status: 1,
-      userID: phone,
-      totalCost: totalCost,
-      address: address,
-      productName: [],
-      userID_status: `${phone}_1`,
-    }
+    let newBill: TotalBill = invoice
+    newBill.id = newKey
     //------------>
     let sentBills = {}
     let removeCartBills = {}
@@ -214,9 +204,9 @@ export class MyDbProvider {
         this.afDB.object('Invoices/sent/').update(sentBills),
         // delete cart bills
         this.afDB.object('Invoices/cart/').update(removeCartBills),
-        // update products amount
-        // ------------------------------------------------>
-      )
+      // update products amount
+      // ------------------------------------------------>
+    )
 
   }
 
@@ -296,14 +286,20 @@ export class MyDbProvider {
     ).valueChanges()
   }
 
-  newAddress(userPhone: string, address: string) {
-    return this.afDB.list(`Users/${userPhone}/deliverAddresses`).push(address)
+  newAddress(userPhone: string, addressInfo: AddressInfo) {
+
+    let addressInfoList = this.afDB.list(`Users/${userPhone}/deliverAddresses`)
+    const newKey = addressInfoList.push('new item').key
+    addressInfo.id = newKey
+    return this.afDB.object(`Users/${userPhone}/deliverAddresses/${newKey}`).update(addressInfo)
   }
 
-  updateAddresses(userPhone: string, addresses: any) {
-    return this.afDB
-      .object(`Users/${userPhone}/deliverAddresses`)
-      .set(addresses)
+  updateAddress(userPhone: string, addressInfo: AddressInfo) {
+    return this.afDB.object(`Users/${userPhone}/deliverAddresses/${addressInfo.id}`).update(addressInfo)
+  }
+
+  removeAddress(userPhone: string, addressInfoID: string) {
+    return this.afDB.object(`Users/${userPhone}/deliverAddresses/${addressInfoID}`).remove()
   }
 
   getHotline() {

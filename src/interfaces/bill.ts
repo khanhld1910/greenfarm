@@ -20,9 +20,18 @@ export interface TotalBill {
     sentTime: string,
     deliverTime: string,
     address: string,
+    name?: string,
+    phone?: string,
     productName: string[],
     userID_status: string,
     morningDeliver?: boolean
+}
+
+export interface AddressInfo {
+    id: string,
+    name: string,
+    phone: string,
+    address: string
 }
 
 

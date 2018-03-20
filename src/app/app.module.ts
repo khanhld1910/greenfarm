@@ -16,7 +16,6 @@ import { MyToastProvider } from '../providers/my-toast';
 import { MyDbProvider } from '../providers/my-db';
 import { ProductReviewPage } from '../pages/product-review/product-review';
 import { TimesPipe } from '../pipes/custom-loop';
-import { AddressModalPage } from '../pages/address-modal/address-modal';
 
 
 @NgModule({
@@ -24,7 +23,6 @@ import { AddressModalPage } from '../pages/address-modal/address-modal';
     MyApp,
     ProductReviewPage,
     TimesPipe,
-    AddressModalPage
   ],
   imports: [
     BrowserModule,
@@ -37,7 +35,6 @@ import { AddressModalPage } from '../pages/address-modal/address-modal';
   entryComponents: [
     MyApp,
     ProductReviewPage,
-    AddressModalPage
   ],
   providers: [
     StatusBar,

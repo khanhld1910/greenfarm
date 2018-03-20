@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, Slides, Events, Loading } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, Slides} from 'ionic-angular';
 import { Product } from '../../interfaces/products';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
@@ -31,14 +31,12 @@ export class StorePage {
     public navParams: NavParams,
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
-    private myToastProvider: MyToastProvider,
-    private events: Events
+    private myToastProvider: MyToastProvider
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
     // preload data ( can be put in IonViewDidEnter event)
     this.presentData()
-    this.listeningToEvents()
   }
 
   ionViewWillEnter() {
@@ -156,30 +154,17 @@ export class StorePage {
   }
 
   addToFavorite(productID: string, setFavoriteTo: boolean) {
-    let publishInfo = {
-      productID: productID,
-      setFavoriteTo: setFavoriteTo
-    }
-    this.events.publish('product:favorite', publishInfo)
-  }
-
-  listeningToEvents() {
-    this.events.subscribe('product:favorite', publishInfo => {
-      let productID: string = publishInfo.productID
-      let setFavoriteTo: boolean = publishInfo.setFavoriteTo
-      // will be publish from StorePage and ProductPage
-      this.myDBProvider.setFavoriteProduct(this.userData.userPhone, productID, setFavoriteTo)
-        .then(() => {
-          this.myToastProvider.myToast({
-            message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
-            duration: 1000,
-            position: 'top',
-            cssClass: 'toast-primary'
-          })
-          if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
-
+    // will be publish from StorePage and ProductPage
+    this.myDBProvider.setFavoriteProduct(this.userData.userPhone, productID, setFavoriteTo)
+      .then(() => {
+        this.myToastProvider.myToast({
+          message: setFavoriteTo ? 'Đã thêm vào yêu thích' : 'Đã bỏ yêu thích',
+          duration: 1000,
+          position: 'top',
+          cssClass: 'toast-primary'
         })
-    })
+        if (this.filterOptions == 'favorite') this.presentFavoriteProducts()
+      })
   }
 
   getFavoriteProductIDs() {
@@ -253,7 +238,7 @@ export class StorePage {
           await loading.dismiss()
           this.myToastProvider.myToast({
             message: 'Sản phẩm đã sẵn có trong giỏ!',
-            duration: 1000,
+            duration: 1500,
             position: 'top',
             cssClass: 'toast-danger'
           })
@@ -266,7 +251,7 @@ export class StorePage {
             await loading.dismiss()
             this.myToastProvider.myToast({
               message: 'Đã thêm sản phẩm vào giỏ hàng!',
-              duration: 1000,
+              duration: 3000,
               position: 'top',
               cssClass: 'toast-info'
             })

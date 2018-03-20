@@ -8,12 +8,7 @@ cart-confirm {
         }
     }
     .item {
-        .item-inner .input-wrapper .label {
-            margin: 5px 0;
-            padding: 5px;
-        }
         &.checked .item-inner .input-wrapper .label {
-            border-left: 5px solid color($colors, primary);
             .address {
                 color: color($colors, primary);
                 font-style: italic;
@@ -71,6 +66,6 @@ cart-confirm {
         background-color: rgba(255, 255, 255, 0.3);
     }
     .my-ion-list {
-        padding-bottom: 190px;
+        margin-bottom: 190px;
     }
 }

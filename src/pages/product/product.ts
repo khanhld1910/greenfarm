@@ -74,7 +74,7 @@ export class ProductPage {
           await loading.dismiss()
           this.myToastProvider.myToast({
             message: 'Sản phẩm đã sẵn có trong giỏ!',
-            duration: 1000,
+            duration: 1500,
             position: 'top',
             cssClass: 'toast-danger'
           })
@@ -87,7 +87,7 @@ export class ProductPage {
             await loading.dismiss()
             this.myToastProvider.myToast({
               message: 'Đã thêm sản phẩm vào giỏ hàng!',
-              duration: 1000,
+              duration: 3000,
               position: 'top',
               cssClass: 'toast-info'
             })

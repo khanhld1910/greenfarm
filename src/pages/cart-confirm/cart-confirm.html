@@ -7,63 +7,51 @@
 <ion-content padding>
   <ion-list class="my-ion-list">
     <ion-list-header>
-      Địa chỉ giao hàng
-      <button ion-button item-end clear (tap)="addOrEditAddress()">
-        Thêm
-      </button>
+      Chọn địa chỉ nhận hàng
     </ion-list-header>
     <h3 *ngIf="!user.address" ion-text color="google" style="margin: 10px 0;">Chưa có địa chỉ giao hàng!!!</h3>
     <ion-item *ngIf="user.address">
+      <div class="tap-area sound" (tap)="mainAddressChecked()"></div>
       <ion-row align-items-center>
-        <ion-col col-3 text-left class="label">
-          Họ tên
+        <ion-col col-1 text-center class="label">
+          <ion-icon [name]="isAddressChecked(null) ? 'radio-button-on' : 'radio-button-off'">
+          </ion-icon>
         </ion-col>
-        <ion-col col-9 text-right class="value">
-          {{user.name}}
+        <ion-col col-10 text-left class="value">
+          <h3>{{user.name}}</h3>
+          <p>{{user.phone}}</p>
+          <p>{{user.address}}</p>
         </ion-col>
-      </ion-row>
-      <ion-row align-items-center>
-        <ion-col col-3 text-left class="label">
-          Giới tính
+        <ion-col col-1 text-center class="label" (tap)="updateUserInfo()">
+          <ion-icon name="md-more">
+          </ion-icon>
         </ion-col>
-        <ion-col col-9 text-right class="value" [innerHTML]="user.isMale ? 'Nam' : 'Nữ'">
-        </ion-col>
-      </ion-row>
-      <ion-row align-items-center>
-        <ion-col col-3 text-left class="label">
-          Ngày sinh
-        </ion-col>
-        <ion-col col-9 text-right class="value">
-          {{birthdateFormat()}}
-        </ion-col>
-      </ion-row>
-    </ion-item>
-    <ion-item *ngIf="user.address" [class.checked]="isAddressChecked(-1)">
-      <div class="tap-area sound" (tap)="setCheckedIndex(-1)"></div>
-      <ion-row>
-        <div ion-col col-11 text-left>
-          <p class="address">
-            {{user.address}}
-          </p>
-        </div>
-        <div ion-col col-1 text-right>
-          <ion-icon color="google" name="md-create" class="more-opts sound" (tap)="addOrEditAddress(-1)"></ion-icon>
-        </div>
       </ion-row>
     </ion-item>
 
-    <ion-item *ngFor="let address of deliverAddresses; let i = index" [class.checked]="isAddressChecked(i)">
-      <div class="tap-area sound" (tap)="setCheckedIndex(i)"></div>
-      <ion-row>
-        <div ion-col col-11 text-left>
-          <p class="address">
-            {{address}}
-          </p>
-        </div>
-        <div ion-col col-1 text-right>
-          <ion-icon color="google" name="md-create" class="more-opts sound" (tap)="addOrEditAddress(i)"></ion-icon>
-        </div>
+    <ion-item *ngFor="let addressInfo of addressInfoList">
+      <div class="tap-area sound" (tap)="addressInfoChecked(addressInfo)"></div>
+      <ion-row align-items-center>
+        <ion-col col-1 text-center class="label">
+          <ion-icon [name]="isAddressChecked(addressInfo.id) ? 'radio-button-on' : 'radio-button-off'">
+          </ion-icon>
+        </ion-col>
+        <ion-col col-10 text-left class="value">
+          <h3>{{addressInfo.name}}</h3>
+          <p>{{addressInfo.phone}}</p>
+          <p>{{addressInfo.address}}</p>
+        </ion-col>
+        <ion-col col-1 text-center class="label" (tap)="editAddressInfo(addressInfo)">
+          <ion-icon name="md-more">
+          </ion-icon>
+        </ion-col>
       </ion-row>
+    </ion-item>
+
+    <ion-item>
+      <h3 (tap)="addAddress()">
+        Thêm địa chỉ nhận hàng
+      </h3>
     </ion-item>
   </ion-list>
 </ion-content>

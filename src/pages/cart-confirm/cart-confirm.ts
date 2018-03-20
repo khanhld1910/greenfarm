@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavParams, ModalController, App, NavController } from 'ionic-angular';
-import { SingleBill } from '../../interfaces/bill';
+import { IonicPage, NavParams, App, NavController } from 'ionic-angular';
+import { SingleBill, AddressInfo, TotalBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
-import { AddressModalPage } from '../address-modal/address-modal';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
 import { User } from '../../interfaces/user';
@@ -22,10 +21,13 @@ export class CartConfirmPage {
     phone: '',
     address: undefined
   }
-  deliverAddresses: string[] = []
-  addressSelectedIndex: number = -1
+  addressInfoList: AddressInfo[] = []
+  confirmAddress: string
+  checkedAddressInforID: string
   time: string
   timeDeliver: string
+  name: string
+  phone: string
 
   min: string
   max: string
@@ -33,7 +35,6 @@ export class CartConfirmPage {
   constructor(
     public navParams: NavParams,
     private userData: UserDataProvider,
-    private modalCtrl: ModalController,
     private myDBProvider: MyDbProvider,
     private myToasProvider: MyToastProvider,
     private _app: App,
@@ -44,9 +45,9 @@ export class CartConfirmPage {
 
   ionViewDidLoad() {
     this.userData
-      .getUserAddresses(this.userData.userPhone)
+      .getUserAddressInfoList(this.userData.userPhone)
       .subscribe(value => {
-        this.deliverAddresses = value
+        this.addressInfoList = value
       })
 
     this.userData
@@ -88,56 +89,64 @@ export class CartConfirmPage {
     return `${now.getFullYear()}-${this.userData.lessThan10Format(now.getMonth() + 1)}-${this.userData.lessThan10Format(now.getDate())}T${this.userData.lessThan10Format(now.getHours())}:${this.userData.lessThan10Format(now.getMinutes())}`
   }
 
-  isAddressChecked(addressIndex: number) {
-    return this.addressSelectedIndex == addressIndex
+  isAddressChecked(checkedAddressInforID: string) {
+    return this.checkedAddressInforID == checkedAddressInforID
   }
 
-  setCheckedIndex(index: number) {
-    this.addressSelectedIndex = index
+  mainAddressChecked() {
+    this.checkedAddressInforID = null
+    this.confirmAddress = this.user.address
+    this.name = this.user.name
+    this.phone = this.user.phone
   }
 
-  addOrEditAddress(index?: number) {
+  addressInfoChecked(address: AddressInfo) {
+    this.checkedAddressInforID = address.id
+    this.confirmAddress = address.address
+    this.name = address.name
+    this.phone = address.phone
+  }
 
+  updateUserInfo() {
+    this.navCtrl.push('ProfilePage', { popBack: true })
+  }
+
+  addAddress() {
     if (!this.user.address) {
       // user have not updated profile
       this.navCtrl.push('ProfilePage', { popBack: true })
       return false
     }
-    //console.log(index)
+    this.navCtrl.push('AddressDeliverPage', { editMode: false })
+  }
 
-    let addressModal
-
-    if (index == undefined) {
-      // new address
-      addressModal = this.modalCtrl.create(AddressModalPage, { isEdit: false })
-    } else if (index == -1) {
-      // edit profile
-      this.navCtrl.push('ProfilePage', { popBack: true })
-      return false
-    } else {
-      // edit address
-      addressModal = this.modalCtrl.create(AddressModalPage, { isEdit: true, index: index, addresses: this.deliverAddresses })
-    }
-
-    addressModal.present()
+  editAddressInfo(address: AddressInfo) {
+    this.navCtrl.push('AddressDeliverPage', { editMode: true, addressInfo: address })
   }
 
 
   confirmInvoice() {
     //console.log(this.timeDeliver, deliverTime) 
-    
-    let address = this.addressSelectedIndex == -1 ? this.user.address : this.deliverAddresses[this.addressSelectedIndex]
 
+    let invoice: TotalBill = {
+      address: this.confirmAddress,
+      deliverTime: this.time,
+      morningDeliver: this.timeDeliver == 'morning',
+      id: '',
+      productName: [],
+      name: this.name,
+      phone: this.phone,
+      status: 1,
+      totalCost: this.navParams.get('total'),
+      userID: this.user.phone,
+      sentTime: this.sentTime(),
+      userID_status: this.user.phone + '_1',      
+    }
     this
       .myDBProvider
       .sentReqFromCart(
         this.cartBills,
-        this.userData.userPhone,
-        this.time,
-        this.timeDeliver == 'morning',
-        this.sentTime(),
-        this.navParams.get('total'),
-        address
+        invoice
       )
       .subscribe(success => {
         this.navCtrl.pop().then(

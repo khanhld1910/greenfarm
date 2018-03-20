@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{title}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+  <form #addressInfoForm="ngForm" novalidate>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">Họ tên</ion-label>
+        <ion-input [(ngModel)]="form.name" minlength="2" maxlength="30" name="name" type="text" #name="ngModel" spellcheck="false"
+          autocapitalize="on" required>
+        </ion-input>
+      </ion-item>
+      <p ion-text [hidden]="name.valid || submitted == false" color="danger" padding-left>
+        Họ tên không hợp lệ
+      </p>
+      <ion-item>
+        <ion-label color="primary">Điện thoại</ion-label>
+        <ion-input [(ngModel)]="form.phone" minlength="10" maxlength="12" name="phone" type="number" #phone="ngModel" spellcheck="false"
+          required>
+        </ion-input>
+      </ion-item>
+      <p ion-text [hidden]="phone.valid || submitted == false" color="danger" padding-left>
+        Số điện thoại không hợp lệ
+      </p>
+      <ion-item>
+        <ion-label color="primary">Địa chỉ</ion-label>
+        <ion-textarea minlength="10" required maxlength="200" autocorrect="off" name="address" [(ngModel)]="form.address" #address="ngModel"
+          autosize>
+        </ion-textarea>
+      </ion-item>
+      <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>
+        Địa chỉ không hợp lệ
+      </p>
+    </ion-list>
+    <button ion-button (tap)="submit(addressInfoForm)" type="submit" block>Đồng ý</button>
+    <button *ngIf="editMode" ion-button (tap)="delete()" color="google" block>Xóa bỏ</button>
+  </form>
+
+</ion-content>
