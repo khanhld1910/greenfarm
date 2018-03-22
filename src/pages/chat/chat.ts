@@ -4,6 +4,7 @@ import { CustomMessage } from '../../interfaces/message';
 import { MyDbProvider } from '../../providers/my-db';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyToastProvider } from '../../providers/my-toast';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage(
   { name: 'ChatPage' }
@@ -27,6 +28,7 @@ export class ChatPage {
     private myDBProvider: MyDbProvider,
     private userDataProvider: UserDataProvider,
     private myToast: MyToastProvider,
+    private smartAudio: SmartAudio
   ) {
   }
 
@@ -54,6 +56,7 @@ export class ChatPage {
   }
 
   openIntroPage() {
+    this.smartAudio.play('tap')
     this._app.getRootNav().setRoot('IntroPage')
   }
 
@@ -70,6 +73,7 @@ export class ChatPage {
   }
 
   sendMsg() {
+    this.smartAudio.play('tap')
     if (!this.editorMsg.trim()) return
 
     //create message object
@@ -89,7 +93,7 @@ export class ChatPage {
 
 
   viewMore() {
-
+    this.smartAudio.play('tap')
     let oldestMessageHasShowed = this.showedMessages[0]
     this._loading = this.myToast.performLoading('Đang tải ...')
     this.myDBProvider

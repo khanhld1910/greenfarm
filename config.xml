@@ -89,4 +89,5 @@
     <plugin name="cordova-plugin-nativeclicksound" spec="0.0.4" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <engine name="android" spec="7.0.0" />
+    <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
 </widget>

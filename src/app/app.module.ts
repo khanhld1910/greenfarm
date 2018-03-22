@@ -17,6 +17,9 @@ import { MyDbProvider } from '../providers/my-db';
 import { ProductReviewPage } from '../pages/product-review/product-review';
 import { TimesPipe } from '../pipes/custom-loop';
 
+import { NativeAudio } from '@ionic-native/native-audio';
+import { SmartAudio } from '../providers/smart-audio';
+
 
 @NgModule({
   declarations: [
@@ -45,7 +48,10 @@ import { TimesPipe } from '../pipes/custom-loop';
     MyDbProvider,
     TimesPipe,
     CallNumber,
-    ScreenOrientation
+    ScreenOrientation,
+    SmartAudio,
+    NativeAudio,
+    SmartAudio,
   ]
 })
 export class AppModule { }

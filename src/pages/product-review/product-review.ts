@@ -5,6 +5,7 @@ import { UserDataProvider } from '../../providers/user-data';
 import { Rating } from '../../interfaces/rating';
 import { MyToastProvider } from '../../providers/my-toast';
 import { Product } from '../../interfaces/products';
+import { SmartAudio } from '../../providers/smart-audio';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class ProductReviewPage {
     private viewCtrl: ViewController,
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
-    private toastProvider: MyToastProvider
+    private toastProvider: MyToastProvider,
+    private smartAudio: SmartAudio
   ) {
     this.product = this.navParams.get('product')
 
@@ -48,10 +50,12 @@ export class ProductReviewPage {
   }
 
   dismiss() {
+    this.smartAudio.play('tap')
     this.viewCtrl.dismiss()
   }
 
   rating() {
+    this.smartAudio.play('tap')
     this.myDBProvider
       .productRate(this.myRating)
       .then(isSuccess => {
@@ -83,6 +87,7 @@ export class ProductReviewPage {
   }
 
   setRate(i: number) {
+    this.smartAudio.play('tap')
     this.myRating.rate = i
   }
 

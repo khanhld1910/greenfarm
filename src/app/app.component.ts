@@ -6,7 +6,9 @@ import { SplashScreen } from '@ionic-native/splash-screen'
 import { CallNumber } from '@ionic-native/call-number'
 import { MyToastProvider } from '../providers/my-toast'
 import { ScreenOrientation } from '@ionic-native/screen-orientation'
-import { timer } from 'rxjs/observable/timer';
+import { timer } from 'rxjs/observable/timer'
+
+import { SmartAudio } from '../providers/smart-audio'
 
 
 export interface PageInterface {
@@ -27,7 +29,7 @@ export class MyApp {
   appPages: PageInterface[] = [
     { title: 'Cửa hàng', name: 'TabsPage', tabComponent: 'StorePage', index: 0, icon: 'home' },
     { title: 'Giỏ hàng', name: 'TabsPage', tabComponent: 'CartPage', index: 1, icon: 'cart' },
-    { title: 'Hóa đơn', name: 'TabsPage', tabComponent: 'InvoicesPage', index: 2, icon: 'paper' },
+    { title: 'Hóa đơn', name: 'TabsPage', tabComponent: 'InvoicesPage', index: 2, icon: 'ios-paper' },
     { title: 'Tin nhắn', name: 'TabsPage', tabComponent: 'ChatPage', index: 3, icon: 'ios-chatbubbles' },
   ]
 
@@ -50,7 +52,8 @@ export class MyApp {
     private myToastProvider: MyToastProvider,
     private callNumber: CallNumber,
     private app: App,
-    private screenOrientation: ScreenOrientation
+    private screenOrientation: ScreenOrientation,
+    private smartAudio: SmartAudio
   ) {
 
     //-----------> very important for preloading userdata
@@ -78,6 +81,8 @@ export class MyApp {
       if (val == 'cordova') {
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
       }
+
+      this.smartAudio.preload('tap', 'assets/sounds/drop.wav')
 
       timer(3000).subscribe(() => this.showSplash = false) // <-- hide animation after 3s
     })
@@ -121,6 +126,7 @@ export class MyApp {
 
 
     if (page.name == 'ProfilePage') {
+      this.smartAudio.play('tap')
       // if click to ProfilePge we use nav.push for future pop navController
       return this.nav.push(page.name)
     }
@@ -171,11 +177,13 @@ export class MyApp {
   }
 
   openIntro() {
+    this.smartAudio.play('tap')
     this.nav.setRoot('IntroPage')
   }
 
 
   call() {
+    this.smartAudio.play('tap')
     this.callNumber.callNumber(this.hotline, true)
       .then(() => console.log('Launched dialer!'))
       .catch(() => console.log('Error launching dialer'))

@@ -1,11 +1,11 @@
 <ion-tabs #tabs [selectedIndex]="mySelectedIndex" name="tabs">
-  <ion-tab class="sound" [root]="tab1Root" tabTitle="Cửa hàng" tabIcon="home" tabUrlPath="store"></ion-tab>
-  <ion-tab class="sound" [enabled]="userData.hasLoggedIn" [root]="tab2Root" tabTitle="Giỏ hàng" tabIcon="cart" tabUrlPath="cart"
+  <ion-tab (ionSelect)="changeTab()" class="sound" [root]="tab1Root" tabTitle="Cửa hàng" tabIcon="home" tabUrlPath="store"></ion-tab>
+  <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab2Root" tabTitle="Giỏ hàng" tabIcon="cart" tabUrlPath="cart"
     [tabBadge]="cartBadge" tabBadgeStyle="google">
   </ion-tab>
-  <ion-tab class="sound" [enabled]="userData.hasLoggedIn" [root]="tab3Root" tabTitle="Hóa đơn" tabIcon="paper" tabUrlPath="invoices"
+  <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab3Root" tabTitle="Hóa đơn" tabIcon="paper" tabUrlPath="invoices"
     [tabBadge]="sentBadge" tabBadgeStyle="facebook">
   </ion-tab>
-  <ion-tab class="sound" [enabled]="userData.hasLoggedIn" [root]="tab4Root" tabTitle="Tin nhắn" tabIcon="chatbubbles" tabUrlPath="chat">
+  <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab4Root" tabTitle="Tin nhắn" tabIcon="chatbubbles" tabUrlPath="chat">
   </ion-tab>
 </ion-tabs>

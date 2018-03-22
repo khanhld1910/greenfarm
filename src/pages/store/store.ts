@@ -5,6 +5,7 @@ import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
 import { UserDataProvider } from '../../providers/user-data';
 import { SingleBill } from '../../interfaces/bill';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage(
   {
@@ -31,7 +32,8 @@ export class StorePage {
     public navParams: NavParams,
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
-    private myToastProvider: MyToastProvider
+    private myToastProvider: MyToastProvider,
+    private smartAudio: SmartAudio
   ) {
     // the first load has no filter
     this.filterOptions = 'all'
@@ -44,6 +46,8 @@ export class StorePage {
   }
 
   filter(filterOptions: string) {
+
+    this.smartAudio.play('tap')
     // set filter
     if (this.filterOptions == filterOptions) {
       return
@@ -150,10 +154,12 @@ export class StorePage {
   }
 
   openProduct(_product: Product) {
+    this.smartAudio.play('tap')
     this.navCtrl.push('ProductPage', { 'product': _product })
   }
 
   addToFavorite(productID: string, setFavoriteTo: boolean) {
+    this.smartAudio.play('tap')
     // will be publish from StorePage and ProductPage
     this.myDBProvider.setFavoriteProduct(this.userData.userPhone, productID, setFavoriteTo)
       .then(() => {
@@ -191,6 +197,7 @@ export class StorePage {
   }
 
   addToCartOpt(product: Product) {
+    this.smartAudio.play('tap')
     if (product.amount == 0) {
       this.myToastProvider.myToast({
         message: 'Sản phẩm tạm thời hết hàng!',

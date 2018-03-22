@@ -6,6 +6,7 @@ import { MyToastProvider } from '../../providers/my-toast';
 import { ProductReviewPage } from '../product-review/product-review';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyDbProvider } from '../../providers/my-db';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage(
   { name: 'ProductPage' }
@@ -23,12 +24,14 @@ export class ProductPage {
     private myToastProvider: MyToastProvider,
     private modalCtrl: ModalController,
     private userData: UserDataProvider,
-    private myDBProvider: MyDbProvider
+    private myDBProvider: MyDbProvider,
+    private smartAudio: SmartAudio
   ) {
     this.product = navParams.get('product')
   }
 
   addToCart() {
+    this.smartAudio.play('tap')
     // trang chi tiet
     if (this.product.amount == 0) {
 
@@ -96,6 +99,7 @@ export class ProductPage {
   }
 
   openReview() {
+    this.smartAudio.play('tap')
     let profileModal = this.modalCtrl.create(ProductReviewPage, { product: this.product })
     profileModal.present()
 

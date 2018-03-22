@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavParams, Tabs } from 'ionic-angular';
 import { UserDataProvider } from '../../providers/user-data';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage()
 @Component({
@@ -18,6 +19,7 @@ export class TabsPage {
   constructor(
     navParams: NavParams,
     private userData: UserDataProvider,
+    private smartAudio: SmartAudio
   ) {
     this.mySelectedIndex = navParams.data.tabIndex || 0
 
@@ -36,6 +38,10 @@ export class TabsPage {
         .subscribe(value => this.cartBadge = value)
 
     }, 1000)
+  }
+
+  changeTab() {    
+    this.smartAudio.play('tap');
   }
 
 

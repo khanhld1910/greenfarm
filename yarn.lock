@@ -164,6 +164,10 @@
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/@ionic-native/core/-/core-4.4.0.tgz#fb0f071543bd2725d858f5a0f5c20adbece20df4"
 
+"@ionic-native/native-audio@^4.6.0":
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/@ionic-native/native-audio/-/native-audio-4.6.0.tgz#312bf9e743e47574d9a1c1f049d5740c33b4157a"
+
 "@ionic-native/screen-orientation@^4.5.3":
   version "4.5.3"
   resolved "https://registry.yarnpkg.com/@ionic-native/screen-orientation/-/screen-orientation-4.5.3.tgz#d9e12a845bf4740cfd90fd49b07dbfd448215577"
@@ -993,6 +997,10 @@ cordova-plugin-ionic-keyboard@^2.0.5:
 cordova-plugin-ionic-webview@^1.1.16:
   version "1.1.16"
   resolved "https://registry.yarnpkg.com/cordova-plugin-ionic-webview/-/cordova-plugin-ionic-webview-1.1.16.tgz#92d5f2e4a5a829f91b487b1761848765a31c9f1e"
+
+cordova-plugin-nativeaudio@^3.0.9:
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/cordova-plugin-nativeaudio/-/cordova-plugin-nativeaudio-3.0.9.tgz#16cebfdaee24beb23c05f49713cb8773bc78536c"
 
 cordova-plugin-screen-orientation@^3.0.1:
   version "3.0.1"

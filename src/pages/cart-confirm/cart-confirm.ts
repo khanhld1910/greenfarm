@@ -4,7 +4,7 @@ import { SingleBill, AddressInfo, TotalBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyDbProvider } from '../../providers/my-db';
 import { User } from '../../interfaces/user';
-import { messaging } from 'firebase';
+import { SmartAudio } from '../../providers/smart-audio';
 
 
 @IonicPage({
@@ -38,7 +38,8 @@ export class CartConfirmPage {
     private myDBProvider: MyDbProvider,
     private _app: App,
     private navCtrl: NavController,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private smartAudio: SmartAudio  
   ) {
     this.cartBills = this.navParams.get('cart')
   }
@@ -95,6 +96,7 @@ export class CartConfirmPage {
   }
 
   mainAddressChecked() {
+    this.smartAudio.play('tap')
     this.checkedAddressInforID = null
     this.confirmAddress = this.user.address
     this.name = this.user.name
@@ -102,6 +104,7 @@ export class CartConfirmPage {
   }
 
   addressInfoChecked(address: AddressInfo) {
+    this.smartAudio.play('tap')
     this.checkedAddressInforID = address.id
     this.confirmAddress = address.address
     this.name = address.name
@@ -109,10 +112,13 @@ export class CartConfirmPage {
   }
 
   updateUserInfo() {
+
+    this.smartAudio.play('tap')
     this.navCtrl.push('ProfilePage', { popBack: true })
   }
 
   addAddress() {
+    this.smartAudio.play('tap')
     if (!this.user.address) {
       // user have not updated profile
       this.navCtrl.push('ProfilePage', { popBack: true })
@@ -122,11 +128,13 @@ export class CartConfirmPage {
   }
 
   editAddressInfo(address: AddressInfo) {
+    this.smartAudio.play('tap')
     this.navCtrl.push('AddressDeliverPage', { editMode: true, addressInfo: address })
   }
 
 
   confirmInvoice() {
+    this.smartAudio.play('tap')
     //console.log(this.timeDeliver, deliverTime) 
 
     let invoice: TotalBill = {

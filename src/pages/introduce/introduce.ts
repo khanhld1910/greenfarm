@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core'
 import { IonicPage, NavController, Slides, MenuController } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
 import { UserDataProvider } from '../../providers/user-data';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage({
   name: 'IntroPage'
@@ -20,10 +21,12 @@ export class IntroducePage {
     public navCtrl: NavController,
     public menu: MenuController,
     public storage: Storage,
-    private userData: UserDataProvider
+    private userData: UserDataProvider,
+    private smartAudio: SmartAudio
   ) { }
 
   startApp() {
+    this.smartAudio.play('tap')
     let root = this.userData.hasLoggedIn ? 'TabsPage' : 'LoginPage'
     this.navCtrl.setRoot(root).then(() => this.storage.set('hasSeenTutorial', true))
   }

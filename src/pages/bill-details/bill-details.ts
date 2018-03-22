@@ -17,7 +17,7 @@ export class BillDetailsPage {
     public navCtrl: NavController,
     public navParams: NavParams,
     private userData: UserDataProvider,
-    private dbProvider: MyDbProvider
+    private dbProvider: MyDbProvider,
   ) {
     this.bill = navParams.get('totalBill')
   }

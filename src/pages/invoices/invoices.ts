@@ -4,6 +4,7 @@ import { TotalBill } from '../../interfaces/bill';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyDbProvider } from '../../providers/my-db';
 import { MyToastProvider } from '../../providers/my-toast';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage({
   name: 'InvoicesPage'
@@ -23,7 +24,8 @@ export class InvoicesPage {
     private userDataProvider: UserDataProvider,
     private dbProvider: MyDbProvider,
     private myToast: MyToastProvider,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private smartAudio: SmartAudio
   ) {
   }
 
@@ -57,6 +59,7 @@ export class InvoicesPage {
   }
 
   removeInvoice(totalBillID: TotalBill) {
+    this.smartAudio.play('tap')
     this.myToast.myConfirmAlert(
       'Hủy đơn hàng',
       'Bạn có chắc chắn muốn hủy đơn đặt hàng?',
@@ -121,6 +124,7 @@ export class InvoicesPage {
   }
 
   totalBillDetails(totalBill: TotalBill) {
+    this.smartAudio.play('tap')
     this.navCtrl.push('BillDetailsPage', { 'totalBill': totalBill })
   }
 

@@ -4,6 +4,7 @@ import { User } from '../../interfaces/user';
 import { NgForm } from '@angular/forms';
 import { UserDataProvider } from '../../providers/user-data';
 import { MyToastProvider } from '../../providers/my-toast';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage({
   name: 'ProfilePage'
@@ -23,7 +24,8 @@ export class ProfilePage {
     private userDataProvider: UserDataProvider,
     private myToastProvider: MyToastProvider,
     private navParams: NavParams,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private smartAudio: SmartAudio
   ) {
     // this page will pop from navi by a toolbar's button
     this.user = {
@@ -58,6 +60,7 @@ export class ProfilePage {
   }
 
   updateProfile(form: NgForm) {
+    this.smartAudio.play('tap')
     this.submitted = true
     if (!form.valid) return
 

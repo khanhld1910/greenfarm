@@ -3,6 +3,7 @@ import { IonicPage, NavController, MenuController, Events } from 'ionic-angular'
 import { NgForm } from '@angular/forms/'
 import { UserDataProvider } from '../../providers/user-data'
 import { MyToastProvider } from '../../providers/my-toast'
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage(
   { name: 'LoginPage' }
@@ -22,7 +23,8 @@ export class LoginPage {
     public userData: UserDataProvider,
     private myToast: MyToastProvider,
     private menu: MenuController,
-    private events: Events
+    private events: Events,
+    private smartAudio: SmartAudio
   ) {
   }
 
@@ -35,6 +37,7 @@ export class LoginPage {
   }
 
   onLogin(form: NgForm) {
+    this.smartAudio.play('tap')
     this.submitted = true
     if (!form.valid) return
     this.userData

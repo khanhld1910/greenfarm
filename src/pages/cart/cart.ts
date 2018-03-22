@@ -6,6 +6,7 @@ import { UserDataProvider } from '../../providers/user-data';
 import { MyToastProvider } from '../../providers/my-toast';
 import { User } from '../../interfaces/user';
 import { Product } from '../../interfaces/products';
+import { SmartAudio } from '../../providers/smart-audio';
 
 @IonicPage()
 @Component({
@@ -25,7 +26,8 @@ export class CartPage {
     private myDBProvider: MyDbProvider,
     private userData: UserDataProvider,
     private myToasProvider: MyToastProvider,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private smartAudio: SmartAudio
   ) {
     this.cartBills = []
   }
@@ -50,6 +52,7 @@ export class CartPage {
 
 
   removeBill(bill: SingleBill) {
+    this.smartAudio.play('tap')
     this.myDBProvider
       .removeCardBill(bill)
   }
@@ -64,6 +67,7 @@ export class CartPage {
   }
 
   quantityChange(indexInArray: number, value: number) {
+    this.smartAudio.play('tap')
     let thisProductAmount = 0
     let bill = this.cartBills[indexInArray]
 
@@ -88,6 +92,7 @@ export class CartPage {
   }
 
   goConfirmCart() {
+    this.smartAudio.play('tap')
     if (this.cartBills.length < 1) {
       this.myToasProvider.myToast({
         message: 'Chưa có sản phẩm trong giỏ hàng!',
