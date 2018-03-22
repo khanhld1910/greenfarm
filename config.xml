@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.khanhld.greenfarm" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="io.khanhld.greenfarm" version="1.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Phú Thịnh Greenfarm</name>
     <description>Nông Nghiệp Phú Thịnh</description>
     <author email="khanhld1910@gmail.com" href="http://facebook.com/dolphin.dreams.91">Dolphin Dreams</author>
@@ -88,6 +88,6 @@
     <plugin name="mx.ferreyra.callnumber" spec="~0.0.2" />
     <plugin name="cordova-plugin-nativeclicksound" spec="0.0.4" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
-    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
+    <engine name="android" spec="7.0.0" />
 </widget>
