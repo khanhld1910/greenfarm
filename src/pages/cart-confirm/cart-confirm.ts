@@ -17,6 +17,10 @@ import { SmartAudio } from '../../providers/smart-audio';
 export class CartConfirmPage {
 
   cartBills: SingleBill[]
+  saved: number
+  ship: number
+  cost: number
+  
   user: User = {
     phone: '',
     address: undefined
@@ -42,6 +46,9 @@ export class CartConfirmPage {
     private smartAudio: SmartAudio  
   ) {
     this.cartBills = this.navParams.get('cart')
+    this.saved = this.navParams.get('saved')
+    this.ship = this.navParams.get('ship')
+    this.cost = this.navParams.get('cost')
   }
 
   ionViewDidLoad() {
@@ -146,10 +153,12 @@ export class CartConfirmPage {
       name: this.name,
       phone: this.phone,
       status: 1,
-      totalCost: this.navParams.get('total'),
       userID: this.user.phone,
       sentTime: this.sentTime(),
       userID_status: this.user.phone + '_1',
+      saved: this.saved,
+      cost: this.cost,
+      ship: this.ship
     }
     this
       .myDBProvider
@@ -200,6 +209,5 @@ export class CartConfirmPage {
   birthdateFormat() {
     return this.userData.dateDisplay(this.user.birthday)
   }
-
 
 }

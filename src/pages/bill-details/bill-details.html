@@ -48,7 +48,27 @@
           =
         </ion-col>
         <ion-col col-4 text-right>
-          {{bill.unitPrice*bill.quantity | number : fractionSize}} đ
+          <span ion-text color="primary">{{bill.unitPrice*bill.quantity | number : fractionSize}} đ</span>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+    <ion-item>
+      <h4>
+        <span class="product--name">Phí giao hàng (miễn phí đơn hàng trên 50,000 đ)</span>
+      </h4>
+      <ion-row align-items-center justify-content-center>
+        <ion-col col-12 text-right>
+          <span ion-text color="primary">{{ship | number : fractionSize}} đ</span>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+    <ion-item>
+      <h4>
+        <span class="product--name">Điểm tích luỹ</span>
+      </h4>
+      <ion-row align-items-center justify-content-center>
+        <ion-col col-12 text-right color="success">
+          <span ion-text color="google">- {{saved | number : fractionSize}} đ</span>
         </ion-col>
       </ion-row>
     </ion-item>
@@ -61,7 +81,7 @@
         </ion-col>
         <ion-col class="name">
           <h3 text-right>
-            <span class="product--total">{{totalCost | number : fractionSize}} đ</span>
+            <span class="product--total" ion-text color="facebook">{{cost + ship - saved | number : fractionSize}} đ</span>
           </h3>
         </ion-col>
       </ion-row>

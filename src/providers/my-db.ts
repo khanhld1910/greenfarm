@@ -57,6 +57,13 @@ export class MyDbProvider {
     return this.afDB.object<User>('Users/' + phone).valueChanges()
   }
 
+  getUserSaved(phone: string): Observable<number> {
+    return this.afDB.object<number>('Users/' + phone + '/saved').valueChanges()
+  }
+  checkUserIsMale(phone: string): Observable<boolean> {
+    return this.afDB.object<boolean>('Users/' + phone + '/isMale').valueChanges()
+  }
+
   getUserAddressInfoList(phone: string) {
     return this.afDB.list<AddressInfo>(`Users/${phone}/deliverAddresses/`).valueChanges()
   }
@@ -134,10 +141,19 @@ export class MyDbProvider {
 
   async removeInvoice(invoice: TotalBill) {
 
+    // remove totalbill
     this.afDB
       .list<TotalBill>(`Bills/`)
       .remove(invoice.id)
 
+    // return saved points
+    this.fdb.ref(`Users/${invoice.userID}/saved`)
+    .transaction(value => {
+      return +value + +invoice.saved
+    })
+
+    // calculating products amount
+    // remove single bills
     this.getBillsInTotalBill(invoice)
       .first()
       .subscribe(singleBills => {
@@ -157,6 +173,7 @@ export class MyDbProvider {
           let update: { productID: string, amount: number } = updateProducts[i]
           this.updateProductAmoutAfterReturn(update.productID, update.amount)
         }
+
       })
   }
 
@@ -204,6 +221,11 @@ export class MyDbProvider {
         this.afDB.object('Invoices/sent/').update(sentBills),
         // delete cart bills
         this.afDB.object('Invoices/cart/').update(removeCartBills),
+        // calculating user saved points
+        this.fdb.ref(`Users/${invoice.userID}/saved`)
+        .transaction(value => {
+          return +value - +invoice.saved
+        })
       // update products amount
       // ------------------------------------------------>
     )
@@ -233,21 +255,21 @@ export class MyDbProvider {
 
   getFirst5Messages(phone: string): Observable<CustomMessage[]> {
     return this.afDB.list<CustomMessage>(
-      'Messages/' + phone,
+      `Messages/${phone}/chat/`,
       ref => ref.limitToLast(5)
     ).valueChanges()
   }
 
   getAnother5Messages(phone: string, endAtTime: number): Observable<CustomMessage[]> {
     return this.afDB.list<CustomMessage>(
-      'Messages/' + phone,
+      `Messages/${phone}/chat/`,
       ref => ref.orderByChild('time').endAt(endAtTime).limitToLast(5)
     ).valueChanges()
   }
 
   newMessage(phone: string, message: CustomMessage): Observable<boolean> {
     return new Observable(ob => {
-      let messageRef = this.afDB.object('Messages/' + phone + '/' + message.time)
+      let messageRef = this.afDB.object(`Messages/${phone}/chat/${message.time}`)
 
       messageRef.update(message)
         .then(() => ob.next(true))

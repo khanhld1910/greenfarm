@@ -26,7 +26,9 @@ export class BillDetailsPage {
   sentTime: string
   address: string
   status: string
-  totalCost: number
+  cost: number
+  ship: number
+  saved: number
   singleBills: SingleBill[]
 
   ionViewDidLoad() {
@@ -34,7 +36,9 @@ export class BillDetailsPage {
     this.deliverTime = this.userData.timeDisplay(this.bill.deliverTime)
     this.address = this.bill.address
     this.status = this.getStatus()
-    this.totalCost = this.bill.totalCost
+    this.cost = this.bill.cost
+    this.ship = this.bill.ship
+    this.saved = this.bill.saved
 
     this.dbProvider
       .getBillsInTotalBill(this.bill)

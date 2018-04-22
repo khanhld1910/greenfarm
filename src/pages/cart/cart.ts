@@ -21,6 +21,9 @@ export class CartPage {
   submitted = false
   userInfo: User
   allProducts: Product[]
+  totalCost: number
+  useSaved: Boolean = false
+  userSaved: number
 
   constructor(
     private myDBProvider: MyDbProvider,
@@ -48,6 +51,8 @@ export class CartPage {
         this.allProducts = value
       })
 
+    this.getUserSaved()
+
   }
 
 
@@ -63,7 +68,11 @@ export class CartPage {
       let bill = this.cartBills[i]
       total += bill.unitPrice * bill.quantity
     }
+    this.totalCost = total
     return total
+  }
+  getShipCost() {
+    return this.totalCost >= 50000 ? 0 : 5000
   }
 
   quantityChange(indexInArray: number, value: number) {
@@ -91,6 +100,20 @@ export class CartPage {
     }
   }
 
+  getUserSaved() {
+    this.userData.getUserSaved().subscribe(value => this.userSaved = value)
+  }
+
+  savedCalc() {
+    if (!this.useSaved) return 0
+    if (this.userSaved > this.totalCost + this.getShipCost()) {
+      return this.totalCost + this.getShipCost()
+    } else {
+      let roundedSaved = Math.floor(this.userSaved/1000)*1000
+      return roundedSaved
+    }
+  }
+
   goConfirmCart() {
     this.smartAudio.play('tap')
     if (this.cartBills.length < 1) {
@@ -102,7 +125,14 @@ export class CartPage {
       })
       return
     }
-    this.navCtrl.push('CartConfirmPage', {'cart': this.cartBills, 'total': this.getTotalCost()})
+    let info = {
+      cart: this.cartBills, // danh sach hang
+      saved: this.savedCalc(), // tra bang diem tich luy
+      ship: this.getShipCost(), // phi van chuyen
+      cost: this.getTotalCost() // gia tong san pham
+    }
+    //console.log(info)
+    this.navCtrl.push('CartConfirmPage', info)
   }
 
 }

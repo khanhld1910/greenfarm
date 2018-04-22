@@ -55,6 +55,14 @@ export class UserDataProvider {
     return this.db.getUserInfo(phone)
   }
 
+  checkUserIsMale() {
+    return this.db.checkUserIsMale(this.userPhone)
+  }
+
+  getUserSaved() {
+    return this.db.getUserSaved(this.userPhone)
+  }
+
   getUserAddressInfoList(phone: string) {
     return this.db.getUserAddressInfoList(phone)
   }

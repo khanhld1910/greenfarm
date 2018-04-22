@@ -50,6 +50,12 @@
       <p ion-text [hidden]="address.valid || submitted == false" color="danger" padding-left>
         Địa chỉ không hợp lệ
       </p>
+      <ion-item>
+        <ion-label color="primary">Điểm tích luỹ</ion-label>
+        <ion-input readonly [(ngModel)]="user.saved" name="saved" type="text" #saved="ngModel" spellcheck="false">
+            
+        </ion-input>
+      </ion-item>
       <p ion-text *ngIf="formMessage" color="danger" padding-left>
         {{formMessage}}
       </p>

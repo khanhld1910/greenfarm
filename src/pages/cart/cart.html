@@ -41,6 +41,43 @@
         </ion-col>
       </ion-row>
     </div>
+    <div class="cart-product">
+      <ion-row>
+        <ion-col col-12 class="name">
+          <h3 class="product--name" text-left>
+            Phí giao hàng 
+          </h3>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-9 text-left style="padding-left: 0; color: #888;">
+        (miễn phí đơn trên 50,000 đ)
+        </ion-col>
+        <ion-col col-3 class="product--cost" style="padding-left: 5px;">
+          {{getShipCost() | number : fractionSize}} đ
+        </ion-col>
+      </ion-row>
+    </div>
+    <div class="cart-product">
+      <ion-row>
+        <ion-col col-12 class="name">
+          <h3 class="product--name" text-left>
+            Điểm tích luỹ: {{userSaved | number : fractionSize}} đ
+          </h3>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-9 text-left style="padding-left: 0;">
+          <ion-item style="padding: 0;">
+            <ion-label>dùng tích luỹ</ion-label>
+            <ion-checkbox [(ngModel)]="useSaved" [disabled]="userSaved < 5000"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+        <ion-col col-3 class="product--cost" style="padding-left: 5px;">
+          <span *ngIf="useSaved" ion-text color="google">-{{savedCalc() | number : fractionSize}} đ</span>
+        </ion-col>
+      </ion-row>
+    </div>
     <div class="cart-product total">
       <ion-row align-items-center>
         <ion-col class="name">
@@ -50,7 +87,7 @@
         </ion-col>
         <ion-col class="name">
           <h3 class="product--name" text-right>
-            {{getTotalCost() | number : fractionSize}} đ
+            {{getTotalCost() + getShipCost() -savedCalc() | number : fractionSize}} đ
           </h3>
         </ion-col>
       </ion-row>

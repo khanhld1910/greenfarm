@@ -25,6 +25,7 @@ cart {
         }
         ion-label {
             margin-right: 0px !important;
+            color: #888;
         }
         ion-row {
             margin-top: 10px;
@@ -74,5 +75,8 @@ cart {
         position: absolute;
         bottom: 66px;
         left: 5%;
+    }
+    .item .checkbox {
+        margin: 9px 9px 9px 0px !important;
     }
 }

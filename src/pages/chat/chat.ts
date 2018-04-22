@@ -21,6 +21,7 @@ export class ChatPage {
   showedMessages: CustomMessage[]
   _loading: Loading
   allMessagesLoaded: boolean = false
+  usersAvatar: string
 
   constructor(
     public navCtrl: NavController,
@@ -36,6 +37,7 @@ export class ChatPage {
   ionViewDidLoad() {
     this._loading = this.myToast.performLoading('Đang tải dữ liệu ...')
     this.presentFirst5Messages()
+    this.getUserAvatar()
   }
 
   presentFirst5Messages() {
@@ -109,6 +111,12 @@ export class ChatPage {
       })
 
 
+  }
+
+  getUserAvatar() {
+    this.userDataProvider.checkUserIsMale().subscribe(isMale => {
+      this.usersAvatar = isMale ? 'assets/avatars/man.svg' : "assets/avatars/woman.svg"
+    })
   }
 
 }

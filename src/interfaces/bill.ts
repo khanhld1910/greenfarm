@@ -16,7 +16,6 @@ export interface TotalBill {
     // 2: checked - da xu ly (da nhan hoa don)
     // 3: done - hoan thanh (da giao hang)
     userID: string,
-    totalCost: number,
     sentTime: string,
     deliverTime: string,
     address: string,
@@ -24,7 +23,10 @@ export interface TotalBill {
     phone?: string,
     productName: string[],
     userID_status: string,
-    morningDeliver?: boolean
+    morningDeliver?: boolean,
+    saved: number,
+    ship: number,
+    cost: number
 }
 
 export interface AddressInfo {
