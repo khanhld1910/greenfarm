@@ -3,6 +3,7 @@ import { IonicPage, NavController, Slides, MenuController } from 'ionic-angular'
 import { Storage } from '@ionic/storage'
 import { UserDataProvider } from '../../providers/user-data';
 import { SmartAudio } from '../../providers/smart-audio';
+import { MyDbProvider } from '../../providers/my-db';
 
 @IonicPage({
   name: 'IntroPage'
@@ -14,6 +15,7 @@ import { SmartAudio } from '../../providers/smart-audio';
 export class IntroducePage {
 
   showSkip = true
+  tutorialPages= []
 
   @ViewChild('slides') slides: Slides
 
@@ -22,6 +24,7 @@ export class IntroducePage {
     public menu: MenuController,
     public storage: Storage,
     private userData: UserDataProvider,
+    private dbProvider: MyDbProvider,
     private smartAudio: SmartAudio
   ) { }
 
@@ -41,6 +44,9 @@ export class IntroducePage {
 
   ionViewDidEnter() {
     // the root left menu should be disabled on the tutorial page
+    this.dbProvider.getTutorialPages().first().subscribe(tutorials => {
+      this.tutorialPages = tutorials
+    })
     this.menu.enable(false)
   }
 

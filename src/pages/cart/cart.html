@@ -25,7 +25,7 @@
       </ion-row>
       <ion-row align-items-center>
         <ion-col col-3 class="product--cost single" style="padding-right: 5px;">
-          {{bill.unitPrice | number : fractionSize}} đ
+          {{(bill.salePrice ? bill.salePrice : bill.unitPrice) | number : fractionSize}} đ
         </ion-col>
         <ion-col col-2 class="quantity-control sound" (tap)="quantityChange(i, -1)">
           <ion-icon name="remove"></ion-icon>
@@ -37,7 +37,7 @@
           <ion-icon name="add"></ion-icon>
         </ion-col>
         <ion-col col-3 class="product--cost" style="padding-left: 5px;">
-          {{bill.unitPrice * bill.quantity | number : fractionSize}} đ
+          {{(bill.salePrice ? bill.salePrice * bill.quantity : bill.unitPrice * bill.quantity) | number : fractionSize}} đ
         </ion-col>
       </ion-row>
     </div>

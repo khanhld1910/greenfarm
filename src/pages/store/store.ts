@@ -25,6 +25,7 @@ export class StorePage {
   favoriteProductIDs: string[]
   filterOptions: string
   searchQuery: string
+  slideImages= []
 
   @ViewChild(Slides) slides: Slides
   constructor(
@@ -39,6 +40,7 @@ export class StorePage {
     this.filterOptions = 'all'
     // preload data ( can be put in IonViewDidEnter event)
     this.presentData()
+    this.myDBProvider.getSlideImages().first().subscribe(array => this.slideImages = array ? array : [])
   }
 
   ionViewWillEnter() {
@@ -97,7 +99,7 @@ export class StorePage {
   presentSaleProducts() {
     let result = []
     this.allProducts.forEach(product => {
-      if (product.saleOff) result.push(product)
+      if (product.salePrice) result.push(product)
     })
     this.filteredProducts = result
     this.showedProducts = this.filteredProducts.slice(0, 6)
@@ -208,6 +210,8 @@ export class StorePage {
       return
     }
 
+    
+
     let bill: SingleBill = {
       id: '',
       // id will be set on DBProvider
@@ -216,11 +220,10 @@ export class StorePage {
       userID: '',
       // userID will be set on event.subcribe
       productName: product.name,
-      unitPrice: product.unitPrice,
+      unitPrice: product.salePrice ? product.salePrice : product.unitPrice,
       quantity: 1,
       productID_userID: ''
     }
-
     // add
 
     let loading = this.myToastProvider.performLoading('đang xử lý ...')

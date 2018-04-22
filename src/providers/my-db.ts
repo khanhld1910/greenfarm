@@ -232,25 +232,11 @@ export class MyDbProvider {
 
   }
 
-  getSentList(phone: string): Observable<TotalBill[]> {
+  getBillList(phone: string): Observable<TotalBill[]> {
     return this.afDB.list<TotalBill>(
       `Bills/`,
-      ref => ref.orderByChild('userID_status').equalTo(`${phone}_1`)
-    ).valueChanges()
-  }
-
-  getCheckedList(phone: string): Observable<TotalBill[]> {
-    return this.afDB.list<TotalBill>(
-      `Bills/`,
-      ref => ref.orderByChild('userID_status').equalTo(`${phone}_2`)
-    ).valueChanges()
-  }
-
-  getDoneList(phone: string): Observable<TotalBill[]> {
-    return this.afDB.list<TotalBill>(
-      `Bills/`,
-      ref => ref.orderByChild('userID_status').equalTo(`${phone}_3`)
-    ).valueChanges()
+      ref => ref.orderByChild('userID').equalTo(`${phone}`)
+    ).valueChanges()    
   }
 
   getFirst5Messages(phone: string): Observable<CustomMessage[]> {
@@ -267,13 +253,40 @@ export class MyDbProvider {
     ).valueChanges()
   }
 
-  newMessage(phone: string, message: CustomMessage): Observable<boolean> {
-    return new Observable(ob => {
-      let messageRef = this.afDB.object(`Messages/${phone}/chat/${message.time}`)
+  newMessage(phone: string, message: CustomMessage) {
 
-      messageRef.update(message)
-        .then(() => ob.next(true))
-        .catch(err => ob.next(false))
+    this.afDB.object(`Messages/${phone}/newest`)
+    .valueChanges().first().subscribe((obj: {content: string, sender: number, time: number}) => {  
+
+      let sender = (!obj) ? 0 : obj.sender     
+      let promise00 = this.updateMessageUnseenNum(phone, sender)
+      let promise01 = this.afDB.object(`Messages/${phone}/`).update({newest: message})
+      let promise02 = this.afDB.object(`Messages/${phone}/chat/${message.time}`).update(message)
+      let promise03 = this.afDB.object(`AdminMessageBox/${phone}`).update(message)
+
+      Promise.all([promise00, promise01, promise02, promise03]).then(value => {}).catch(err => {})
+    })
+      
+  }
+
+  updateMessageUnseenNum(phone, sender) {
+    return this.fdb.ref(`Messages/${phone}/num`).transaction(value => {
+      return sender == 0 ? 1 : value + 1
+    })
+  }
+
+  getNewestMessage(phone): Observable<CustomMessage> {
+    return this.afDB.object<CustomMessage>(`Messages/${phone}/newest`).valueChanges()
+  }
+
+  getUnseenMessageNum(phone): Observable<number> {
+    return this.afDB.object<number>(`Messages/${phone}/num`).valueChanges()
+  }  
+
+  setSeenMessage(phone) {
+    this.afDB.object<CustomMessage>(`Messages/${phone}/newest`).valueChanges().first().subscribe(message => {
+      if (!message || message.sender == 1) return      
+      this.afDB.object(`Messages/${phone}/`).update({num: 0})
     })
   }
 
@@ -324,8 +337,16 @@ export class MyDbProvider {
     return this.afDB.object(`Users/${userPhone}/deliverAddresses/${addressInfoID}`).remove()
   }
 
-  getHotline() {
+  getAppConfig() {
     return this.afDB.object<AppsCfg>('Apps').valueChanges()
+  }
+
+  getTutorialPages() {
+    return this.afDB.list<[{imageRef: string, title: string, text: string}]>('Apps/tutorial').valueChanges()
+  }
+
+  getSlideImages() {
+    return this.afDB.list<Object>('Apps/slideshow').valueChanges()
   }
 
 }

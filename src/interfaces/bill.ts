@@ -22,7 +22,6 @@ export interface TotalBill {
     name?: string,
     phone?: string,
     productName: string[],
-    userID_status: string,
     morningDeliver?: boolean,
     saved: number,
     ship: number,

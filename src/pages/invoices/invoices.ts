@@ -16,6 +16,7 @@ import { SmartAudio } from '../../providers/smart-audio';
 export class InvoicesPage {
 
   status: string = 'sent'
+  billList: TotalBill[]
   sentList: TotalBill[]
   checkedList: TotalBill[]
   doneList: TotalBill[]
@@ -33,19 +34,16 @@ export class InvoicesPage {
     let loading = this.myToast.performLoading('đang tải dữ liệu ...')
 
     this.dbProvider
-      .getSentList(this.userDataProvider.userPhone)
+      .getBillList(this.userDataProvider.userPhone)
       .subscribe(value => {
-        this.sentList = value
-        loading.dismiss()
+        this.billList = (value && value.length >0) ? value : []
+        this.sentList = this.billList.filter(bill => bill.status === 1)
+        this.checkedList = this.billList.filter(bill => bill.status === 2)
+        this.doneList = this.billList.filter(bill => bill.status === 3)
       })
 
-    this.dbProvider
-      .getCheckedList(this.userDataProvider.userPhone)
-      .subscribe(value => this.checkedList = value)
 
-    this.dbProvider
-      .getDoneList(this.userDataProvider.userPhone)
-      .subscribe(value => this.doneList = value)
+    loading.dismiss()
 
   }
 

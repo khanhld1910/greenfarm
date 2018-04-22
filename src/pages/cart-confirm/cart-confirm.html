@@ -12,13 +12,13 @@
     <h3 *ngIf="!user.address" ion-text color="google" style="margin: 10px 0;">Chưa có địa chỉ giao hàng!!!</h3>
     <ion-item *ngIf="user.address">
       <div class="tap-area sound" (tap)="mainAddressChecked()"></div>
-      <ion-row align-items-center>
-        <ion-col col-1 text-center class="label">
-          <ion-icon [name]="isAddressChecked(null) ? 'radio-button-on' : 'radio-button-off'">
+      <ion-row>
+        <ion-col col-1 text-center class="label check-colum">
+          <ion-icon class="check-icon" [color]="isAddressChecked(null) ? 'primary' : ''" [name]="isAddressChecked(null) ? 'radio-button-on' : 'radio-button-off'">
           </ion-icon>
         </ion-col>
         <ion-col col-10 text-left class="value">
-          <h3>{{user.name}}</h3>
+          <h3 class="bold-text">{{user.name}}</h3>
           <p>{{user.phone}}</p>
           <p>{{user.address}}</p>
         </ion-col>
@@ -31,13 +31,13 @@
 
     <ion-item *ngFor="let addressInfo of addressInfoList">
       <div class="tap-area sound" (tap)="addressInfoChecked(addressInfo)"></div>
-      <ion-row align-items-center>
-        <ion-col col-1 text-center class="label">
-          <ion-icon [name]="isAddressChecked(addressInfo.id) ? 'radio-button-on' : 'radio-button-off'">
+      <ion-row>
+        <ion-col col-1 text-center class="label check-colum">
+          <ion-icon class="check-icon" [color]="isAddressChecked(addressInfo.id) ? 'primary' : ''" [name]="isAddressChecked(addressInfo.id) ? 'radio-button-on' : 'radio-button-off'">
           </ion-icon>
         </ion-col>
         <ion-col col-10 text-left class="value">
-          <h3>{{addressInfo.name}}</h3>
+          <h3 class="bold-text">{{addressInfo.name}}</h3>
           <p>{{addressInfo.phone}}</p>
           <p>{{addressInfo.address}}</p>
         </ion-col>
@@ -48,11 +48,12 @@
       </ion-row>
     </ion-item>
 
-    <ion-item>
-      <h3 (tap)="addAddress()">
+    <ion-row style="margin: 5px 0;">
+      <h3 (tap)="addAddress()" ion-text color="primary" style="padding: 5px;">
+        <ion-icon name="md-add-circle"></ion-icon>&nbsp;
         Thêm địa chỉ nhận hàng
       </h3>
-    </ion-item>
+    </ion-row>
   </ion-list>
 </ion-content>
 

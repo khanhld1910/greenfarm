@@ -270,22 +270,22 @@ ion-toast.toast-danger .toast-wrapper {
 }
 
 .my-custom-spinner {
+    position: absolute;
     height: 80px;
     width: 80px;
     display: block;
     background: transparent url('../assets/bananas.svg') no-repeat center center;
     top: calc(50% - 40px);
-    left: calc(50% - 40px);
+}
+
+.splash {
+    position: relative;
 }
 
 .my-custom-loading {
     position: relative;
     .my-custom-spinner {
-        position: absolute;
-        width: 80px;
-        height: 80px;
         top: -80px;
-        left: calc(50% - 40px);
     }
     .message {
         padding-top: 10px;

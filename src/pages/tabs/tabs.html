@@ -6,6 +6,7 @@
   <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab3Root" tabTitle="Hóa đơn" tabIcon="paper" tabUrlPath="invoices"
     [tabBadge]="sentBadge" tabBadgeStyle="facebook">
   </ion-tab>
-  <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab4Root" tabTitle="Tin nhắn" tabIcon="chatbubbles" tabUrlPath="chat">
+  <ion-tab (ionSelect)="changeTab()" class="sound" [enabled]="userData.hasLoggedIn" [root]="tab4Root" tabTitle="Tin nhắn" 
+  tabIcon="chatbubbles" tabUrlPath="chat" [tabBadge]="chatBadge" tabBadgeStyle="google">
   </ion-tab>
 </ion-tabs>

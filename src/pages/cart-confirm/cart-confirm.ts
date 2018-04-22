@@ -155,7 +155,6 @@ export class CartConfirmPage {
       status: 1,
       userID: this.user.phone,
       sentTime: this.sentTime(),
-      userID_status: this.user.phone + '_1',
       saved: this.saved,
       cost: this.cost,
       ship: this.ship

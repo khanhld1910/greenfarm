@@ -12,8 +12,9 @@
   <ion-list class="my-ion-list">
     <ion-item>
       <h2 class="newPrice">
-        <span class="oldPrice" *ngIf="product.oldPrice">{{product.oldPrice | number : fractionSize}} đ</span>
-        <span>&nbsp;{{product.unitPrice | number : fractionSize}} đ</span>
+        <span class="oldPrice" *ngIf="product.salePrice">{{product.unitPrice | number : fractionSize}} đ</span>
+        <span>&nbsp;{{product.salePrice | number : fractionSize}} đ</span>
+        <span *ngIf="!product.salePrice">&nbsp;{{product.unitPrice | number : fractionSize}} đ</span>
       </h2>
       <h3 item-end>
         Hiện có:&nbsp;

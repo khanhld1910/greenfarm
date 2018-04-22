@@ -27,6 +27,7 @@ export class TabsPage {
 
   cartBadge: number = 0
   sentBadge: number = 0
+  chatBadge: number = 0
   ionViewDidEnter() {
     setTimeout(() => {
       this.userData
@@ -37,7 +38,21 @@ export class TabsPage {
         .getCartBadge()
         .subscribe(value => this.cartBadge = value)
 
+
     }, 1000)
+
+    this.userData.getNewestMessage().subscribe(sender => {
+      this.userData.getChatBadge().first().subscribe(value => {
+        //console.log(sender, value)
+        if (sender == 0 && value) {
+          this.chatBadge = value          
+        } else {
+          this.chatBadge = 0
+        }
+      })    
+    })
+
+    
   }
 
   changeTab() {    

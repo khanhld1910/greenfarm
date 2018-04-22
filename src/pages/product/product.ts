@@ -51,7 +51,7 @@ export class ProductPage {
       totalBillID: '',
       // userID will be set on StorePage
       productName: this.product.name,
-      unitPrice: this.product.unitPrice,
+      unitPrice: this.product.salePrice ? this.product.salePrice : this.product.unitPrice,
       quantity: 1
     }
 

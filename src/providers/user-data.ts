@@ -101,10 +101,40 @@ export class UserDataProvider {
 
   getSentBadge() {
     //console.log(this.userPhone)
-    return this.db
-      .getSentList(this.userPhone)
-      .map(array => array.length)
+    return new Observable<number>(ob => {
+      ob.next(0)
+      this.db
+      .getBillList(this.userPhone)
+      .subscribe(arr => {
+        if (!arr) {
+          ob.next(0)
+          return
+        } else {
+          let num = arr.filter(bill => bill.status === 1 || bill.status === 2).length
+          ob.next(num)
+        }
+      })
+    })
   }
+
+  getChatBadge() {
+    //console.log(this.userPhone)
+    return this.db.getUnseenMessageNum(this.userPhone)
+  }
+
+  getNewestMessage() {
+    return this.db.getNewestMessage(this.userPhone)
+    .map(value => {
+      return (value) ? value.sender : null
+    })
+  }
+
+  setSeenMessage() {
+    this.getNewestMessage().first().subscribe(sender => {
+      if (!sender || sender == 0) this.db.setSeenMessage(this.userPhone) // tin cuoi la cua admin
+    })    
+  }
+  
 
   lessThan10Format(number: number) {
     return number < 10 ? '0' + number : number
@@ -151,8 +181,8 @@ export class UserDataProvider {
       this.lessThan10Format(date.getFullYear())
   }
 
-  getHotlineNumber() {
-    return this.db.getHotline()
+  getAppConfig() {
+    return this.db.getAppConfig()
   }
 
 

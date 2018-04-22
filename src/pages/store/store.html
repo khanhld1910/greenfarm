@@ -11,12 +11,9 @@
 
 <ion-content>
   <div class="header-slide">
-    <ion-slides loop="true" autoplay="3000" speed="500" pager="true" (ionSlideDidChange)="slideChanged()">
-      <ion-slide>
-        <img src="assets/imgs/slide1.jpg" class="slide-image">
-      </ion-slide>
-      <ion-slide>
-        <img src="assets/imgs/slide2.jpg" class="slide-image">
+    <ion-slides *ngIf="slideImages && slideImages.length" loop="true" autoplay="3000" speed="500" pager="true" (ionSlideDidChange)="slideChanged()">
+      <ion-slide *ngFor="let slide of slideImages">
+        <img src="{{slide.imageRef}}" class="slide-image">
       </ion-slide>
     </ion-slides>
   </div>
@@ -67,12 +64,15 @@
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col align-self-center *ngIf="product.oldPrice" text-left>
-            <h3 class="oldPrice">{{product.oldPrice | number : fractionSize}} đ</h3>
+          <ion-col align-self-center *ngIf="product.salePrice" text-left>
+            <h3 class="oldPrice">{{product.unitPrice | number : fractionSize}} đ</h3>
           </ion-col>
           <ion-col align-self-center text-right>
-            <h3 class="newPrice">
+            <h3 class="newPrice" *ngIf="!product.salePrice">
               {{product.unitPrice | number : fractionSize}} đ
+            </h3>
+            <h3 class="newPrice" *ngIf="product.salePrice">
+              {{product.salePrice | number : fractionSize}} đ
             </h3>
           </ion-col>
         </ion-row>

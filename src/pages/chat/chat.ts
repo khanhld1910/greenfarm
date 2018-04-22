@@ -38,6 +38,7 @@ export class ChatPage {
     this._loading = this.myToast.performLoading('Đang tải dữ liệu ...')
     this.presentFirst5Messages()
     this.getUserAvatar()
+    this.userDataProvider.setSeenMessage()
   }
 
   presentFirst5Messages() {
@@ -88,9 +89,8 @@ export class ChatPage {
     this.editorMsg = ''
 
     // send message to database
-    this.myDBProvider
-      .newMessage(this.userDataProvider.userPhone, message)
-      .subscribe()
+    this.myDBProvider.newMessage(this.userDataProvider.userPhone, message)
+    this.userDataProvider.setSeenMessage()
   }
 
 

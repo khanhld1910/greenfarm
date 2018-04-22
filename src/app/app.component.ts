@@ -91,9 +91,9 @@ export class MyApp {
 
   getHotline() {
     this.userData
-      .getHotlineNumber()
+      .getAppConfig()
       .first()
-      .subscribe(value => this.hotline = value.hotline)
+      .subscribe(cfg => this.hotline = cfg.hotline)
   }
 
   menuTrigger(hasLoggedIn: boolean) {
